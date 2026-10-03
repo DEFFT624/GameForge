@@ -14,7 +14,7 @@ npm start
 
 Open http://127.0.0.1:4173. Run `npm test` for the security and content checks. Stop the server with Ctrl+C. The server binds only to this computer. Serve through this server to get the security headers; opening index.html directly is unsupported.
 
-Build static assets with `node build.mjs`. The private Sites deployment uses those assets; GitHub remains the source of truth.
+Build static assets with `node build.mjs`. A future private Sites deployment can use those assets; publishing is currently blocked and no hosted build is live. GitHub remains the source of truth.
 
 ## Honest boundaries
 

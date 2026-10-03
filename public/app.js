@@ -20,7 +20,7 @@ function element(tag, text, className) {
   if (className) node.className = className;
   return node;
 }
-function focusLesson() { $('lesson-title').focus({preventScroll: true}); }
+function focusLesson() { $('lesson-title').focus({preventScroll: true}); $('lesson-title').scrollIntoView({block: 'start'}); }
 function renderProgress() {
   $('progress-count').textContent = `${completed.size} / ${lessons.length}`;
   $('progress').max = lessons.length; $('progress').value = completed.size;
@@ -72,7 +72,7 @@ $('previous').addEventListener('click', () => { if (active > 0) { showLesson(act
 $('next').addEventListener('click', () => { if (active < lessons.length - 1) { showLesson(active + 1); focusLesson(); } });
 $('continue').addEventListener('click', () => {
   const next = lessons.findIndex(l => !completed.has(l.id)); showLesson(next < 0 ? 0 : next);
-  $('lessons').scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth'}); focusLesson();
+  focusLesson();
 });
 $('copy-code').addEventListener('click', async () => {
   try { await navigator.clipboard.writeText(lessons[active].code); $('copy-status').textContent = 'Example copied.'; }

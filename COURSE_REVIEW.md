@@ -17,3 +17,7 @@ Snippet drafts now reject explicit bidirectional control characters in titles an
 5. A three-room console RPG project checklist with health, inventory, combat, and clean endings. The full game is for the learner to build.
 
 No site-side code runner or executable uploads are part of this roadmap.
+
+## Eight-lesson review
+
+Claude manually traced course-extension.js on the PR 3 branch and confirmed four new quiz indexes and all eight code blanks. The review did not independently compile examples or run browser tests. Applied its end-of-input/nullability explanation, inventory membership/removal notes, a 25-health clamp test, explicit separate status lines, and clearer optional Random and switch-blank wording. Local browser navigation now scrolls the selected lesson into view on narrow screens.
