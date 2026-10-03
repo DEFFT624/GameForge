@@ -13,6 +13,17 @@ const practiced = savedSet('gameforge-practice', lessons.map(l => l.id));
 const built = savedSet('gameforge-capstone', milestones.map(m => m.id));
 const savedDrafts = read('gameforge-drafts', []);
 let drafts = Array.isArray(savedDrafts) ? savedDrafts.filter(d => d && !validateDraft(d.title, d.code)).slice(0, 20) : [];
+const savedAnswers = read('gameforge-answers', {});
+const answers = Object.create(null);
+for (const lesson of lessons) {
+  const saved = savedAnswers && typeof savedAnswers === 'object' && !Array.isArray(savedAnswers) ? savedAnswers[lesson.id] : null;
+  answers[lesson.id] = {
+    quiz: Number.isInteger(saved?.quiz) && saved.quiz >= 0 && saved.quiz < lesson.answers.length
+      ? saved.quiz : completed.has(lesson.id) ? lesson.correct : null,
+    practice: typeof saved?.practice === 'string' && saved.practice.length <= 40
+      ? saved.practice : practiced.has(lesson.id) ? practices[lesson.id].answer : ''
+  };
+}
 let active = 0;
 function element(tag, text, className) {
   const node = document.createElement(tag);
@@ -36,6 +47,7 @@ function renderProgress() {
 }
 function showLesson(index) {
   active = index; const lesson = lessons[index];
+  save('gameforge-active-lesson', lesson.id);
   $('lesson-meta').textContent = `LESSON ${index + 1} OF ${lessons.length} · ${lesson.topic}`;
   $('lesson-title').textContent = lesson.title; $('lesson-body').textContent = lesson.body;
   $('lesson-code').textContent = lesson.code; $('lesson-explanation').textContent = lesson.explanation;
@@ -43,15 +55,23 @@ function showLesson(index) {
   $('feedback').textContent = completed.has(lesson.id) ? 'You have completed this quiz. You can try it again anytime.' : '';
   $('answers').replaceChildren(...lesson.answers.map((answer, i) => {
     const label = element('label', undefined, 'answer'), input = element('input');
-    Object.assign(input, {type: 'radio', name: 'answer', value: String(i), required: true});
+    Object.assign(input, {type: 'radio', name: 'answer', value: String(i), required: true, checked: answers[lesson.id].quiz === i});
+    input.addEventListener('change', () => {
+      answers[lesson.id].quiz = i; save('gameforge-answers', answers);
+      $('feedback').textContent = '';
+    });
     label.append(input, document.createTextNode(answer)); return label;
   }));
   const practice = practices[lesson.id];
   $('practice-prompt').textContent = practice.prompt; $('practice-code').textContent = practice.code;
-  $('practice-answer').value = ''; $('practice-feedback').textContent = practiced.has(lesson.id) ? 'You have solved this code blank.' : '';
+  $('practice-answer').value = answers[lesson.id].practice; $('practice-feedback').textContent = practiced.has(lesson.id) ? 'You have solved this code blank.' : '';
   $('previous').disabled = index === 0; $('next').disabled = index === lessons.length - 1;
   $('copy-status').textContent = ''; renderProgress();
 }
+$('practice-answer').addEventListener('input', () => {
+  answers[lessons[active].id].practice = $('practice-answer').value;
+  save('gameforge-answers', answers); $('practice-feedback').textContent = '';
+});
 $('challenge').addEventListener('submit', event => {
   event.preventDefault(); const answer = new FormData(event.currentTarget).get('answer'); if (answer === null) return;
   const lesson = lessons[active];
@@ -117,8 +137,11 @@ function renderMilestones() {
   $('capstone-progress').textContent = `${built.size} of ${milestones.length} milestones checked`;
 }
 $('reset').addEventListener('click', () => {
-  if (!window.confirm('Reset quiz and code-blank progress? Your snippet drafts and project checklist will stay saved.')) return;
-  completed.clear(); practiced.clear(); save('gameforge-progress', []); save('gameforge-practice', []); showLesson(0);
+  if (!window.confirm('Reset quiz and code-blank progress and saved answers? Your snippet drafts and project checklist will stay saved.')) return;
+  completed.clear(); practiced.clear();
+  for (const lesson of lessons) answers[lesson.id] = {quiz: null, practice: ''};
+  save('gameforge-answers', answers); save('gameforge-progress', []); save('gameforge-practice', []); showLesson(0);
 });
 const firstUnfinished = lessons.findIndex(l => !completed.has(l.id));
-showLesson(firstUnfinished < 0 ? 0 : firstUnfinished); renderDrafts(); renderSnippets(); renderMilestones();
+const lastActive = lessons.findIndex(l => l.id === read('gameforge-active-lesson', null));
+showLesson(lastActive >= 0 ? lastActive : firstUnfinished < 0 ? 0 : firstUnfinished); renderDrafts(); renderSnippets(); renderMilestones();

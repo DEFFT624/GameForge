@@ -10,3 +10,7 @@
 ## Limits
 
 No user-submitted code is compiled or run. Compilation above covers only our own eight curriculum examples. Code blanks are string comparisons. Public moderation, accounts, uploads, and server-side progress are not implemented. Local server header/write-rejection tests do not by themselves verify the private hosting platform; deployment verification is recorded separately.
+
+## Answer persistence fix
+
+Twelve automated checks pass, including fresh page initialization, per-lesson drafts, completed-answer migration, malformed storage, and reset behavior. Browser reload preserves the selected quiz answer, code-blank text, completion, and active lesson. Legacy completions display canonical correct answers because exact prior entries were not stored.
