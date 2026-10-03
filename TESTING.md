@@ -4,7 +4,7 @@ For local testing on Windows, open START-GAMEFORGE.cmd, leave that window runnin
 
 ## Five-minute test
 
-1. Choose Continue learning. Read lesson 1 and try an incorrect quiz answer, then the correct one. Feedback should explain the mistake and the progress count should increase only after a correct answer.
+1. Choose Continue learning. Read lesson 1 and try an incorrect quiz answer, then the correct one. Feedback should explain the mistake and the lesson should show In progress. The completed-lesson count should increase only after both the quiz and code blank are passed.
 2. Fill in the code blank. Try the Hint button. Check the answer, then refresh the page. Quiz and code-blank progress, your selected answer, and the exact text in the blank should remain saved. Try refreshing with an unfinished answer, then switching lessons and returning. The last viewed lesson should reopen.
 3. Use Next and Previous. Open the inventory, character and game-state lessons from the learning path. All eight lessons should be available.
 4. Check a milestone under Dungeon of Three Rooms. Refresh and confirm it stays checked. Uncheck it if it was only a test.
