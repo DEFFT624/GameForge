@@ -1,4 +1,4 @@
-# Gameforge project specification — v0.1
+# Gameforge project specification — v0.2
 
 ## Purpose
 
@@ -6,8 +6,9 @@ Help beginners learn game programming by reading short C# lessons, tracing game 
 
 ## Implemented local MVP
 
-- Dashboard: progress count, resume-first-unfinished lesson, and a four-lesson path.
-- Course: variables/types, conditionals, loops, methods. Each has a game example, explanation, multiple-choice trace challenge, retry hint, and completion state.
+- Dashboard: progress count, resume-first-unfinished lesson, and an eight-lesson path.
+- Course: variables/types, conditionals, loops, methods, lists, classes, input validation, and game states. Each has a game example, explanation, multiple-choice trace challenge, retry hint, completion state, and a text-only code-blank exercise.
+- Capstone: six self-reported milestones for a three-room console RPG, with browser-local persistence.
 - Community preview: two first-party text examples, a title/source draft form, local persistence, and draft deletion. Drafts do not enter the public gallery.
 - Accessible native controls, responsive layout, visible focus, labelled quiz choices, live feedback, reduced-motion CSS, and no external assets.
 
@@ -23,14 +24,14 @@ Accept only a strict JSON title/source schema, with a 32 KB request-body limit, 
 
 ## Release gates
 
-1. Owner selects repository, public/private visibility, and license; sensitive machine/account access requires explicit approval.
+1. Repository is DEFFT624/GameForge (public). License selection remains pending. The test hosting project is owner-private; sensitive machine/account access requires explicit approval.
 2. Independent review of auth, ownership, moderation, request limits, abuse prevention, data retention/deletion and secret handling.
 3. End-to-end tests for learner progress, retries, malicious snippet markup, review transitions, cross-user authorization and rate limits.
 4. Keyboard/mobile/browser QA and review of every lesson by a C# reader. Choose hosting and test equivalent CSP and security headers before publication.
 
 ## Acceptance checks for this starter
 
-Correct answers mark a lesson complete; incorrect answers give a hint and do not complete it. Reload preserves progress when storage works. Resume selects the first unfinished lesson. Draft text displays literally, can be deleted, and never publishes. POST/PUT/PATCH/DELETE requests are rejected. Only five explicit public asset routes are served.
+Correct answers mark a lesson complete; incorrect answers give a hint and do not complete it. Reload preserves progress when storage works. Resume selects the first unfinished lesson. Draft text displays literally, can be deleted, and never publishes. POST/PUT/PATCH/DELETE requests are rejected. The local server serves only six explicit asset routes (including the index alias); hosted deployment serves static assets only.
 
 ## Excluded for now
 

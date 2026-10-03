@@ -1,13 +1,12 @@
 # Validation — October 3, 2026
 
-## Review follow-up
+## v0.2 test build
 
-All five automated tests pass, including coverage of bidi controls in both draft fields, ordinary Arabic/Hebrew text, exact length limits and emoji UTF-16 counting. In the connected browser, verified wrong-answer hints without completion, correct-answer completion, reload persistence, automatic selection of the next lesson, literal rendering of an HTML event-handler payload, draft reload persistence and draft deletion. The temporary markup draft was removed. These were focused interaction checks; full mobile, keyboard and visual QA remain outstanding. C# examples remain manually traced, not compiled.
+- Eight Node tests pass: all eight lessons have unique IDs, valid quiz answers and corresponding code blanks; code blanks reject hostile/non-string inputs; capstone IDs are stable; draft limits and text-direction controls are checked; literal rendering avoids HTML and execution sinks; local server rejects writes and private-file routes.
+- All eight first-party C# samples compiled with warnings treated as errors using the installed .NET 10.0.301 Roslyn compiler and 10.0.9 reference assemblies. Each executable produced the expected output. Compilation used direct compiler calls with explicit references and System imports, without NuGet or access to user package settings. A normal SDK build was attempted first but could not read protected user NuGet settings; those settings were not accessed.
+- Browser walkthrough completed all eight quizzes and code blanks, verified 8/8 completion and disabled final Next button, reload persistence, incorrect practice feedback, checklist persistence, snippet search including no-results feedback, and quiz/practice reset. Earlier focused testing verified literal HTML draft rendering, draft reload persistence and deletion.
+- Desktop and 390-pixel layouts were visually inspected. At 390 pixels there was no horizontal page overflow. Keyboard focus moves to the selected lesson heading, and a skip-to-lessons link is available. This is not a full accessibility or cross-browser audit.
 
-## Initial starter checks
+## Limits
 
-Passed `node --test tests/*.test.mjs`: four tests cover draft validation, lesson IDs/answer indexes, absence of HTML/code execution sinks in the current client, and live server rejection of write requests and private/traversal routes. Security headers and all asset responses were checked. `node --check public/app.js` passed.
-
-The local preview server started successfully. Browser automation failed with an app-session/tab mismatch; the app's browser opening request was queued. Visual rendering, keyboard flow, browser persistence, and end-to-end challenge interactions remain unverified. These tests do not constitute a security audit, and the C# examples have not been compiled in this environment.
-
-Initial local validation required no package installation or credential access. The owner subsequently created DEFFT624/GameForge and connected GitHub for source publication. Website deployment and direct Claude messaging remain outstanding.
+No user-submitted code is compiled or run. Compilation above covers only our own eight curriculum examples. Code blanks are string comparisons. Public moderation, accounts, uploads, and server-side progress are not implemented. Local server header/write-rejection tests do not by themselves verify the private hosting platform; deployment verification is recorded separately.

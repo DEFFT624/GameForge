@@ -2,7 +2,7 @@
 
 ## Shared workflow
 
-The source of truth is https://github.com/DEFFT624/GameForge. Work from one issue per task and one branch per issue. Use pull requests with concrete acceptance criteria, screenshots for UI changes, and test results. Avoid concurrent edits to the same file. A human approves merges and changes involving credentials, account permissions, deployment, local sensitive access or an execution service.
+The source of truth is https://github.com/DEFFT624/GameForge. Work from one issue per task and one branch per issue. Use pull requests with concrete acceptance criteria, screenshots for UI changes, and test results. Avoid concurrent edits to the same file. The owner has authorized routine development, testing, GitHub updates and preparation of a test version. Request separate approval for sensitive access, permission expansion, purchases or destructive actions. No execution service is authorized.
 
 Codex owns the initial dashboard, static server, security tests and specification. Proposed first Claude task: independently review C# explanations, trace every quiz answer, and propose the next four lessons in a separate content branch. Do not assume a Claude session is connected or has received this task.
 
@@ -19,4 +19,4 @@ Review SPEC.md and SECURITY.md before editing. Review public/content.js for begi
 
 ## Publishing this starter
 
-The owner created the public repository DEFFT624/GameForge. License selection remains pending. The starter is being added through the connected GitHub integration. Claude has not yet received a direct message; its review brief is ready above. Never enter tokens into source files or chat.
+The owner created the public repository DEFFT624/GameForge. License selection remains pending. The starter is in GitHub. Claude received the review brief and manually checked the original four lessons; Codex applied the verified improvements. Never enter tokens into source files or chat.
