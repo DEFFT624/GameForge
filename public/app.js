@@ -118,6 +118,37 @@ function renderSnippets() {
   $('search-status').textContent = results.length ? `${results.length} starter examples` : 'No matching examples. Try “health” or “level”.';
 }
 $('snippet-search').addEventListener('input', renderSnippets);
+const snippetEditor = $('snippet-code');
+let leaveEditor = false;
+snippetEditor.addEventListener('blur', () => { leaveEditor = false; });
+snippetEditor.addEventListener('keydown', event => {
+  if (event.key === 'Escape') { leaveEditor = true; return; }
+  if (event.key !== 'Tab') { leaveEditor = false; return; }
+  if (leaveEditor || event.ctrlKey || event.metaKey || event.altKey) { leaveEditor = false; return; }
+  event.preventDefault();
+  const {value, selectionStart: start, selectionEnd: end} = snippetEditor;
+  if (!event.shiftKey && start === end) {
+    if (value.length + 4 > snippetEditor.maxLength) return;
+    snippetEditor.setRangeText('    ', start, end, 'end');
+    return;
+  }
+  const from = value.slice(0, start).lastIndexOf('\n') + 1;
+  const to = end > start && value[end - 1] === '\n' ? end - 1 : end;
+  const lines = value.slice(from, to).split('\n');
+  let removedFirst = 0, removedTotal = 0;
+  const replacement = lines.map((line, index) => {
+    if (!event.shiftKey) return '    ' + line;
+    const count = (line.match(/^(?:\t| {1,4})/) || [''])[0].length;
+    if (index === 0) removedFirst = count;
+    removedTotal += count; return line.slice(count);
+  }).join('\n');
+  if (value.length - (to - from) + replacement.length > snippetEditor.maxLength) return;
+  snippetEditor.setRangeText(replacement, from, to, 'preserve');
+  snippetEditor.setSelectionRange(
+    event.shiftKey ? Math.max(from, start - removedFirst) : start + 4,
+    event.shiftKey ? Math.max(from, end - removedTotal) : end + lines.length * 4
+  );
+});
 $('snippet-form').addEventListener('submit', event => {
   event.preventDefault(); const title = $('snippet-title').value, code = $('snippet-code').value;
   const error = validateDraft(title, code);

@@ -18,3 +18,5 @@ Progress belongs to the browser and site address you use. A hosted version and l
 ## Current boundaries
 
 There are no public accounts, file uploads, public submissions, or code execution. Code blanks use exact, trimmed text answers and are not a compiler. The capstone is a project guide with a self-reported checklist, not a playable finished RPG. License selection is still pending before an open-source release.
+
+Snippet editor: Tab inserts four spaces; select multiple lines to indent them together. Shift+Tab removes one indentation level. Press Escape then Tab to move to Save local draft. Indentation must remain in a saved draft after refresh.

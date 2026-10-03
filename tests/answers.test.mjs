@@ -12,7 +12,10 @@ function load(storage = new Map(), confirm = true) {
     replaceChildren(...items) { this.children = items; }
     setAttribute() {} focus() {} scrollIntoView() {}
     addEventListener(name, fn) { this.events[name] = fn; }
-    fire(name) { this.events[name]?.({currentTarget: this, preventDefault() {}}); }
+    fire(name, extra = {}) { const event = {currentTarget: this, prevented: false, preventDefault() {this.prevented = true;}, ...extra}; this.events[name]?.(event); return event; }
+    selectionStart = 0; selectionEnd = 0; maxLength = 8000;
+    setSelectionRange(start, end) { this.selectionStart = start; this.selectionEnd = end; }
+    setRangeText(text, start, end, mode) { this.value = this.value.slice(0, start) + text + this.value.slice(end); if (mode === 'end') this.setSelectionRange(start + text.length, start + text.length); }
   }
   const nodes = new Map();
   const get = id => { if (!nodes.has(id)) nodes.set(id, new Element()); return nodes.get(id); };
@@ -93,4 +96,21 @@ test('all quizzes alone do not complete the course', () => {
   page.storage.set('gameforge-practice', JSON.stringify(ids)); page = load(page.storage);
   assert.equal(page.get('progress-count').textContent, '8 / 8');
   assert.equal(page.get('completion').hidden, false);
+});
+
+test('snippet editor indents selections, unindents, respects limits and lets Tab leave after Escape', () => {
+  const editor = load().get('snippet-code');
+  editor.value = 'if (true) {\nConsole.WriteLine(1);\n}';
+  editor.setSelectionRange(12, 12);
+  assert.equal(editor.fire('keydown', {key: 'Tab'}).prevented, true);
+  assert.match(editor.value, /\n    Console/); assert.equal(editor.selectionStart, 16);
+  editor.fire('keydown', {key: 'Tab', shiftKey: true}); assert.match(editor.value, /\nConsole/);
+  editor.value = 'one\ntwo\nthree'; editor.setSelectionRange(0, 8);
+  editor.fire('keydown', {key: 'Tab'}); assert.equal(editor.value, '    one\n    two\nthree');
+  editor.fire('keydown', {key: 'Tab', shiftKey: true}); assert.equal(editor.value, 'one\ntwo\nthree');
+  editor.value = 'x'.repeat(7998); editor.setSelectionRange(0, 0);
+  editor.fire('keydown', {key: 'Tab'}); assert.equal(editor.value.length, 7998);
+  editor.fire('keydown', {key: 'Escape'});
+  assert.equal(editor.fire('keydown', {key: 'Tab'}).prevented, false);
+  assert.equal(editor.fire('keydown', {key: 'Tab', ctrlKey: true}).prevented, false);
 });
