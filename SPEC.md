@@ -35,3 +35,7 @@ Correct answers mark a lesson complete; incorrect answers give a hint and do not
 ## Excluded for now
 
 Unity project downloads, native installers, automatic project imports, chat, multiplayer, payments, executable grading, public accounts, and full game-engine integration.
+
+## Source-text review policy
+
+Reject explicit Unicode bidirectional control characters U+061C, U+200E-U+200F, U+202A-U+202E and U+2066-U+2069 in snippet titles and source, while allowing ordinary Unicode letters, including right-to-left languages. This reduces misleading visual reordering; it does not certify source as safe to execute. Enforce the same policy on the future server and moderation revisions. Length limits count UTF-16 code units, matching JavaScript string.length and browser maxlength.
