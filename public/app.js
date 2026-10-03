@@ -32,16 +32,18 @@ function element(tag, text, className) {
   return node;
 }
 function focusLesson() { $('lesson-title').focus({preventScroll: true}); $('lesson-title').scrollIntoView({block: 'start'}); }
+function isLessonComplete(id) { return completed.has(id) && practiced.has(id); }
 function renderProgress() {
-  $('progress-count').textContent = `${completed.size} / ${lessons.length}`;
-  $('progress').max = lessons.length; $('progress').value = completed.size;
+  const completeCount = lessons.filter(l => isLessonComplete(l.id)).length;
+  $('progress-count').textContent = `${completeCount} / ${lessons.length}`;
+  $('progress').max = lessons.length; $('progress').value = completeCount;
   $('practice-count').textContent = `${practiced.size} / ${lessons.length} code blanks solved`;
-  $('continue').textContent = completed.size === lessons.length ? 'Review the course →' : 'Continue learning →';
-  $('completion').hidden = completed.size !== lessons.length;
+  $('continue').textContent = completeCount === lessons.length ? 'Review the course →' : 'Continue learning →';
+  $('completion').hidden = completeCount !== lessons.length;
   $('lesson-list').replaceChildren(...lessons.map((lesson, index) => {
     const button = element('button', undefined, 'lesson-card');
     button.type = 'button'; button.setAttribute('aria-pressed', String(index === active));
-    button.append(element('span', `${completed.has(lesson.id) ? '✓ COMPLETE' : String(index + 1).padStart(2, '0')} / ${lesson.minutes} MIN`, 'eyebrow'), element('strong', lesson.title), element('small', lesson.topic));
+    button.append(element('span', `${isLessonComplete(lesson.id) ? '✓ COMPLETE' : completed.has(lesson.id) || practiced.has(lesson.id) ? 'IN PROGRESS · 1 / 2' : String(index + 1).padStart(2, '0')} / ${lesson.minutes} MIN`, 'eyebrow'), element('strong', lesson.title), element('small', lesson.topic));
     button.addEventListener('click', () => { showLesson(index); focusLesson(); }); return button;
   }));
 }
@@ -77,21 +79,21 @@ $('challenge').addEventListener('submit', event => {
   const lesson = lessons[active];
   if (Number(answer) === lesson.correct) {
     completed.add(lesson.id); save('gameforge-progress', [...completed]);
-    $('feedback').textContent = 'Correct! Quiz complete. Try the code blank below, or choose Next lesson.'; renderProgress();
+    $('feedback').textContent = isLessonComplete(lesson.id) ? 'Correct! Both exercises passed. Lesson complete.' : 'Correct! Quiz passed (1 of 2). Solve the code blank below to complete this lesson.'; renderProgress();
   } else $('feedback').textContent = `Try again. ${lesson.hint}`;
 });
 $('practice-form').addEventListener('submit', event => {
   event.preventDefault(); const id = lessons[active].id;
   if (checkPractice(id, $('practice-answer').value)) {
     practiced.add(id); save('gameforge-practice', [...practiced]);
-    $('practice-feedback').textContent = 'Correct! That fills the blank. This is a text check, not code execution.'; renderProgress();
+    $('practice-feedback').textContent = isLessonComplete(id) ? 'Correct! Both exercises passed. Lesson complete.' : 'Correct! Code blank passed (1 of 2). Pass the quiz above to complete this lesson.'; renderProgress();
   } else $('practice-feedback').textContent = `Try again. ${practices[id].hint}`;
 });
 $('practice-hint').addEventListener('click', () => { $('practice-feedback').textContent = practices[lessons[active].id].hint; });
 $('previous').addEventListener('click', () => { if (active > 0) { showLesson(active - 1); focusLesson(); } });
 $('next').addEventListener('click', () => { if (active < lessons.length - 1) { showLesson(active + 1); focusLesson(); } });
 $('continue').addEventListener('click', () => {
-  const next = lessons.findIndex(l => !completed.has(l.id)); showLesson(next < 0 ? 0 : next);
+  const next = lessons.findIndex(l => !isLessonComplete(l.id)); showLesson(next < 0 ? 0 : next);
   focusLesson();
 });
 $('copy-code').addEventListener('click', async () => {
@@ -142,6 +144,6 @@ $('reset').addEventListener('click', () => {
   for (const lesson of lessons) answers[lesson.id] = {quiz: null, practice: ''};
   save('gameforge-answers', answers); save('gameforge-progress', []); save('gameforge-practice', []); showLesson(0);
 });
-const firstUnfinished = lessons.findIndex(l => !completed.has(l.id));
+const firstUnfinished = lessons.findIndex(l => !isLessonComplete(l.id));
 const lastActive = lessons.findIndex(l => l.id === read('gameforge-active-lesson', null));
 showLesson(lastActive >= 0 ? lastActive : firstUnfinished < 0 ? 0 : firstUnfinished); renderDrafts(); renderSnippets(); renderMilestones();

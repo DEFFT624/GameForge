@@ -65,3 +65,32 @@ test('malformed answer records do not prevent the course loading', () => {
     assert.equal(page.selected(), -1); assert.equal(page.get('practice-answer').value, '');
   }
 });
+
+test('lesson completion requires both exercises, in either order, and survives reload', () => {
+  for (const quizFirst of [true, false]) {
+    let page = load();
+    const quiz = () => { page.choose(1); page.get('challenge').fire('submit'); };
+    const blank = () => { page.type('int'); page.get('practice-form').fire('submit'); };
+    (quizFirst ? quiz : blank)();
+    page = load(page.storage);
+    assert.equal(page.get('progress-count').textContent, '0 / 8');
+    assert.match(page.get('lesson-list').children[0].children[0].textContent, /IN PROGRESS/);
+    page.get('continue').fire('click');
+    assert.equal(page.get('lesson-title').textContent, foundations[0].title);
+    (quizFirst ? blank : quiz)();
+    page = load(page.storage);
+    assert.equal(page.get('progress-count').textContent, '1 / 8');
+    assert.match(page.get('lesson-list').children[0].children[0].textContent, /COMPLETE/);
+    page.get('continue').fire('click');
+    assert.equal(page.get('lesson-title').textContent, foundations[1].title);
+  }
+});
+test('all quizzes alone do not complete the course', () => {
+  const ids = [...foundations, ...extraLessons].map(l => l.id);
+  let page = load(new Map([['gameforge-progress', JSON.stringify(ids)]]));
+  assert.equal(page.get('progress-count').textContent, '0 / 8');
+  assert.equal(page.get('completion').hidden, true);
+  page.storage.set('gameforge-practice', JSON.stringify(ids)); page = load(page.storage);
+  assert.equal(page.get('progress-count').textContent, '8 / 8');
+  assert.equal(page.get('completion').hidden, false);
+});
