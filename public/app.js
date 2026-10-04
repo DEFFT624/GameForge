@@ -179,12 +179,26 @@ function renderProgress() {
     ? 'Your full C# foundations review is ready. Share what helped and what needs a clearer explanation.'
     : `Complete both exercises in all ${lessons.length} lessons to unlock the course review (${completeCount} / ${lessons.length} complete).`;
   $('navigation-status').textContent = `Lesson ${active + 1} / ${lessons.length} · ${isLessonComplete(lessons[active].id) ? 'Complete' : 'Keep going'}`;
-  $('outline-summary').textContent = `Choose a lesson · ${active + 1} of ${lessons.length}`;
-  $('lesson-list').replaceChildren(...lessons.map((lesson, index) => {
-    const button = element('button', undefined, 'lesson-card');
-    button.type = 'button'; button.setAttribute('aria-pressed', String(index === active));
-    button.append(element('span', `${isLessonComplete(lesson.id) ? '✓ COMPLETE' : completed.has(lesson.id) || practiced.has(lesson.id) ? 'IN PROGRESS · 1 / 2' : String(index + 1).padStart(2, '0')} / ${lesson.minutes} MIN`, 'eyebrow'), element('strong', lesson.title), element('small', lesson.topic));
-    button.addEventListener('click', () => { showLesson(index); focusLesson(); }); return button;
+  const currentModule = modules.findIndex(module => module.ids.includes(lessons[active].id));
+  $('outline-summary').textContent = `Choose a module · Module ${currentModule + 1} of ${modules.length}`;
+  $('lesson-list').replaceChildren(...modules.map((module, moduleIndex) => {
+    const group = element('details', undefined, 'outline-module');
+    group.open = moduleIndex === currentModule;
+    const count = module.ids.filter(isLessonComplete).length;
+    const summary = element('summary', `Module ${moduleIndex + 1} · ${module.title}`);
+    const status = element('p', `${count} / ${module.ids.length} lessons complete`, 'muted');
+    const list = element('div', undefined, 'module-lessons');
+    list.append(...module.ids.map(id => {
+      const index = lessons.findIndex(lesson => lesson.id === id);
+      const lesson = lessons[index];
+      const button = element('button', undefined, 'lesson-card');
+      button.type = 'button'; button.setAttribute('aria-pressed', String(index === active));
+      button.append(element('span', `${isLessonComplete(lesson.id) ? '✓ COMPLETE' : completed.has(lesson.id) || practiced.has(lesson.id) ? 'IN PROGRESS · 1 / 2' : String(index + 1).padStart(2, '0')} / ${lesson.minutes} MIN`, 'eyebrow'), element('strong', lesson.title), element('small', lesson.topic));
+      button.addEventListener('click', () => { showLesson(index); focusLesson(); });
+      return button;
+    }));
+    group.append(summary, status, list);
+    return group;
   }));
   $('module-list').replaceChildren(...modules.map((module, index) => {
     const count = module.ids.filter(isLessonComplete).length;

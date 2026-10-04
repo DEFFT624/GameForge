@@ -36,7 +36,7 @@ function load(storage = new Map(), confirm = true, hash = "", storageFailure = f
     window: {confirm: () => confirm, location, history, addEventListener: (name,fn) => { windowEvents[name]=fn; }},
     FormData: class { get() { return get('answers').children.map(l => l.children[0]).find(i => i.checked)?.value ?? null; } }
   });
-  return {get, storage, location, visits, restore(url) { location.href = url; windowEvents.popstate?.(); }, open(id) {get('lesson-list').children[course.lessons.findIndex(lesson=>lesson.id===id)].fire('click');}, sync(key) {windowEvents.storage?.({key});}, navigate(hash) { location.hash=hash; windowEvents.hashchange(); }, choose(index) {
+  return {get, storage, location, visits, restore(url) { location.href = url; windowEvents.popstate?.(); }, open(id) {const moduleIndex=course.modules.findIndex(module=>module.ids.includes(id));get('lesson-list').children[moduleIndex].children[2].children[course.modules[moduleIndex].ids.indexOf(id)].fire('click');}, sync(key) {windowEvents.storage?.({key});}, navigate(hash) { location.hash=hash; windowEvents.hashchange(); }, choose(index) {
     const radios = get('answers').children.map(l => l.children[0]);
     radios.forEach((r, i) => { r.checked = i === index; }); radios[index].fire('change');
   }, type(value) { get('practice-answer').value = value; get('practice-answer').fire('input'); },
@@ -124,13 +124,13 @@ test('lesson completion requires both exercises, in either order, and survives r
     (quizFirst ? quiz : blank)();
     page = load(page.storage);
     assert.equal(page.get('progress-count').textContent, '0 / 22');
-    assert.match(page.get('lesson-list').children[0].children[0].textContent, /IN PROGRESS/);
+    assert.match(page.get('lesson-list').children[0].children[2].children[0].children[0].textContent, /IN PROGRESS/);
     page.get('continue').fire('click');
     assert.equal(page.get('lesson-title').textContent, foundations[0].title);
     (quizFirst ? blank : quiz)();
     page = load(page.storage);
     assert.equal(page.get('progress-count').textContent, '1 / 22');
-    assert.match(page.get('lesson-list').children[0].children[0].textContent, /COMPLETE/);
+    assert.match(page.get('lesson-list').children[0].children[2].children[0].children[0].textContent, /COMPLETE/);
     page.get('continue').fire('click');
     assert.equal(page.get('lesson-title').textContent, 'Give your hero a text greeting');
   }
@@ -384,4 +384,21 @@ test('lesson URLs ignore unknown IDs, restore browser navigation, and follow res
  page.get('reset').fire('click');assert.equal(page.location.search,'?lesson=health');
  page.navigate('#community');page.get('reset').fire('click');
  assert.equal(page.location.hash,'#community');assert.equal(page.location.search,'');
+});
+
+test('module chooser groups every lesson and opens the current module after navigation and reload',()=>{
+ const page=load();const groups=page.get('lesson-list').children;
+ assert.equal(groups.length,course.modules.length);
+ course.modules.forEach((module,index)=>{
+  assert.equal(groups[index].children[2].children.length,module.ids.length);
+  assert.equal(groups[index].open,index===0);
+  module.ids.forEach((id,lessonIndex)=>assert.equal(groups[index].children[2].children[lessonIndex].children[1].textContent,course.lessons.find(lesson=>lesson.id===id).title));
+ });
+ page.open('arrays');
+ assert.match(page.get('outline-summary').textContent,/Module 5 of 5/);
+ assert.equal(page.get('course-outline').open,false);
+ const restored=load(page.storage);
+ assert.equal(restored.get('lesson-title').textContent,page.get('lesson-title').textContent);
+ assert.equal(restored.get('lesson-list').children[4].open,true);
+ assert.equal(restored.get('lesson-list').children[0].open,false);
 });
