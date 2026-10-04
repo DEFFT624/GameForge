@@ -8,6 +8,7 @@
     "test": "node tests/run.mjs",
     "test:rpg": "node tests/rpg-behavior.mjs",
     "test:csharp": "node tests/csharp-content.mjs",
+    "test:errors": "node tests/csharp-errors.mjs",
     "build": "node build.mjs"
   },
   "engines": {

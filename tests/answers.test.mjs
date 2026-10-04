@@ -251,6 +251,14 @@ test('glossary search finds a concept, opens its lesson, and handles literal hos
  page.get('glossary-search').value='a';page.get('glossary-search').fire('input');
  assert.equal(page.get('glossary-results').children.length,12);assert.match(page.get('glossary-status').textContent,/first 12/);
 });
+test('troubleshooting renders deliberate mistakes and repairs without running code',()=>{
+ const page=load();assert.equal(page.get('help-examples').children.length,5);
+ const first=page.get('help-examples').children[0];
+ assert.match(first.children[0].textContent,/CS1002/);
+ assert.equal(first.children[2].children[0].textContent,'Console.WriteLine("Hello")');
+ assert.equal(first.children[4].children[1].children[0].textContent,'Console.WriteLine("Hello");');
+ assert.equal(page.get('progress-count').textContent,'0 / 18');
+});
 test('all fourteen earlier completions survive while four new lessons keep the review locked',()=>{
  const newIds=new Set(['strings','booleans','combined-conditions','list-loop']);
  const oldIds=course.lessons.filter(lesson=>!newIds.has(lesson.id)).map(lesson=>lesson.id);

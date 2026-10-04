@@ -3,7 +3,7 @@ const root = new URL('./', import.meta.url);
 const dist = new URL('dist/', root);
 await mkdir(dist, {recursive: true});
 for (const name of await readdir(new URL('public/', root))) {
-  if (!['vt323-regular.ttf','vt323-OFL.txt','index.html','style.css','app.js','content.js','course-extension.js','radio.js','learner-guides.js','lesson-traces.js','foundation-bridges.js','home.html','home-tabs.js','course-plan.js','beginner-test.html','beginner-test.js','rpg-reference.cs'].includes(name)) continue;
+  if (!['vt323-regular.ttf','vt323-OFL.txt','index.html','style.css','app.js','content.js','course-extension.js','radio.js','learner-guides.js','lesson-traces.js','foundation-bridges.js','help-examples.js','home.html','home-tabs.js','course-plan.js','beginner-test.html','beginner-test.js','rpg-reference.cs'].includes(name)) continue;
   await copyFile(new URL('public/' + name, root), new URL(name === 'index.html' ? 'learn.html' : name, dist));
 }
 const headers = "/*\n  Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; connect-src 'none'; media-src blob:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: no-referrer\n  Permissions-Policy: camera=(), microphone=(), geolocation=()\n";

@@ -339,6 +339,19 @@ function renderGlossary() {
 }
 $('glossary-search').addEventListener('input', renderGlossary);
 renderGlossary();
+for (const example of course.helpExamples) {
+  const card = element('details', undefined, 'help-example');
+  card.append(element('summary', example.title), element('p', 'This example deliberately contains a mistake.'));
+  const broken = element('pre'); broken.append(element('code', example.broken));
+  card.append(broken, element('p', example.explanation));
+  const repair = element('details'); repair.append(element('summary', 'Compare a repair'));
+  const fixed = element('pre'); fixed.append(element('code', example.fixed));
+  const output = element('pre'); output.append(element('code', example.output));
+  repair.append(fixed, element('h4', 'Expected output after the repair'), output, element('p', example.check));
+  const reference = element('a', 'Microsoft reference ↗');
+  reference.href = example.source; reference.target = '_blank'; reference.rel = 'noopener noreferrer';
+  card.append(repair, reference); $('help-examples').append(card);
+}
 function snippetCard(snippet, draft = false) {
   const card = element('article', undefined, 'snippet');
   card.append(element('span', draft ? 'LOCAL DRAFT · NOT PUBLISHED' : snippet.author, 'eyebrow'), element('h3', snippet.title));

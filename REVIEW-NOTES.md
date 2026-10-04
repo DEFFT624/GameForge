@@ -43,3 +43,7 @@ Review foundation-bridges.js: string joining, bool formatting and snapshot behav
 ## Pending review: glossary
 
 Glossary entries reuse the current lesson definitions. Searches match word/meaning text without interpreting it, results are capped at 12, and lesson buttons navigate through the existing flow. No progress changes or network requests. Check the result announcements and keyboard flow when the browser connection is restored.
+
+## Pending review: troubleshooting
+
+Review help-examples.js and First steps' troubleshooting guide for beginner clarity. The compiler codes, list-index exception, and off-by-one output were observed by compiling the intentional mistakes; every repaired example was compiled and run. Microsoft Learn links were checked. No code runs in the browser. Check whether the nested disclosure flow is understandable and avoids overwhelming a learner who only needs one repair. Claude and visual review remain pending.

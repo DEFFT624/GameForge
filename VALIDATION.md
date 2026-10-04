@@ -101,3 +101,9 @@ The foundations path now has 18 lessons: added strings, booleans, combined condi
 The expanded 18-lesson course passed hosted workflow 37193832704 at commit e0b389851195dba0101d5985f5d66820638ce524 on Linux/Node 22 and Windows/Node 24, including 44 compiled teaching samples, RPG behavior, and static build.
 
 Added a searchable glossary under First steps, sourced from lesson definitions with direct buttons to their examples. Case-insensitive matching, literal hostile input, result limits, and unchanged completion counts are tested. `npm test`: 50 pass. Also clarified the string prediction prompt to change the first line, distinguished revisiting lessons from the feedback review, and made reset wording explicitly preserve optional notes.
+
+## October 4: beginner troubleshooting
+
+Added five first-party error/repair pairs under First steps. `npm run test:errors` compiles each deliberate mistake, checks its documented compiler diagnostic, runtime exception, or wrong output, then compiles and runs the repair. All five pass. A proposed missing-semicolon example actually produced CS1003 during verification; it was replaced with an unambiguous single printing statement that produces the documented CS1002. Source links were checked against Microsoft Learn.
+
+`npm test`: 52 pass. Static build and the new preview module endpoint pass. Only approved source text is served; no execution or uploads were added. GitHub workflow 37194684582 passed for the earlier glossary commit 7228f6f1384b90bbcb5082e835552af16fe576d9. Current troubleshooting changes still need their hosted run and browser/Claude review.

@@ -81,3 +81,11 @@ test('text, booleans, combined conditions, and list iteration precede their appl
   assert.ok(ids.includes(before),before);assert.ok(ids.indexOf(before)<ids.indexOf(after));
  }
 });
+test('troubleshooting distinguishes compiler, runtime, and logic failures with first-party repairs',()=>{
+ assert.deepEqual(new Set(course.helpExamples.map(example=>example.kind)),new Set(['compiler','runtime','logic']));
+ for(const example of course.helpExamples) {
+  assert.ok(example.broken && example.fixed && example.output && example.explanation && example.check);
+  assert.notEqual(example.broken,example.fixed);assert.ok(example.source.startsWith('https://learn.microsoft.com/'));
+  if(example.kind!=='logic')assert.ok(example.diagnostic);
+ }
+});

@@ -52,3 +52,7 @@ In Understand it, open Trace the values one step at a time. Compare the values a
 Upgrade check: if you previously completed all 14 earlier lessons, the dashboard now shows 14 / 18 and Continue opens Give your hero a text greeting. Existing answers remain saved. Finish the four new lessons to reopen the full-course review.
 
 In First steps, search the glossary for concatenation, bool, &&, or return. Open a matching lesson and check that progress did not change. A broad search shows at most 12 entries and asks you to narrow it. Clearing the search should remove results and show the instructions.
+
+## Troubleshooting a console project
+
+Open When your code does not work under First steps. Distinguish a compiler error, a runtime exception, and a logic mistake. Expand a deliberate example, predict the problem, then open its repair. None of this runs in the website or changes lesson completion. In a fresh local console project, verify the before/after behavior with `dotnet run`; do not replace your working RPG. Maintainers can run `npm run test:errors` to check all documented diagnostics and repaired outputs.
