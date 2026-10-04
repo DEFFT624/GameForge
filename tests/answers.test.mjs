@@ -74,6 +74,18 @@ test('module cards resume the first unfinished lesson within their module',()=>{
  assert.equal(page.get('lesson-title').textContent,'Send a value in, get a result back');
  assert.match(page.get('module-meta').textContent,/MODULE 2/);
 });
+test('module debugging notes persist independently and appear only at module endings',()=>{
+ let page=load();assert.equal(page.get('module-debug').hidden,true);
+ for(let i=0;i<3;i++)page.get('next').fire('click');
+ assert.equal(page.get('module-debug').hidden,false);
+ page.get('debug-note').value='Zero is not alive.';page.get('debug-note').fire('input');
+ page.get('module-debug').open=true;page.get('debug-repair').open=true;
+ page=load(page.storage);assert.equal(page.get('debug-note').value,'Zero is not alive.');
+ assert.equal(page.get('module-debug').open,false);assert.equal(page.get('debug-repair').open,false);
+ assert.equal(page.get('progress-count').textContent,'0 / 14');
+ page.get('next').fire('click');assert.equal(page.get('module-debug').hidden,true);
+ for(const raw of ['null','[]','{','{"control":42}']) assert.equal(load(new Map([['gameforge-debug-notes',raw]])).get('debug-note').value,'');
+});
 test('reset clears saved answers and progress but preserves drafts and project milestones', () => {
   let page = load(new Map([['gameforge-drafts', '[]'], ['gameforge-capstone', '["status"]']]));
   page.choose(1); page.type('int'); page.get('challenge').fire('submit'); page.get('practice-form').fire('submit');

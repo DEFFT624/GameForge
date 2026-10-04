@@ -62,3 +62,9 @@ All 14 first-party C# samples compiled with warnings as errors and produced the 
 - `node build.mjs`: approved static assets only, including source text.
 - Preview reference endpoint returned HTTP 200 with text/plain and nosniff; POST and binary paths are rejected in server tests.
 - Browser automation still fails during initialization with a missing kernel-assets path. Current visual inspection and Claude review remain pending; these are not claimed as passed.
+
+## October 4: module debugging and repeatable curriculum validation
+
+- Four module debugging challenges, saved per-module notes, hints, repairs, and follow-up tests. Optional, independent of required completion.
+- `node tests/csharp-content.mjs`: all 36 samples compiled and their outputs matched; warnings treated as errors. This includes 14 lessons, 14 prediction labs, 4 bugs, and 4 repairs.
+- Website tests include debugging persistence, module-end visibility, malformed notes, real-page control IDs, and all local navigation/asset targets. Browser rendering is still unverified.

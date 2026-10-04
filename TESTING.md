@@ -36,3 +36,7 @@ Check the four module cards in Overview. Each must show its own completion count
 Open the RPG project guide and its complete source reference. Follow the setup instructions in a fresh project. Attack nine times: three rooms clear, victory prints once, and health ends at 52. Try invalid choices, full-health and empty-inventory potions, Quit, and end-of-input. Follow the documented 10-health experiment to check defeat, then restore the value.
 
 Maintainers with the .NET 10 SDK can run `npm run test:rpg` for compiled behavior tests; `npm test` covers the website and does not need .NET. `npm run build` copies only approved static assets, including the C# source file. No compiled game binaries are published.
+
+## Module debugging
+
+At the last lesson of each module, open Find and repair a bug. Compare the expected and actual output, write a repair note, and refresh. The note must return. Switch modules: notes should remain separate. Returning to a challenge closes its hint and repair so you can try again. Verify the lesson count remains unchanged. Maintainers can run `npm run test:csharp` with .NET 10 to check all lesson, lab, bug, and repair outputs.

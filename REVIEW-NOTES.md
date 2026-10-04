@@ -23,3 +23,7 @@ Do not claim these pending checks have passed. No deployment is included.
 ## Pending review: source-only RPG reference
 
 Check `public/rpg-reference.cs`, its beginner reading guide in the capstone page, and `tests/rpg-behavior.mjs`. Focus on continue vs switch break, preserving health between rooms, failed potions consuming no turn, EOF/quit preventing counterattacks, and one ending only. The normal settings cannot reach defeat; the guide and compiled test deliberately use the documented 10-health experiment. There are no packages or executable uploads. Browser connection is unavailable; this handoff has not yet been sent to Claude.
+
+## Pending review: optional module debugging
+
+Four challenges in `course-plan.js` pair observed behavior with a minimal repair. Check beginner wording, the distinction between compile errors and logic mistakes, int argument/result handling, object references, and loop conditions. Saved explanations are optional; no automatic completion is granted. `npm run test:csharp` verifies all 36 first-party samples, while real-HTML contract tests catch missing controls and broken local links. Claude review remains pending because browser initialization still fails.

@@ -299,3 +299,7 @@ pre,code,textarea,#practice-answer{font-family:Consolas,'Courier New',monospace;
   .learning-page .lesson-panel p,.learning-page #lesson-steps li{font-size:21px}
   .learning-page .lesson-navigation #next{font-size:18px}.learning-page header{font-size:16px}
 }
+
+.module-debug { margin-block: 24px; }
+.module-debug textarea { width: 100%; }
+.module-debug pre { white-space: pre; overflow-x: auto; }

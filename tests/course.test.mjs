@@ -56,6 +56,13 @@ test('every lesson has a complete beginner guide and feedback for every quiz cho
   assert.equal(guide.why.length,lesson.answers.length);assert.ok(guide.steps.length>=3);assert.ok(guide.words.length>=4);assert.ok(guide.output);
  }
 });
+test('each module has a debugging challenge with distinct observed and expected behavior',()=>{
+ for (const module of course.modules) {
+  const bug=course.debugging[module.id];
+  assert.ok(bug.title && bug.goal && bug.code && bug.fixed && bug.hint && bug.why && bug.test);
+  assert.notEqual(bug.actual,bug.expected);assert.notEqual(bug.code,bug.fixed);
+ }
+});
 test('small lessons come before their combined applications without changing old quiz IDs',()=>{
  const ids=course.lessons.map(l=>l.id);
  for(const [before,after] of [['call-function','function-inputs'],['function-inputs','methods'],['class-fields','characters'],['while-loop','enum-state'],['enum-state','switch-choice'],['switch-choice','states']]) assert.ok(ids.indexOf(before)<ids.indexOf(after));

@@ -37,3 +37,7 @@ Open /beginner-test.html after finishing both required exercises in all fourteen
 The project guide now links to `public/rpg-reference.cs`, a first-party source-only example. Learners copy it into Program.cs in a new console project and use the guided reading passes and test checklist. No uploaded source or executable is accepted or run.
 
 For maintainers, `dotnet run --project examples/tiny-rpg/GameForgeRpg.csproj` runs the reference with .NET 10. `npm run test:rpg` compiles it with warnings treated as errors and checks victory, quit, EOF, invalid input, potion limits, room transitions, and the documented low-health defeat experiment. Build outputs stay ignored and are not shipped. .NET 10 support: https://dotnet.microsoft.com/en-us/platform/support/policy.
+
+### Optional module debugging
+
+Each module ends with a small program that compiles but behaves incorrectly. Learners compare expected and actual output, write a saved explanation, reveal a hint or repair, and try two test cases. These challenges never change required completion. `npm run test:csharp` compiles and checks all 36 first-party lesson, lab, bug, and repair samples with .NET 10.

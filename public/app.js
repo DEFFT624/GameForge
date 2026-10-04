@@ -1,7 +1,7 @@
 import {course} from './course-plan.js';
 import {lessons as foundations, snippets, validateDraft} from './content.js';
 import {milestones} from './course-extension.js';
-const {lessons, practices, lessonGuides, checkPractice, modules, labs, checkLab} = course;
+const {lessons, practices, lessonGuides, checkPractice, modules, labs, checkLab, debugging} = course;
 const $ = id => document.getElementById(id);
 function read(key, fallback) { try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; } }
 function save(key, value) {
@@ -13,6 +13,12 @@ const completed = savedSet('gameforge-progress', lessons.map(l => l.id));
 const practiced = savedSet('gameforge-practice', lessons.map(l => l.id));
 const savedLabs = read('gameforge-labs', {});
 const labWork = Object.create(null);
+const savedDebugNotes = read('gameforge-debug-notes', {});
+const debugNotes = Object.create(null);
+for (const module of modules) {
+  const value = savedDebugNotes && typeof savedDebugNotes === 'object' ? savedDebugNotes[module.id] : null;
+  debugNotes[module.id] = typeof value === 'string' ? value.slice(0, 2000) : '';
+}
 for (const lesson of lessons) {
   const record = savedLabs && typeof savedLabs === 'object' && !Array.isArray(savedLabs) ? savedLabs[lesson.id] : null;
   labWork[lesson.id] = {
@@ -152,6 +158,20 @@ function showLesson(index) {
   $('module-recap').open = false;
   $('module-recap-list').replaceChildren(...module.recap.map(text => element('li', text)));
   $('module-project').textContent = module.project;
+  const debug = debugging[module.id];
+  $('module-debug').hidden = module.ids.at(-1) !== lesson.id;
+  $('module-debug').open = false; $('debug-repair').open = false; $('debug-hint').open = false;
+  $('debug-title').textContent = debug.title;
+  $('debug-goal').textContent = debug.goal;
+  $('debug-code').textContent = debug.code;
+  $('debug-actual').textContent = debug.actual;
+  $('debug-expected').textContent = debug.expected;
+  $('debug-hint-text').textContent = debug.hint;
+  $('debug-fixed').textContent = debug.fixed;
+  $('debug-why').textContent = debug.why;
+  $('debug-test').textContent = debug.test;
+  $('debug-note').value = debugNotes[module.id];
+  $('debug-save-status').textContent = '';
   $('lab-prompt').textContent = labs[lesson.id].prompt;
   $('lab-code').textContent = labs[lesson.id].code;
   $('lab-answer').value = labWork[lesson.id].answer;
@@ -224,6 +244,12 @@ $('lab-form').addEventListener('submit', event => {
   if (correct) labWork[id].solved = true;
   save('gameforge-labs', labWork);
   $('lab-feedback').textContent = correct ? `Correct! ${labs[id].why}` : `Try again. ${labs[id].hint} Use one line for each printed line, without quotes.`;
+});
+$('debug-note').addEventListener('input', () => {
+  const module = modules.find(module => module.ids.includes(lessons[active].id));
+  debugNotes[module.id] = $('debug-note').value.slice(0, 2000);
+  const saved = save('gameforge-debug-notes', debugNotes);
+  $('debug-save-status').textContent = saved ? 'Debugging note saved in this browser.' : 'This note lasts only for this visit.';
 });
 $('lab-hint').addEventListener('click', () => { $('lab-feedback').textContent = labs[lessons[active].id].hint; });
 for (const [field, property] of [['lab-answer', 'answer'], ['lab-note', 'note']]) {
