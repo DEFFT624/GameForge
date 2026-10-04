@@ -25,6 +25,8 @@ test('static builds remove stale output, ignore unapproved source, and keep secu
     const html = await readFile(join(project, 'dist/learn.html'), 'utf8');
     assert.equal((html.match(/http-equiv="Content-Security-Policy"/g) || []).length, 1);
     assert.match(await readFile(join(project, 'dist/test-guide.html'), 'utf8'), /http-equiv="Content-Security-Policy"/);
+    assert.match(await readFile(join(project, 'dist/character.html'), 'utf8'), /http-equiv="Content-Security-Policy"/);
+    for (const name of ['shell.js','shell.css','character.js','character-progress.js']) assert.ok(files.includes(name));
     assert.match(await readFile(join(project, 'dist/_headers'), 'utf8'), /object-src 'none'/);
     await writeFile(join(project, 'dist/stale.exe'), 'stale fixture');
     result = build(); assert.equal(result.status, 0, result.stderr);

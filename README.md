@@ -58,3 +58,9 @@ A fifth module adds readable status messages, fixed room arrays, constructor inp
 
 The language rules were checked against Microsoft documentation: [interpolation](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/tokens/interpolated), [arrays](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/arrays), [constructors](https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/constructors), and [TryGetValue](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.dictionary-2.trygetvalue?view=net-10.0). First-party teaching code is compiled in the validation suite; learner code remains text-only.
 
+
+## Shared navigation and ASCII character
+
+The sidebar is available on Home, lessons, testing pages, and My character. Its collapse button remains fixed while scrolling; the preference is saved in this browser. A compact rail keeps every destination available, with labels on keyboard focus or hover. On narrow screens, it starts collapsed unless a preference exists and closes after navigation, outside clicks, or Escape.
+
+My character is a separate page at /character.html. Completing both exercises in one lesson earns 10 XP; finishing every lesson in a module adds 25 XP once. Levels require 50 XP. Four ASCII appearances unlock at levels 1, 4, 8, and 12. XP is calculated from existing lesson progress rather than saved as a separate balance, so earlier completions count, repeats do not farm rewards, and resetting lesson progress resets the character. The current 39-lesson course reaches 640 XP, level 13, and displays a complete bar rather than an unreachable next level. No avatar uploads or accounts are added.

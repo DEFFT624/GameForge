@@ -18,6 +18,12 @@ test('drafts reject text-direction controls in both fields but preserve Unicode'
 test('draft limits reject malformed and oversized input',()=>{assert.ok(validateDraft('', 'code'));assert.ok(validateDraft('title','x'.repeat(8001)));assert.ok(validateDraft('x'.repeat(81),'code'));assert.ok(validateDraft('title','a\0b'));assert.ok(validateDraft({},[]));assert.equal(validateDraft('Health','int health = 100;'),null);});
 test('all lessons have stable unique IDs and valid challenge answers',()=>{assert.equal(new Set(lessons.map(l=>l.id)).size,4);for(const lesson of lessons){assert.ok(lesson.answers[lesson.correct]);assert.ok(lesson.code);assert.ok(lesson.hint);}});
 test('text rendering never uses HTML injection or code execution sinks',async()=>{const source=await readFile(new URL('../public/app.js',import.meta.url),'utf8');assert.doesNotMatch(source,/innerHTML|outerHTML|insertAdjacentHTML|eval\s*\(|new Function|document\.write/);assert.match(source,/textContent/);});
+test('shared navigation and character only render text and never upload or execute input',async()=>{
+ for(const name of ['shell.js','character.js','character-progress.js']) {
+  const source=await readFile(new URL('../public/'+name,import.meta.url),'utf8');
+  assert.doesNotMatch(source,/innerHTML|outerHTML|insertAdjacentHTML|eval\s*\(|new Function|document\.write|fetch\s*\(|XMLHttpRequest/);
+ }
+});
 test('RPG reference is first-party plain text and upload methods remain blocked',async()=>{
  const server=createServer();await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
  const url=`http://127.0.0.1:${server.address().port}/rpg-reference.cs`;

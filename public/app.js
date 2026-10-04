@@ -482,7 +482,7 @@ function renderMilestones() {
   $('capstone-progress').textContent = `${built.size} of ${milestones.length} milestones checked`;
 }
 $('reset').addEventListener('click', () => {
-  if (!window.confirm('Reset quiz and code-blank progress and saved answers? Your notes, snippet drafts, and project checklist will stay saved.')) return;
+  if (!window.confirm('Reset quiz and code-blank progress and saved answers? Your character\'s XP and level will also reset. Your notes, snippet drafts, and project checklist will stay saved.')) return;
   completed.clear(); practiced.clear();
   for (const lesson of lessons) answers[lesson.id] = {quiz: null, practice: ''};
   save('gameforge-answers', answers); save('gameforge-progress', []); save('gameforge-practice', []); showLesson(0);

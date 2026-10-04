@@ -18,7 +18,7 @@ test('local page assets and navigation targets are served and fragments exist', 
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   const base = `http://127.0.0.1:${server.address().port}`;
   try {
-    for (const page of ['/home.html', '/learn.html', '/beginner-test.html', '/test-guide.html']) {
+    for (const page of ['/home.html', '/learn.html', '/beginner-test.html', '/test-guide.html', '/character.html']) {
       const html = await (await fetch(base + page)).text();
       for (const match of html.matchAll(/\b(?:href|src)="([^"]+)"/g)) {
         const href = match[1];
