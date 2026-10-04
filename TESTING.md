@@ -50,3 +50,5 @@ Open two learning workspaces at the same address. Complete different lessons in 
 In Understand it, open Trace the values one step at a time. Compare the values after each row with the code; New output shows only the line printed during that step. Try the for and while loops, function return, inventory removal, and game-state loop. At narrow widths the table can scroll within its own box; focus the table region to scroll with the keyboard. Changing lessons closes the trace and replaces its caption and rows.
 
 Upgrade check: if you previously completed all 14 earlier lessons, the dashboard now shows 14 / 18 and Continue opens Give your hero a text greeting. Existing answers remain saved. Finish the four new lessons to reopen the full-course review.
+
+In First steps, search the glossary for concatenation, bool, &&, or return. Open a matching lesson and check that progress did not change. A broad search shows at most 12 entries and asks you to narrow it. Clearing the search should remove results and show the instructions.

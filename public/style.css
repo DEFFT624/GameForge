@@ -311,3 +311,8 @@ pre,code,textarea,#practice-answer{font-family:Consolas,'Courier New',monospace;
 .trace-scroll th, .trace-scroll td { text-align: left; vertical-align: top; padding: 12px; border: 1px solid var(--line); }
 .trace-scroll thead { background: #142219; color: var(--green); }
 .trace-scroll tbody tr:nth-child(even) { background: #15221966; }
+
+.glossary-entry { padding: 18px 0; border-bottom: 1px solid var(--line); }
+.glossary-entry dl { margin: 0 0 18px; }
+.glossary-entry dt { color: var(--green); font-size: 24px; }
+.glossary-entry dd { margin: 8px 0; color: var(--muted); }

@@ -95,3 +95,9 @@ The foundations path now has 18 lessons: added strings, booleans, combined condi
 - `npm run test:csharp`: all 44 first-party samples compile with warnings treated as errors and match their outputs (18 lessons, 18 labs, 4 bugs, 4 repairs).
 - `npm run build`: passes. New module endpoint returns HTTP 200 in the preview.
 - Current home/workspace/review wording and roadmap now state 18 lessons. Browser rendering and Claude review remain pending.
+
+## October 4: glossary and expansion checks
+
+The expanded 18-lesson course passed hosted workflow 37193832704 at commit e0b389851195dba0101d5985f5d66820638ce524 on Linux/Node 22 and Windows/Node 24, including 44 compiled teaching samples, RPG behavior, and static build.
+
+Added a searchable glossary under First steps, sourced from lesson definitions with direct buttons to their examples. Case-insensitive matching, literal hostile input, result limits, and unchanged completion counts are tested. `npm test`: 50 pass. Also clarified the string prediction prompt to change the first line, distinguished revisiting lessons from the feedback review, and made reset wording explicitly preserve optional notes.

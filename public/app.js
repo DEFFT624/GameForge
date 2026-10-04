@@ -154,7 +154,7 @@ function renderProgress() {
   $('progress-count').textContent = `${completeCount} / ${lessons.length}`;
   $('progress').max = lessons.length; $('progress').value = completeCount;
   $('practice-count').textContent = `${practiced.size} / ${lessons.length} code blanks solved`;
-  $('continue').textContent = completeCount === lessons.length ? 'Review the course →' : 'Continue learning →';
+  $('continue').textContent = completeCount === lessons.length ? 'Revisit C# lessons →' : 'Continue learning →';
   $('completion').hidden = completeCount !== lessons.length;
   $('course-review-link').hidden = completeCount !== lessons.length;
   $('course-review-status').textContent = completeCount === lessons.length
@@ -320,6 +320,25 @@ $('copy-code').addEventListener('click', async () => {
   try { await navigator.clipboard.writeText(lessons[active].code); $('copy-status').textContent = 'Example copied.'; }
   catch { $('copy-status').textContent = 'Copy is unavailable here. Select the code text and copy it manually.'; }
 });
+function renderGlossary() {
+  const query = $('glossary-search').value.trim().toLowerCase().slice(0, 80);
+  const entries = lessons.flatMap((lesson, index) => lessonGuides[lesson.id].words.map(([word, meaning]) => ({word, meaning, lesson, index})));
+  const matches = query ? entries.filter(entry => `${entry.word} ${entry.meaning}`.toLowerCase().includes(query)) : [];
+  $('glossary-results').replaceChildren(...matches.slice(0, 12).map(entry => {
+    const card = element('article', undefined, 'glossary-entry');
+    const definition = element('dl');
+    definition.append(element('dt', entry.word), element('dd', entry.meaning));
+    const button = element('button', `Read: ${entry.lesson.title} →`, 'secondary'); button.type = 'button';
+    button.addEventListener('click', () => { showLesson(entry.index); focusLesson(); });
+    card.append(definition, button); return card;
+  }));
+  $('glossary-status').textContent = !query ? 'Type a word or symbol to find its meaning and a lesson that uses it.'
+    : !matches.length ? 'No matching words yet. Try string, bool, return, or loop.'
+    : matches.length > 12 ? `Showing the first 12 of ${matches.length} matches. Add more detail to narrow your search.`
+    : `${matches.length} ${matches.length === 1 ? 'match' : 'matches'}. Some words appear in more than one lesson.`;
+}
+$('glossary-search').addEventListener('input', renderGlossary);
+renderGlossary();
 function snippetCard(snippet, draft = false) {
   const card = element('article', undefined, 'snippet');
   card.append(element('span', draft ? 'LOCAL DRAFT · NOT PUBLISHED' : snippet.author, 'eyebrow'), element('h3', snippet.title));
@@ -416,7 +435,7 @@ function renderMilestones() {
   $('capstone-progress').textContent = `${built.size} of ${milestones.length} milestones checked`;
 }
 $('reset').addEventListener('click', () => {
-  if (!window.confirm('Reset quiz and code-blank progress and saved answers? Your snippet drafts and project checklist will stay saved.')) return;
+  if (!window.confirm('Reset quiz and code-blank progress and saved answers? Your notes, snippet drafts, and project checklist will stay saved.')) return;
   completed.clear(); practiced.clear();
   for (const lesson of lessons) answers[lesson.id] = {quiz: null, practice: ''};
   save('gameforge-answers', answers); save('gameforge-progress', []); save('gameforge-practice', []); showLesson(0);

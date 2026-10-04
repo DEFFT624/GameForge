@@ -43,3 +43,5 @@ For maintainers, `dotnet run --project examples/tiny-rpg/GameForgeRpg.csproj` ru
 Each module ends with a small program that compiles but behaves incorrectly. Learners compare expected and actual output, write a saved explanation, reveal a hint or repair, and try two test cases. These challenges never change required completion. `npm run test:csharp` compiles and checks all 44 first-party lesson, lab, bug, and repair samples with .NET 10.
 
 Every lesson also includes an optional execution trace table. It follows the current example and separates changing values from newly printed output. The trace opens on demand so the main lesson stays focused.
+
+First steps also has a searchable glossary that links definitions to the lessons where they appear. Searching or opening a definition does not complete a lesson.

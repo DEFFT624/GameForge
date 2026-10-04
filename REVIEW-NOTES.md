@@ -39,3 +39,7 @@ The two-tab regression failed before the fix and passes now. Review `recordMap`,
 ## Pending review: prerequisite expansion
 
 Review foundation-bridges.js: string joining, bool formatting and snapshot behavior, && versus ||, and foreach ordering/scope/collection mutation. All new examples and labs compile with correct output. Existing completion IDs survive; the whole-course feedback gate now requires both exercises in all 18 lessons. Upgrade tests explicitly protect 14 earlier completions and prevent premature review access.
+
+## Pending review: glossary
+
+Glossary entries reuse the current lesson definitions. Searches match word/meaning text without interpreting it, results are capped at 12, and lesson buttons navigate through the existing flow. No progress changes or network requests. Check the result announcements and keyboard flow when the browser connection is restored.

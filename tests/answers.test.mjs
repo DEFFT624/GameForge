@@ -240,6 +240,17 @@ test('snippet search uses singular wording and reset keeps the current section a
  page.navigate('#community');const art=page.get('section-art').textContent;
  page.get('reset').fire('click');assert.equal(page.get('section-art').textContent,art);
 });
+test('glossary search finds a concept, opens its lesson, and handles literal hostile text',()=>{
+ const page=load();assert.equal(page.get('glossary-results').children.length,0);
+ page.get('glossary-search').value='CONCATENATION';page.get('glossary-search').fire('input');
+ assert.equal(page.get('glossary-results').children.length,1);assert.match(page.get('glossary-status').textContent,/1 match/);
+ page.get('glossary-results').children[0].children[1].fire('click');
+ assert.equal(page.get('lesson-title').textContent,'Give your hero a text greeting');assert.equal(page.get('progress-count').textContent,'0 / 18');
+ page.get('glossary-search').value='<script>alert(1)</script>';page.get('glossary-search').fire('input');
+ assert.equal(page.get('glossary-results').children.length,0);assert.match(page.get('glossary-status').textContent,/No matching/);
+ page.get('glossary-search').value='a';page.get('glossary-search').fire('input');
+ assert.equal(page.get('glossary-results').children.length,12);assert.match(page.get('glossary-status').textContent,/first 12/);
+});
 test('all fourteen earlier completions survive while four new lessons keep the review locked',()=>{
  const newIds=new Set(['strings','booleans','combined-conditions','list-loop']);
  const oldIds=course.lessons.filter(lesson=>!newIds.has(lesson.id)).map(lesson=>lesson.id);

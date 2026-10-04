@@ -14,7 +14,7 @@ export const bridges = [
       words: [['string', 'A type for text.'], ['literal', 'A value written directly in the code, such as "Nova".'], ['double quotes', 'Mark where literal string text starts and ends.'], ['concatenation', 'Joining strings into one text value with +.']],
       steps: ['Store the text Nova in heroName.', 'Read heroName and join it to the literal text Welcome, and its trailing space.', 'Store Welcome, Nova in greeting.', 'Read greeting and print it without code quotation marks.'],
       output: 'Welcome, Nova', mistake: '"heroName" is literal text, not the variable. With strings, "2" + "3" gives "23"; adding the numbers 2 + 3 gives 5.',
-      tryIt: 'Change heroName to "Mira". What changes in the output?', solution: 'Welcome, Mira. The greeting reads the name value when that assignment runs.',
+      tryIt: 'Change "Nova" to "Mira" in the first line. What changes in the output?', solution: 'Welcome, Mira. The greeting reads the name value when that assignment runs.',
       why: ['This would happen if heroName were inside quotes in the greeting.', 'Correct: the variable contributes Nova to the greeting.', 'Nova is only the name; greeting also contains Welcome, and a space.'],
       practiceWhy: 'string stores text. int would store a whole number, not this quoted name.'
     },
