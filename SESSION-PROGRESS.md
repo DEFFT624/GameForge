@@ -41,3 +41,5 @@ Claude and visual browser reviews remain pending: the browser-control tool canno
 5. Open Build a tiny RPG, then the complete-reference section and Trace one fight before playing. The code runs in a separate local console project, never in the site.
 
 The full-course feedback page unlocks only after all 18 lessons. To test reset and multiple tabs, use a disposable browser profile so your real completed work remains intact. Localhost links do not work on a friend's computer; license selection, a reviewed deployment, and a real beginner feedback session are next. Unity, Blender, and Krita remain planned paths.
+
+GitHub follow-up: commit a0dbaf6d1b558dc0c3e35ea1b5f92cdf567d8c25 passed workflow 37204113539 on both Windows / Node 24 and Linux / Node 22. Both jobs passed website tests, C# teaching examples, RPG behavior, deliberate-error repairs, and the static build. All 21 uploaded files matched the verified local file hashes. Draft PR: https://github.com/DEFFT624/GameForge/pull/19.

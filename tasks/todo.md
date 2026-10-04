@@ -14,5 +14,5 @@
 - [x] Pass 62 website tests, 80 compiled C# cases, and the static build.
 - [x] Restart the localhost preview for the new approved asset.
 - [x] Attempt browser controls; record Claude/visual review as unavailable.
-- [ ] Publish the verified changes to the existing draft PR and check its CI.
+- [x] Publish the verified changes to the existing draft PR; Windows and Linux CI passed at a0dbaf6 (run 37204113539).
 

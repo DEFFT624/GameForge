@@ -148,3 +148,5 @@ Workflow 37198210645 passed at ebe113c244102a7617846539e5da75ce023d709c on Linux
 - node build.mjs passed; approved new asset included in the build and preview routes.
 - Claude/browser visual review could not run: browser control initialization reports a missing kernel-assets path. This is an unperformed review, not a passed check.
 
+
+GitHub follow-up: commit a0dbaf6d1b558dc0c3e35ea1b5f92cdf567d8c25 passed workflow 37204113539 on both Windows / Node 24 and Linux / Node 22. Both jobs passed website tests, C# teaching examples, RPG behavior, deliberate-error repairs, and the static build. All 21 uploaded files matched the verified local file hashes. Draft PR: https://github.com/DEFFT624/GameForge/pull/19.

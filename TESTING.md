@@ -29,7 +29,7 @@ Expanded course: verify 22 lesson cards, including two small function lessons, c
 
 ## Modules and optional labs
 
-Check the four module cards in Overview. Each must show its own completion count and resume the first unfinished lesson in that module. At the end of a module, read the recap and the connection to the RPG. In an optional prediction lab, save an unfinished answer and experiment note, refresh, and check they return. Solving a lab must not complete the required quiz or blank.
+Check the five module cards in Overview. Each must show its own completion count and resume the first unfinished lesson in that module. At the end of a module, read the recap and the connection to the RPG. In an optional prediction lab, save an unfinished answer and experiment note, refresh, and check they return. Solving a lab must not complete the required quiz or blank.
 
 ## Run the reference locally
 
