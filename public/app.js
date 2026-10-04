@@ -158,7 +158,7 @@ function focusLesson() {
   } else if (window.location) window.location.hash = 'lessons';
   $('course-outline').open = false;
   $('lesson-title').focus({preventScroll: true});
-  $('lesson-title').scrollIntoView({block: 'start', behavior: 'instant'});
+  $('lessons').scrollIntoView({block: 'start', behavior: 'instant'});
 }
 function isLessonComplete(id) { return completed.has(id) && practiced.has(id); }
 function answerEffect(formId, correct) {
@@ -513,7 +513,7 @@ function routeView() {
   const linked = requestedLesson();
   if (id === 'lessons' && linked >= 0 && linked !== active) showLesson(linked);
   activateView(id);
-  if (id === 'lessons') { $('lesson-title').focus({preventScroll:true}); $('lesson-title').scrollIntoView({block:'start',behavior:'instant'}); }
+  if (id === 'lessons') { $('lesson-title').focus({preventScroll:true}); $('lessons').scrollIntoView({block:'start',behavior:'instant'}); }
   else document.querySelector?.('main')?.scrollIntoView({block:'start',behavior:'instant'});
 }
 function syncRequiredAnswers() {

@@ -19,7 +19,7 @@ function load(storage = new Map(), confirm = true, hash = "", storageFailure = f
     children = []; events = {}; value = ''; textContent = '';
     append(...items) { this.children.push(...items); }
     replaceChildren(...items) { this.children = items; }
-    setAttribute() {} focus() {} scrollIntoView() {} reset() {}
+    setAttribute() {} focus() {} scrollIntoView(options) { this.lastScroll = options; } reset() {}
     addEventListener(name, fn) { this.events[name] = fn; }
     fire(name, extra = {}) { const event = {currentTarget: this, prevented: false, preventDefault() {this.prevented = true;}, ...extra}; this.events[name]?.(event); return event; }
     selectionStart = 0; selectionEnd = 0; maxLength = 8000;
@@ -401,4 +401,14 @@ test('module chooser groups every lesson and opens the current module after navi
  assert.equal(restored.get('lesson-title').textContent,page.get('lesson-title').textContent);
  assert.equal(restored.get('lesson-list').children[4].open,true);
  assert.equal(restored.get('lesson-list').children[0].open,false);
+});
+
+test('lesson changes scroll to the chooser while focusing the lesson title',()=>{
+ const page=load();page.get('next').fire('click');
+ assert.equal(page.get('lessons').lastScroll.block,'start');
+ assert.equal(page.get('lesson-title').lastScroll,undefined);
+ page.open('arrays');
+ assert.equal(page.get('lessons').lastScroll.behavior,'instant');
+ page.navigate('dashboard');page.navigate('lessons');
+ assert.equal(page.get('lessons').lastScroll.block,'start');
 });

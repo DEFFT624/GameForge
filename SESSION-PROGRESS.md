@@ -51,3 +51,7 @@ Claude milestone review completed in the existing conversation after browser acc
 ## Module-first lesson chooser
 - Replaced the flat 22-lesson chooser with five module disclosures. Each contains only its own lessons, completion count, and existing lesson progress indicators. The current module opens automatically, and selecting a lesson closes the outer chooser.
 - Verified opening another module and selecting a lesson in the live browser; no console errors observed. Saved answers and lesson URLs remain unchanged. All 63 tests and the static build pass. Graphify updated.
+
+## Keep the lesson chooser visible
+- Reproduced navigation scrolling the chooser off-screen. Lesson changes now scroll to the lesson section, keeping its chooser above the title. The chooser stays pinned while reading, with a bounded expanded menu.
+- Verified Next and direct lesson selection in the browser; 64 tests and build pass. Saved answers unchanged.
