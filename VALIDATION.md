@@ -1,5 +1,26 @@
 # Validation — October 3, 2026
 
+## C# modules and practice labs — October 4
+
+- Four modules partition all 14 lessons in teaching order. Module cards resume the first unfinished lesson within that module; end-of-module recaps connect ideas to the RPG project.
+- Each lesson has an optional output-prediction lab, a hint, an explained answer, a small-change question, and locally saved notes. Labs do not count toward required course completion or change the full-course feedback gate.
+- 33 automated tests pass, including module ordering, answer checking, saved lab drafts, navigation, and preservation of main lesson progress. Static build succeeds.
+- All 14 new first-party C# lab programs compiled with warnings treated as errors against .NET 10.0.9 references using SDK 10.0.301. Every observed output matched its published answer.
+- Browser-control initialization remains unavailable. The new UI needs visual and keyboard checks in a real browser; Claude has not reviewed this milestone. These pending checks do not invalidate the recorded automated or compiler results.
+
+## Themed learning-path tabs — October 4
+
+- Home roadmap now uses four accessible tabs: C# green, Unity gray, Krita pink-purple, Blender orange. Future courses remain explicitly planned. Keyboard support includes arrows, Home, and End.
+- 30 automated tests pass; static build succeeds; the running preview serves the new module with HTTP 200. Graphify code map refreshed locally without LLM calls.
+- Browser visual verification could not run because the browser-control runtime failed to initialize after the app restart. Appearance needs a manual check.
+
+## Learning roadmap and full-course feedback
+
+- 29 automated tests pass. The feedback review requires both exercises in every C# lesson; tests cover 13/14 completion, unlock at 14/14, reset/relock, malformed records, and changes from another tab.
+- Static build succeeds. Browser verification confirms the roadmap appears in Overview and a direct feedback-page visit stays locked at 7/14 completed lessons.
+- Feedback prompts cover the full foundations course and the optional RPG. Existing early-test notes retain their old storage key; new full-course notes use a separate key.
+- Unity, Krita, Blender, and the combined project are planned paths, not implemented courses. No deployment was performed in this pass.
+
 ## Guided project and review pass
 
 - Current suite: 27 passing tests. New checks cover project prerequisite links, while-loop ordering before input, singular search feedback, and preserving section artwork on reset.

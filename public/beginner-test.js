@@ -1,13 +1,27 @@
+import {course} from './course-plan.js';
 const tasks = [
- ['Find your starting point','From the home page, find where someone who has never coded should begin. Say why you chose it. Observer: record any hesitation or misleading link.'],
- ['Explain a value changing','Read First steps and the health lesson. Before doing its quiz, explain in your own words what a variable is. Then, without looking at the walkthrough, predict: int health = 20; health = health - 5; Console.WriteLine(health);. Explain each step.'],
- ['Choose a branch','Read Make the game react. Imagine health starts at 1 instead of 0. Which message would print, and why? If a symbol is unclear, say which one before opening the glossary.'],
- ['Use the practice and resume','Try a quiz and code blank. Make one deliberate wrong attempt and explain whether the feedback helped. Refresh, then check your answer and progress. Finally, point out one sentence you would rewrite.']
+ ['Getting started','Did First steps explain the symbols and vocabulary clearly? Describe where you first felt confident or confused.'],
+ ['Values, decisions, and loops','Explain how health changes, how an if chooses a branch, and what makes a loop stop. Which example or hint needs a clearer explanation?'],
+ ['Functions and objects','Explain calling a function versus returning a value, then describe why hero and rival can have separate health. You can revisit a lesson. Record any unclear words.'],
+ ['Inventory, input, and game states','Describe how you would handle an invalid menu choice, an inventory item, and a change from exploring to battle. Where did the course move too quickly?'],
+ ['Using the website','How did navigation, saved drafts, quizzes, code blanks, and feedback work for you? Mention phone layout or accessibility problems and steps to reproduce any bug.'],
+ ['Your next project','Does the tiny RPG guide feel approachable? If you tried it, what happened? What would help you move into Unity or game art next? Building the RPG is optional.']
 ];
-const key='gameforge-beginner-feedback-v1';
+const key='gameforge-course-feedback-v2';
 let saved={};try{const value=JSON.parse(localStorage.getItem(key)||'{}');if(value && typeof value==='object' && !Array.isArray(value))saved=value;}catch{}
 const $=id=>document.getElementById(id),fields=[];
-$('test-host-note').textContent=['localhost','127.0.0.1','[::1]'].includes(location.hostname)?'Local preview: this address cannot be opened by your friend on another computer. This test page is ready to use after the site is hosted.':'Share this page’s address with your friend, then open the course together in a call.';
+$('test-host-note').textContent=['localhost','127.0.0.1','[::1]'].includes(location.hostname)?'Local preview: your friend will need a hosted link to complete the course on their own computer.':'Your friend can use this site to complete the course, then open this review in the same browser during your call.';
+function completedIds(key) { try { const value=JSON.parse(localStorage.getItem(key)||'[]'); return new Set(Array.isArray(value)?value:[]); } catch { return new Set(); } }
+function updateAccess() {
+ const quizzes=completedIds('gameforge-progress'), blanks=completedIds('gameforge-practice');
+ const count=course.lessons.filter(lesson=>quizzes.has(lesson.id)&&blanks.has(lesson.id)).length;
+ const ready=count===course.lessons.length;
+ $('review-lock').hidden=ready; $('review-content').hidden=!ready;
+ $('review-progress').textContent=`${count} / ${course.lessons.length} lessons complete. The review opens after all 14.`;
+}
+updateAccess();
+window.addEventListener('storage',updateAccess);
+window.addEventListener('pageshow',updateAccess);
 for(const [i,[title,prompt]] of tasks.entries()){
  const card=document.createElement('article');card.className='test-task';
  const heading=document.createElement('h2');heading.textContent=`${i+1}. ${title}`;
@@ -17,7 +31,7 @@ for(const [i,[title,prompt]] of tasks.entries()){
  card.append(heading,text,label,notes);$('test-tasks').append(card);
 }
 $('test-summary').value=typeof saved.summary==='string'?saved.summary.slice(0,4000):'';
-function report(){return 'GameForge beginner feedback — no learner names\n\n'+tasks.map(([title],i)=>`${i+1}. ${title}\n${fields[i].value || '(not observed)'}`).join('\n\n')+'\n\nSummary\n'+$('test-summary').value;}
+function report(){return 'GameForge full C# foundations review — no learner names\n\n'+tasks.map(([title],i)=>`${i+1}. ${title}\n${fields[i].value || '(not observed)'}`).join('\n\n')+'\n\nSummary\n'+$('test-summary').value;}
 function update(){const data=Object.fromEntries(fields.map((field,i)=>[i,field.value]));data.summary=$('test-summary').value;try{localStorage.setItem(key,JSON.stringify(data));$('test-status').textContent='Notes saved in this browser only.';}catch{$('test-status').textContent='Storage unavailable. Copy the feedback before closing this page.';}$('test-report').value=report();}
 for(const field of [...fields,$('test-summary')])field.addEventListener('input',update);
 $('test-report').value=report();

@@ -56,6 +56,24 @@ test('old completions restore canonical answers without losing progress', () => 
   assert.equal(page.selected(), 1); assert.equal(page.get('practice-answer').value, 'int');
   assert.equal(page.get('progress-count').textContent, '1 / 14');
 });
+test('optional lab answers and notes survive navigation and reload without completing the main exercises',()=>{
+ let page=load();
+ page.get('lab-answer').value='70';page.get('lab-answer').fire('input');
+ page.get('lab-note').value='Track each assignment.';page.get('lab-note').fire('input');
+ page.get('lab-form').fire('submit');assert.match(page.get('lab-feedback').textContent,/Correct/);
+ assert.equal(page.get('progress-count').textContent,'0 / 14');
+ page.get('next').fire('click');page.get('previous').fire('click');
+ assert.equal(page.get('lab-answer').value,'70');
+ page=load(page.storage);assert.equal(page.get('lab-note').value,'Track each assignment.');
+ assert.match(page.get('lab-feedback').textContent,/solved/);
+ page.get('lab-answer').value='wrong';page.get('lab-form').fire('submit');assert.match(page.get('lab-feedback').textContent,/Try again/);
+});
+test('module cards resume the first unfinished lesson within their module',()=>{
+ const page=load(new Map([['gameforge-progress','["call-function"]'],['gameforge-practice','["call-function"]']]));
+ page.get('module-list').children[1].children[3].fire('click');
+ assert.equal(page.get('lesson-title').textContent,'Send a value in, get a result back');
+ assert.match(page.get('module-meta').textContent,/MODULE 2/);
+});
 test('reset clears saved answers and progress but preserves drafts and project milestones', () => {
   let page = load(new Map([['gameforge-drafts', '[]'], ['gameforge-capstone', '["status"]']]));
   page.choose(1); page.type('int'); page.get('challenge').fire('submit'); page.get('practice-form').fire('submit');
@@ -96,9 +114,13 @@ test('all quizzes alone do not complete the course', () => {
   let page = load(new Map([['gameforge-progress', JSON.stringify(ids)]]));
   assert.equal(page.get('progress-count').textContent, '0 / 14');
   assert.equal(page.get('completion').hidden, true);
+  assert.equal(page.get('course-review-link').hidden, true);
   page.storage.set('gameforge-practice', JSON.stringify(ids)); page = load(page.storage);
   assert.equal(page.get('progress-count').textContent, '14 / 14');
   assert.equal(page.get('completion').hidden, false);
+  assert.equal(page.get('course-review-link').hidden, false);
+  page.get('reset').fire('click');
+  assert.equal(page.get('course-review-link').hidden, true);
 });
 
 test('snippet editor indents selections, unindents, respects limits and lets Tab leave after Escape', () => {

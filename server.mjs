@@ -1,7 +1,7 @@
 import http from 'node:http';
 import {readFile} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
-const routes=new Map([['/','home.html'],['/home.html','home.html'],['/index.html','home.html'],['/learn.html','index.html'],['/style.css','style.css'],['/vt323-regular.ttf','vt323-regular.ttf'],['/vt323-OFL.txt','vt323-OFL.txt'],['/app.js','app.js'],['/content.js','content.js'],['/course-extension.js','course-extension.js'],['/radio.js','radio.js'],['/learner-guides.js','learner-guides.js'],['/course-plan.js','course-plan.js'],['/beginner-test.html','beginner-test.html'],['/beginner-test.js','beginner-test.js']]);
+const routes=new Map([['/','home.html'],['/home.html','home.html'],['/home-tabs.js','home-tabs.js'],['/index.html','home.html'],['/learn.html','index.html'],['/style.css','style.css'],['/vt323-regular.ttf','vt323-regular.ttf'],['/vt323-OFL.txt','vt323-OFL.txt'],['/app.js','app.js'],['/content.js','content.js'],['/course-extension.js','course-extension.js'],['/radio.js','radio.js'],['/learner-guides.js','learner-guides.js'],['/course-plan.js','course-plan.js'],['/beginner-test.html','beginner-test.html'],['/beginner-test.js','beginner-test.js']]);
 const types={ttf:'font/ttf',txt:'text/plain; charset=utf-8',html:'text/html; charset=utf-8',css:'text/css; charset=utf-8',js:'text/javascript; charset=utf-8'};
 export function createServer(){return http.createServer(async(req,res)=>{
  res.setHeader('Content-Security-Policy',"default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; connect-src 'none'; media-src blob:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'");
@@ -12,3 +12,4 @@ export function createServer(){return http.createServer(async(req,res)=>{
  try{const data=await readFile(new URL(`./public/${file}`,import.meta.url));res.writeHead(200,{'Content-Type':types[file.split('.').pop()]});res.end(req.method==='HEAD'?undefined:data);}catch{res.writeHead(500);res.end('Unable to load page');}
 });}
 if(process.argv[1]===fileURLToPath(import.meta.url)){const server=createServer();server.listen(4173,'127.0.0.1',()=>console.log('Local preview: http://127.0.0.1:4173'));}
+

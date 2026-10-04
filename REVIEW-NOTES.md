@@ -1,0 +1,21 @@
+# C# modules and practice labs: milestone review
+
+## Ready for review
+
+Review `public/course-plan.js`, `public/app.js`, and the new module/lab sections of `public/index.html`. The milestone adds four modules and fourteen optional practice labs. All original lesson IDs and required completion rules stay stable.
+
+Check explanations for beginner vocabulary, ambiguous phrasing, spelling, and whether each lab can be understood using the preceding lessons. Check object aliasing, loop boundaries, return versus print, parsing versus range validation, and switch break scope especially carefully.
+
+## Evidence
+
+33 Node tests pass. Every new lab sample was compiled and run locally with its output checked against the answer. The browser does not execute code: prediction checks compare strings, and user notes render through text/value properties.
+
+## Pending checks
+
+- Claude milestone review: not sent because browser controls failed to initialize. Review the current branch snapshot rather than the older main branch.
+- Desktop/mobile appearance, hover space, and keyboard navigation through the optional lab.
+- Refresh a partially typed lab answer and notes; switch lessons and return.
+- Complete only an optional lab and confirm main completion remains unchanged.
+- Open each module card and confirm it resumes the first unfinished lesson in that module.
+
+Do not claim these pending checks have passed. No deployment is included.

@@ -4,6 +4,8 @@ The home page introduces the course at `/`; `/learn.html` opens the learning wor
 
 A beginner-friendly game development learning website. This first local MVP has a responsive dashboard, fourteen C# lessons with quizzes and code blanks, browser-local progress, two starter snippets, local text draft creation/deletion, snippet search, and a six-step RPG project checklist.
 
+The C# path is organized into four modules: values and control flow; reusable actions; inventory, characters, and input; and game states. Each lesson also offers an optional output-prediction lab with hints, explained answers, a small-change exercise, and saved notes. Optional labs do not change the required quiz-and-code-blank completion rules. Home-page tabs introduce future Unity, Krita, and Blender paths with their own color themes; those courses are planned.
+
 See [TESTING.md](TESTING.md) for the short user test checklist. On Windows, you can also open START-GAMEFORGE.cmd.
 
 ## Run locally
@@ -28,4 +30,4 @@ See [SPEC.md](SPEC.md), [SECURITY.md](SECURITY.md), and [CONTRIBUTING.md](CONTRI
 Choose local audio files in the bottom-left player, then press Play. Playback continues between lessons. Use the playlist, previous/next, volume, repeat-song, and Clear controls. Click the Quest Radio heading to collapse it. Select up to 30 files, each at most 100 MB; browser format support varies. Files are not uploaded or stored by GameForge, and must be reselected after refresh.
 
 ## Friend feedback session
-Open /beginner-test.html for a 15–20 minute moderated test script and locally saved notes with Copy feedback. No results are submitted automatically. A hosted URL is still required before a friend on another computer can use it. The six new lessons introduce function calls, parameters and returns, class fields, while loops, enums, and switch before the original application lessons. Old completion IDs are preserved; the new lessons begin unfinished.
+Open /beginner-test.html after finishing both required exercises in all fourteen C# lessons. The full-course review uses the same browser and website address as the saved progress; it includes locally saved notes and Copy feedback. No results are submitted automatically, and the RPG project is optional for the review. A hosted URL is required before a friend on another computer can use it. Existing completion IDs are preserved.

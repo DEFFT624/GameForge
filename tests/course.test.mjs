@@ -37,6 +37,19 @@ test('project guides point to existing lessons and cover build and verification 
   assert.ok(course.lessons.findIndex(l => l.id === 'while-loop') < course.lessons.findIndex(l => l.id === 'input'));
 });
 const {practices, checkPractice, lessonGuides} = course;
+test('modules partition the course in teaching order and every lesson has a practice lab',()=>{
+ assert.deepEqual(course.modules.flatMap(module=>module.ids),course.lessons.map(lesson=>lesson.id));
+ for(const module of course.modules) assert.ok(module.goal && module.project && module.recap.length >= 3);
+ for(const lesson of course.lessons){
+  const lab=course.labs[lesson.id];
+  assert.ok(lab.prompt && lab.code && lab.output && lab.hint && lab.why && lab.change && lab.changeWhy);
+  assert.equal(course.checkLab(lesson.id,' '+lab.output.replaceAll('\n','\r\n')+' '),true);
+  assert.equal(course.checkLab(lesson.id,'<script>alert(1)</script>'),false);
+  assert.equal(course.checkLab(lesson.id,null),false);
+ }
+ assert.equal(course.checkLab('missing',''),false);
+ assert.equal(course.checkLab('decisions','defeated'),false);
+});
 test('every lesson has a complete beginner guide and feedback for every quiz choice', () => {
  for(const lesson of course.lessons){
   const guide=lessonGuides[lesson.id];assert.ok(guide.goal && guide.before && guide.mistake && guide.tryIt && guide.solution && guide.practiceWhy);
