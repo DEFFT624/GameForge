@@ -150,3 +150,5 @@ Workflow 37198210645 passed at ebe113c244102a7617846539e5da75ce023d709c on Linux
 
 
 GitHub follow-up: commit a0dbaf6d1b558dc0c3e35ea1b5f92cdf567d8c25 passed workflow 37204113539 on both Windows / Node 24 and Linux / Node 22. Both jobs passed website tests, C# teaching examples, RPG behavior, deliberate-error repairs, and the static build. All 21 uploaded files matched the verified local file hashes. Draft PR: https://github.com/DEFFT624/GameForge/pull/19.
+
+Browser access recovered after restarting Codex. The local preview was restarted, and real browser inspection confirmed lessons 19–22, Next navigation, the 22-item chooser, the fifth module, the final project link, and Quest Radio opening/closing. No browser console errors were reported during this check. Corrected misleading constructor wording and a stale four-module dashboard heading. Saved answers were not edited during inspection; automated persistence checks still cover them.

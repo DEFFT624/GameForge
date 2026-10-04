@@ -57,7 +57,7 @@ export const gameDataLessons = [
       before: 'You know classes, fields, arguments, and interpolation. A constructor connects these ideas when an instance is created.',
       words: [['constructor', 'Special code that initializes a new instance.'], ['new Enemy(...)', 'Create an Enemy and supply its constructor arguments.'], ['Name = name', 'Store the lowercase parameter value in the uppercase field.'], ['no return type', 'A constructor has no int, string, or void before its name.']],
       steps: ['Create slime; its constructor receives Slime and 25 and stores those fields.', 'Create bat; a separate constructor call stores Bat and 15 in a separate object.', 'Change only slime.Health to 10.', 'Print each object: Slime: 10 and Bat: 15.'], output: 'Slime: 10\nBat: 15',
-      mistake: 'Writing void Enemy(...) would make a method, not a constructor. This constructor stores exactly what it receives; it does not validate negative health. We use positive starting values here.',
+      mistake: 'Writing void Enemy(...) inside class Enemy is invalid C#: a constructor has the class name and no return type. An ordinary method needs a different name. This constructor stores exactly what it receives; it does not validate negative health. We use positive starting values here.',
       tryIt: 'Change the bat constructor argument from 15 to 30. Does the slime change?', solution: 'No. The lines become Slime: 10 and Bat: 30. Each constructor initializes its own new object.',
       why: ['Correct: bat is a separate object initialized with 15.', 'Only slime receives the assignment to 10.', '25 belongs to the slime starting value, not the bat.'],
       practiceWhy: 'Enemy matches the class name. Constructors initialize instances and do not declare a return type.'
