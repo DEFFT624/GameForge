@@ -32,7 +32,7 @@ function element(tag, text, className) {
   if (className) node.className = className;
   return node;
 }
-function focusLesson() { $('course-outline').open = false; $('lesson-title').focus({preventScroll: true}); $('lesson-title').scrollIntoView({block: 'start', behavior: 'instant'}); }
+function focusLesson() { activateView('lessons'); if (window.location && window.location.hash !== '#lessons') window.location.hash = 'lessons'; $('course-outline').open = false; $('lesson-title').focus({preventScroll: true}); $('lesson-title').scrollIntoView({block: 'start', behavior: 'instant'}); }
 function isLessonComplete(id) { return completed.has(id) && practiced.has(id); }
 function renderProgress() {
   const completeCount = lessons.filter(l => isLessonComplete(l.id)).length;
@@ -193,10 +193,27 @@ const firstUnfinished = lessons.findIndex(l => !isLessonComplete(l.id));
 const lastActive = lessons.findIndex(l => l.id === read('gameforge-active-lesson', null));
 showLesson(lastActive >= 0 ? lastActive : firstUnfinished < 0 ? 0 : firstUnfinished); renderDrafts(); renderSnippets(); renderMilestones();
 
-function revealDestination() {
-  const target = { '#start-here': 'start-here', '#capstone': 'capstone', '#community': 'community' }[window.location?.hash];
-  if (target) { const section = $(target); const disclosure = section.querySelector('details'); if (disclosure) disclosure.open = true; section.scrollIntoView({block: 'start'}); }
+function activateView(id) {
+  const names = {dashboard:'Overview',lessons:'C# lessons','start-here':'First steps',capstone:'Build a tiny RPG',community:'Community snippets'};
+  const current = Object.hasOwn(names,id) ? id : 'dashboard';
+  for (const key of Object.keys(names)) $(key).hidden = key !== current;
+  $('view-name').textContent = names[current];
+  const disclosure = $(current).querySelector?.(':scope > details.workspace-disclosure');
+  if (disclosure) disclosure.open = true;
+  document.querySelectorAll?.('#workspace-nav a[href^="#"]').forEach(link => link.setAttribute('aria-current',link.getAttribute('href') === '#' + current ? 'page' : 'false'));
+  document.querySelector?.('aside')?.setAttribute('data-menu-open','false');
+  $('menu-toggle').setAttribute('aria-expanded','false');
 }
-window.addEventListener?.('hashchange', revealDestination);
-document.querySelectorAll?.('a[href^="#"]').forEach(link => link.addEventListener('click', () => { const section = $(link.getAttribute('href').slice(1)); const disclosure = section?.querySelector('details'); if (disclosure) disclosure.open = true; }));
-revealDestination();
+function routeView() {
+  const id = window.location?.hash.slice(1) || 'dashboard';
+  activateView(id);
+  if (id === 'lessons') { $('lesson-title').focus({preventScroll:true}); $('lesson-title').scrollIntoView({block:'start',behavior:'instant'}); }
+  else document.querySelector?.('main')?.scrollIntoView({block:'start',behavior:'instant'});
+}
+window.addEventListener?.('hashchange',routeView);
+$('menu-toggle').addEventListener('click',()=>{
+  const expanded=$('menu-toggle').getAttribute('aria-expanded')==='true';
+  $('menu-toggle').setAttribute('aria-expanded',String(!expanded));
+  document.querySelector('aside').setAttribute('data-menu-open',String(!expanded));
+});
+routeView();
