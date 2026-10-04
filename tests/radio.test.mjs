@@ -24,3 +24,14 @@ test('invalid files preserve playlist; replacements release it; queue is bounded
  p.choose(Array.from({length:35},(_,i)=>song(`${i}.wav`)));assert.equal(p.get('radio-queue').children.length,30);assert.equal(p.revoked.length,1);
  p.lifecycle.pagehide();assert.equal(p.revoked.length,31);
 });
+test('song position tracks time, seeks without starting playback, and resets between tracks', async()=>{
+ const p=setup(),audio=p.get('radio-audio'),slider=p.get('radio-position');p.choose([song('one.wav'),song('two.wav')]);
+ assert.equal(slider.disabled,true);
+ audio.duration=125;audio.currentTime=0;audio.fire('loadedmetadata');assert.equal(slider.disabled,false);assert.equal(slider.max,'125');assert.equal(p.get('radio-time').textContent,'0:00 / 2:05');
+ slider.value='61.5';slider.fire('input');assert.equal(audio.currentTime,61.5);assert.equal(audio.paused,true);assert.equal(p.get('radio-time').textContent,'1:01 / 2:05');
+ audio.currentTime=75;audio.fire('timeupdate');assert.equal(slider.value,'75');
+ await audio.play();slider.value='40';slider.fire('input');assert.equal(audio.paused,false);
+ await p.get('radio-next').fire('click');assert.equal(slider.disabled,true);assert.equal(slider.value,'0');
+ audio.duration=Infinity;audio.fire('durationchange');assert.equal(slider.disabled,true);
+ p.get('radio-clear').fire('click');assert.equal(p.get('radio-time').textContent,'0:00 / 0:00');
+});

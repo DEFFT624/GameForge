@@ -4,8 +4,30 @@ audio.volume = 0.5;
 $('radio-volume').addEventListener('input', event => { audio.volume = Number(event.target.value); });
 let tracks = [], current = -1, repeat = false;
 const status = message => { $('radio-status').textContent = message; };
+const position = $('radio-position');
+function timeLabel(seconds) {
+  const whole = Math.max(0, Math.floor(seconds));
+  return `${Math.floor(whole / 60)}:${String(whole % 60).padStart(2, '0')}`;
+}
+function syncPosition(reset = false) {
+  const duration = !reset && Number.isFinite(audio.duration) && audio.duration > 0 ? audio.duration : 0;
+  const elapsed = duration && Number.isFinite(audio.currentTime) ? Math.min(duration, Math.max(0, audio.currentTime)) : 0;
+  position.disabled = !duration; position.max = String(duration || 1); position.value = String(elapsed);
+  $('radio-time').textContent = `${timeLabel(elapsed)} / ${timeLabel(duration)}`;
+  position.setAttribute('aria-valuetext', `${timeLabel(elapsed)} of ${timeLabel(duration)}`);
+}
+for (const event of ['loadedmetadata', 'durationchange', 'timeupdate', 'seeked']) audio.addEventListener(event, () => syncPosition());
+audio.addEventListener('emptied', () => syncPosition(true));
+position.addEventListener('input', () => {
+  if (position.disabled || !Number.isFinite(audio.duration) || audio.duration <= 0) return;
+  const requested = Number(position.value);
+  if (!Number.isFinite(requested)) return;
+  try { audio.currentTime = Math.max(0, Math.min(audio.duration, requested)); syncPosition(); }
+  catch { status('This track cannot seek yet. Wait for it to load and try again.'); }
+});
 function clearTracks() {
   audio.pause(); audio.removeAttribute('src'); audio.load();
+  syncPosition(true);
   for (const track of tracks) URL.revokeObjectURL(track.url);
   tracks = []; current = -1;
 }
@@ -21,7 +43,7 @@ function render() {
 async function select(index, play = false) {
   if (!tracks.length) return;
   current = (index + tracks.length) % tracks.length;
-  audio.src = tracks[current].url; render();
+  audio.src = tracks[current].url; syncPosition(true); render();
   if (play) {
     try { await audio.play(); } catch { status('Could not play this track. Try Play, or choose another audio file.'); }
   }

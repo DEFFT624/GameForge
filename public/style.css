@@ -19,3 +19,5 @@ aside{background:#000;display:flex;flex-direction:column;overflow-y:auto}.sideba
 
 .radio-volume{display:flex;align-items:center;gap:8px;font-size:10px;color:var(--muted);margin-bottom:10px}.radio-volume input{padding:0;width:100%;accent-color:var(--green)}
 @media(max-height:850px) and (min-width:701px){aside{padding-top:20px;padding-bottom:20px}aside nav{gap:4px}aside nav a{padding-top:9px;padding-bottom:9px}}
+
+.radio-position{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px;font-size:10px;color:var(--muted);margin:10px 0}.radio-position input{width:100%;padding:0;accent-color:var(--green)}#radio-time{font-variant-numeric:tabular-nums}
