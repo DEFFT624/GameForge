@@ -135,3 +135,7 @@ Hosted workflow 37196381286 passed all 66 teaching/experiment cases at commit de
 Build regression fixtures reproduced stale generated files surviving a rebuild. The build now validates all required regular source assets, refuses linked source/output directories, verifies its resolved output stays in this project, and replaces only its generated dist directory. Tests use fresh project fixtures; the output-junction test confirms its target remains unchanged. A missing required font fails before replacing a previous build. Repeated builds have the same files and one CSP meta declaration per page. No unapproved source file is copied.
 
 `npm test`: 59 pass. Local static build passes. This changes generated output only and does not add publishing or execution. The three new build checks are part of the existing website check command; hosted results remain pending until the saved branch runs them.
+
+## October 4: complete code milestone verified
+
+Workflow 37198210645 passed at ebe113c244102a7617846539e5da75ce023d709c on Linux/Node 22 and Windows/Node 24: 59 website checks, 66 C# teaching/experiment cases, five intentional-error/repair pairs, RPG behavior including its walkthrough, and static build. An exact Git blob hash comparison found all 50 checked project/repository files identical. The local home, lesson link, troubleshooting module, and reference-source endpoint returned HTTP 200 with the expected content types. Browser initialization still failed on the closing review attempt, so visual/keyboard/Claude checks remain unperformed.

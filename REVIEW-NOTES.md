@@ -30,7 +30,7 @@ Review the current draft at https://github.com/DEFFT624/GameForge/pull/19, branc
 - `npm run test:rpg`: compiled reference behavior, defeat experiment, and the published fight walkthrough verified.
 - `npm run build`: approved static assets and restrictive security policy only.
 
-No application packages need installing. C# checks require the .NET 10 SDK. Only repository-owned programs are compiled. GitHub checks through commit de08d0aa6d49366c1ff2928e02cbbc32a9aeb36b passed on Linux/Node 22 and Windows/Node 24. Later visible-answer, RPG-walkthrough, and scoped-build changes await their own hosted run. Build fixtures verify stale output is removed, linked output is refused without touching its target, and a missing required asset fails before replacing a previous build.
+No application packages need installing. C# checks require the .NET 10 SDK. Only repository-owned programs are compiled. Workflow 37198210645 passed the complete code milestone ebe113c244102a7617846539e5da75ce023d709c on Linux/Node 22 and Windows/Node 24. Build fixtures verify stale output is removed, linked output is refused without touching its target, and a missing required asset fails before replacing a previous build. All 50 checked repository files matched the local project at that milestone.
 
 ## Unperformed checks
 
