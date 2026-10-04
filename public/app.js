@@ -32,7 +32,7 @@ function element(tag, text, className) {
   if (className) node.className = className;
   return node;
 }
-function focusLesson() { $('lesson-title').focus({preventScroll: true}); $('lesson-title').scrollIntoView({block: 'start'}); }
+function focusLesson() { $('course-outline').open = false; $('lesson-title').focus({preventScroll: true}); $('lesson-title').scrollIntoView({block: 'start', behavior: 'instant'}); }
 function isLessonComplete(id) { return completed.has(id) && practiced.has(id); }
 function renderProgress() {
   const completeCount = lessons.filter(l => isLessonComplete(l.id)).length;
@@ -41,6 +41,8 @@ function renderProgress() {
   $('practice-count').textContent = `${practiced.size} / ${lessons.length} code blanks solved`;
   $('continue').textContent = completeCount === lessons.length ? 'Review the course →' : 'Continue learning →';
   $('completion').hidden = completeCount !== lessons.length;
+  $('navigation-status').textContent = `Lesson ${active + 1} / ${lessons.length} · ${isLessonComplete(lessons[active].id) ? 'Complete' : 'Keep going'}`;
+  $('outline-summary').textContent = `Choose a lesson · ${active + 1} of ${lessons.length}`;
   $('lesson-list').replaceChildren(...lessons.map((lesson, index) => {
     const button = element('button', undefined, 'lesson-card');
     button.type = 'button'; button.setAttribute('aria-pressed', String(index === active));
@@ -78,6 +80,8 @@ function showLesson(index) {
   $('practice-prompt').textContent = practice.prompt; $('practice-code').textContent = practice.code;
   $('practice-answer').value = answers[lesson.id].practice; $('practice-feedback').textContent = practiced.has(lesson.id) ? 'You have solved this code blank.' : '';
   $('previous').disabled = index === 0; $('next').disabled = index === lessons.length - 1;
+  $('next').hidden = index === lessons.length - 1; $('next-project').hidden = index !== lessons.length - 1;
+  $('next').textContent = index < lessons.length - 1 ? `Next: ${lessons[index + 1].title} →` : 'Next lesson →';
   $('copy-status').textContent = ''; renderProgress();
 }
 $('practice-answer').addEventListener('input', () => {
@@ -188,3 +192,11 @@ $('reset').addEventListener('click', () => {
 const firstUnfinished = lessons.findIndex(l => !isLessonComplete(l.id));
 const lastActive = lessons.findIndex(l => l.id === read('gameforge-active-lesson', null));
 showLesson(lastActive >= 0 ? lastActive : firstUnfinished < 0 ? 0 : firstUnfinished); renderDrafts(); renderSnippets(); renderMilestones();
+
+function revealDestination() {
+  const target = { '#start-here': 'start-here', '#capstone': 'capstone', '#community': 'community' }[window.location?.hash];
+  if (target) { const section = $(target); const disclosure = section.querySelector('details'); if (disclosure) disclosure.open = true; section.scrollIntoView({block: 'start'}); }
+}
+window.addEventListener?.('hashchange', revealDestination);
+document.querySelectorAll?.('a[href^="#"]').forEach(link => link.addEventListener('click', () => { const section = $(link.getAttribute('href').slice(1)); const disclosure = section?.querySelector('details'); if (disclosure) disclosure.open = true; }));
+revealDestination();
