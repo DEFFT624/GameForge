@@ -24,3 +24,10 @@ test('capstone has unique stable saved-state keys', () => {
   assert.equal(new Set(milestones.map(m => m.id)).size, milestones.length);
   for (const m of milestones) assert.ok(m.title && m.detail);
 });
+import {lessonGuides} from '../public/learner-guides.js';
+test('every lesson has a complete beginner guide and feedback for every quiz choice', () => {
+ for(const lesson of [...lessons,...extraLessons]){
+  const guide=lessonGuides[lesson.id];assert.ok(guide.goal && guide.before && guide.mistake && guide.tryIt && guide.solution && guide.practiceWhy);
+  assert.equal(guide.why.length,lesson.answers.length);assert.ok(guide.steps.length>=3);assert.ok(guide.words.length>=4);assert.ok(guide.output);
+ }
+});

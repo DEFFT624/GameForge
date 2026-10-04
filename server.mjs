@@ -1,7 +1,7 @@
 import http from 'node:http';
 import {readFile} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
-const routes=new Map([['/','index.html'],['/index.html','index.html'],['/style.css','style.css'],['/app.js','app.js'],['/content.js','content.js'],['/course-extension.js','course-extension.js'],['/radio.js','radio.js']]);
+const routes=new Map([['/','home.html'],['/home.html','home.html'],['/index.html','home.html'],['/learn.html','index.html'],['/style.css','style.css'],['/app.js','app.js'],['/content.js','content.js'],['/course-extension.js','course-extension.js'],['/radio.js','radio.js'],['/learner-guides.js','learner-guides.js']]);
 const types={html:'text/html; charset=utf-8',css:'text/css; charset=utf-8',js:'text/javascript; charset=utf-8'};
 export function createServer(){return http.createServer(async(req,res)=>{
  res.setHeader('Content-Security-Policy',"default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'none'; media-src blob:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'");

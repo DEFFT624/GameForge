@@ -1,3 +1,4 @@
+import {lessonGuides} from './learner-guides.js';
 import {lessons as foundations, snippets, validateDraft} from './content.js';
 import {extraLessons, practices, milestones, checkPractice} from './course-extension.js';
 const lessons = [...foundations, ...extraLessons];
@@ -53,6 +54,15 @@ function showLesson(index) {
   $('lesson-meta').textContent = `LESSON ${index + 1} OF ${lessons.length} · ${lesson.topic}`;
   $('lesson-title').textContent = lesson.title; $('lesson-body').textContent = lesson.body;
   $('lesson-code').textContent = lesson.code; $('lesson-explanation').textContent = lesson.explanation;
+  const guide = lessonGuides[lesson.id];
+  $('lesson-goal').textContent = guide.goal; $('lesson-before').textContent = guide.before;
+  $('lesson-words').replaceChildren(...guide.words.map(([word, meaning]) => {
+    const row = element('div'); row.append(element('dt', word), element('dd', meaning)); return row;
+  }));
+  $('lesson-steps').replaceChildren(...guide.steps.map(step => element('li', step)));
+  $('lesson-output').textContent = guide.output; $('lesson-mistake').textContent = guide.mistake;
+  $('lesson-try').textContent = guide.tryIt; $('lesson-solution').textContent = guide.solution;
+  $('solution-reveal').open = false; $('words-reveal').open = false;
   $('question').textContent = lesson.question;
   $('feedback').textContent = completed.has(lesson.id) ? 'You have completed this quiz. You can try it again anytime.' : '';
   $('answers').replaceChildren(...lesson.answers.map((answer, i) => {
@@ -79,14 +89,14 @@ $('challenge').addEventListener('submit', event => {
   const lesson = lessons[active];
   if (Number(answer) === lesson.correct) {
     completed.add(lesson.id); save('gameforge-progress', [...completed]);
-    $('feedback').textContent = isLessonComplete(lesson.id) ? 'Correct! Both exercises passed. Lesson complete.' : 'Correct! Quiz passed (1 of 2). Solve the code blank below to complete this lesson.'; renderProgress();
-  } else $('feedback').textContent = `Try again. ${lesson.hint}`;
+    $('feedback').textContent = isLessonComplete(lesson.id) ? 'Correct! Both exercises passed. Lesson complete.' : 'Correct! Quiz passed (1 of 2). Solve the code blank below to complete this lesson.'; $('feedback').textContent += ' ' + lessonGuides[lesson.id].why[Number(answer)]; renderProgress();
+  } else $('feedback').textContent = `Try again. ${lessonGuides[lesson.id].why[Number(answer)]} ${lesson.hint}`;
 });
 $('practice-form').addEventListener('submit', event => {
   event.preventDefault(); const id = lessons[active].id;
   if (checkPractice(id, $('practice-answer').value)) {
     practiced.add(id); save('gameforge-practice', [...practiced]);
-    $('practice-feedback').textContent = isLessonComplete(id) ? 'Correct! Both exercises passed. Lesson complete.' : 'Correct! Code blank passed (1 of 2). Pass the quiz above to complete this lesson.'; renderProgress();
+    $('practice-feedback').textContent = isLessonComplete(id) ? 'Correct! Both exercises passed. Lesson complete.' : 'Correct! Code blank passed (1 of 2). Pass the quiz above to complete this lesson.'; $('practice-feedback').textContent += ' ' + lessonGuides[id].practiceWhy; renderProgress();
   } else $('practice-feedback').textContent = `Try again. ${practices[id].hint}`;
 });
 $('practice-hint').addEventListener('click', () => { $('practice-feedback').textContent = practices[lessons[active].id].hint; });

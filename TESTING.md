@@ -1,5 +1,7 @@
 # Try GameForge
 
+The home page is at http://127.0.0.1:4173/. The learning workspace is at http://127.0.0.1:4173/learn.html. Choose Start from the beginning to read the new First steps guide. Open a lesson glossary, trace its walkthrough, predict a tiny change, and reveal the reasoning. Try a wrong quiz answer: feedback should explain that specific choice. Going Home and back must retain saved progress. Leaving the workspace stops its music.
+
 For local testing on Windows, open START-GAMEFORGE.cmd, leave that window running, and visit http://127.0.0.1:4173. Node.js 22 or newer must be installed. No package installation is required. Close the server with Ctrl+C when finished.
 
 ## Five-minute test
