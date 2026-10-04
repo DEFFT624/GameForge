@@ -316,3 +316,4 @@ pre,code,textarea,#practice-answer{font-family:Consolas,'Courier New',monospace;
 .glossary-entry dl { margin: 0 0 18px; }
 .glossary-entry dt { color: var(--green); font-size: 24px; }
 .glossary-entry dd { margin: 8px 0; color: var(--muted); }
+.lesson-permalink{display:inline-block;color:var(--muted);font-size:18px;text-underline-offset:4px;margin:0 0 8px}.lesson-permalink:hover,.lesson-permalink:focus-visible{color:var(--green)}

@@ -7,8 +7,14 @@ import {readFileSync} from 'node:fs';
 import {lessons as foundations, snippets, validateDraft} from '../public/content.js';
 import {extraLessons, practices, milestones, checkPractice} from '../public/course-extension.js';
 const source = readFileSync(new URL('../public/app.js', import.meta.url), 'utf8').replace(/^import .*;\r?\n/gm, '');
-function load(storage = new Map(), confirm = true, hash = "", storageFailure = false) {
-  const location = {hash}, windowEvents = {};
+function load(storage = new Map(), confirm = true, hash = "", storageFailure = false, search = "") {
+  const location = new URL('http://127.0.0.1:4173/learn.html' + search + hash), windowEvents = {};
+  const visits = [location.href];
+  const history = {
+    state: null,
+    pushState(state, unused, url) { location.href = new URL(url, location.href).href; visits.push(location.href); },
+    replaceState(state, unused, url) { location.href = new URL(url, location.href).href; visits[visits.length - 1] = location.href; }
+  };
   class Element {
     children = []; events = {}; value = ''; textContent = '';
     append(...items) { this.children.push(...items); }
@@ -26,10 +32,11 @@ function load(storage = new Map(), confirm = true, hash = "", storageFailure = f
     course, lessonGuides, foundations, snippets, validateDraft, extraLessons, practices, milestones, checkPractice,
     document: {getElementById: get, createElement: () => new Element(), createTextNode: text => ({textContent: text})},
     localStorage: {getItem: key => storage.get(key) ?? null, setItem: (key, value) => { if(storageFailure)throw Error('Storage unavailable');storage.set(key, value); }},
-    window: {confirm: () => confirm, location, addEventListener: (name,fn) => { windowEvents[name]=fn; }},
+    URLSearchParams,
+    window: {confirm: () => confirm, location, history, addEventListener: (name,fn) => { windowEvents[name]=fn; }},
     FormData: class { get() { return get('answers').children.map(l => l.children[0]).find(i => i.checked)?.value ?? null; } }
   });
-  return {get, storage, open(id) {get('lesson-list').children[course.lessons.findIndex(lesson=>lesson.id===id)].fire('click');}, sync(key) {windowEvents.storage?.({key});}, navigate(hash) { location.hash=hash; windowEvents.hashchange(); }, choose(index) {
+  return {get, storage, location, visits, restore(url) { location.href = url; windowEvents.popstate?.(); }, open(id) {get('lesson-list').children[course.lessons.findIndex(lesson=>lesson.id===id)].fire('click');}, sync(key) {windowEvents.storage?.({key});}, navigate(hash) { location.hash=hash; windowEvents.hashchange(); }, choose(index) {
     const radios = get('answers').children.map(l => l.children[0]);
     radios.forEach((r, i) => { r.checked = i === index; }); radios[index].fire('change');
   }, type(value) { get('practice-answer').value = value; get('practice-answer').fire('input'); },
@@ -287,4 +294,36 @@ test('workspace routes reveal one activity and Continue opens the saved course',
 test('deep links open the requested activity on reload',()=>{
   const page=load(new Map(),true,'#lessons');assert.equal(page.get('lessons').hidden,false);assert.equal(page.get('dashboard').hidden,true);
   page.navigate('#start-here');assert.equal(page.get('start-here').hidden,false);assert.equal(page.get('lessons').hidden,true);
+});
+
+test('an exact lesson link opens that lesson without changing earned progress',()=>{
+ const storage=new Map([['gameforge-active-lesson','"health"'],['gameforge-progress','["health"]'],['gameforge-practice','["health"]']]);
+ const page=load(storage,true,'#lessons',false,'?lesson=characters');
+ assert.equal(page.get('lesson-title').textContent,course.lessons.find(lesson=>lesson.id==='characters').title);
+ assert.equal(page.get('lessons').hidden,false);
+ assert.equal(page.get('progress-count').textContent,'1 / 18');
+ assert.equal(page.get('lesson-link').href,'/learn.html?lesson=characters#lessons');
+ page.get('next').fire('click');
+ assert.equal(page.location.search,'?lesson=input');
+ const fresh=load(storage,true,page.location.hash,false,page.location.search);
+ assert.equal(fresh.get('lesson-title').textContent,course.lessons.find(lesson=>lesson.id==='input').title);
+ const recipient=load(new Map(),true,'',false,'?lesson=strings');
+ assert.equal(recipient.get('lessons').hidden,false);
+ assert.equal(recipient.get('lesson-title').textContent,'Give your hero a text greeting');
+ assert.equal(recipient.get('progress-count').textContent,'0 / 18');
+});
+
+test('lesson URLs ignore unknown IDs, restore browser navigation, and follow reset',()=>{
+ for(const query of ['?lesson=missing','?lesson=%3Cscript%3E','?lesson=__proto__']) {
+  const page=load(new Map(),true,'#lessons',false,query);
+  assert.equal(page.get('lesson-title').textContent,course.lessons[0].title);
+ }
+ const page=load(new Map(),true,'#community');
+ page.open('characters');assert.equal(page.visits.length,2);
+ page.get('next').fire('click');assert.equal(page.visits.length,2);
+ page.restore('http://127.0.0.1:4173/learn.html?lesson=strings#lessons');
+ assert.equal(page.get('lesson-title').textContent,'Give your hero a text greeting');
+ page.get('reset').fire('click');assert.equal(page.location.search,'?lesson=health');
+ page.navigate('#community');page.get('reset').fire('click');
+ assert.equal(page.location.hash,'#community');assert.equal(page.location.search,'');
 });

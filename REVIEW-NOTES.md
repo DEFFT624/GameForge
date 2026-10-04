@@ -47,3 +47,7 @@ Glossary entries reuse the current lesson definitions. Searches match word/meani
 ## Pending review: troubleshooting
 
 Review help-examples.js and First steps' troubleshooting guide for beginner clarity. The compiler codes, list-index exception, and off-by-one output were observed by compiling the intentional mistakes; every repaired example was compiled and run. Microsoft Learn links were checked. No code runs in the browser. Check whether the nested disclosure flow is understandable and avoids overwhelming a learner who only needs one repair. Claude and visual review remain pending.
+
+## Pending review: exact lesson links
+
+Review app.js requestedLesson, lessonAddress, focusLesson, and routeView. Query IDs are matched against the known course IDs. Direct links select content without granting progress; Next/Previous update the address; reset clears stale targeting. Source behavior and page contracts pass. Verify actual browser Back/Forward, anchor copying, focus, and mobile placement once browser controls work. These links become remotely shareable only after a reviewed deployment.

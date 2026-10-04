@@ -107,3 +107,9 @@ Added a searchable glossary under First steps, sourced from lesson definitions w
 Added five first-party error/repair pairs under First steps. `npm run test:errors` compiles each deliberate mistake, checks its documented compiler diagnostic, runtime exception, or wrong output, then compiles and runs the repair. All five pass. A proposed missing-semicolon example actually produced CS1003 during verification; it was replaced with an unambiguous single printing statement that produces the documented CS1002. Source links were checked against Microsoft Learn.
 
 `npm test`: 52 pass. Static build and the new preview module endpoint pass. Only approved source text is served; no execution or uploads were added. GitHub workflow 37194684582 passed for the earlier glossary commit 7228f6f1384b90bbcb5082e835552af16fe576d9. Current troubleshooting changes still need their hosted run and browser/Claude review.
+
+## October 4: exact lesson links
+
+Lesson links use validated stable IDs in the query string and open the requested lesson before falling back to saved progress. Lesson navigation updates the address; leaving another activity for a lesson creates a browser history entry, while Next/Previous replace the current lesson address. Browser navigation restores the requested activity/lesson. Reset removes stale lesson targeting without changing a non-lesson activity.
+
+`npm test`: 54 pass, including direct-link selection, refresh, independent recipient progress, unknown/hostile IDs, history restoration, and reset. Real-HTML checks confirm the link control exists. Visual and actual browser history/keyboard review still need a functioning browser connection. Localhost remains local-only, with no publication.

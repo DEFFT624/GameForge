@@ -55,4 +55,10 @@ In First steps, search the glossary for concatenation, bool, &&, or return. Open
 
 ## Troubleshooting a console project
 
-Open When your code does not work under First steps. Distinguish a compiler error, a runtime exception, and a logic mistake. Expand a deliberate example, predict the problem, then open its repair. None of this runs in the website or changes lesson completion. In a fresh local console project, verify the before/after behavior with `dotnet run`; do not replace your working RPG. Maintainers can run `npm run test:errors` to check all documented diagnostics and repaired outputs.
+Open When a program goes wrong under First steps. Distinguish a compiler error, a runtime exception, and a logic mistake. Expand a deliberate example, predict the problem, then open its repair. None of this runs in the website or changes lesson completion. In a fresh local console project, verify the before/after behavior with `dotnet run`; do not replace your working RPG. Maintainers can run `npm run test:errors` to check all documented diagnostics and repaired outputs.
+
+## Returning to a specific lesson
+
+Use Link to this lesson near the lesson heading, or copy the browser address while reading a lesson. A URL such as `http://127.0.0.1:4173/learn.html?lesson=strings#lessons` should open the greeting lesson, even if a different lesson was last saved. It must not change completed exercises. Next and Previous should update that lesson ID, and refresh should keep the intended lesson. A recipient keeps their own progress.
+
+Localhost links work only on the computer running the site. To send a working link to a friend on another computer, first publish the reviewed static site and use its hosted address. Publication and license selection are still pending. Try browser Back after opening a glossary result or project prerequisite: it should return to the previous activity. Reset on a lesson should leave its URL pointing to lesson 1; reset from another activity should keep that activity open.

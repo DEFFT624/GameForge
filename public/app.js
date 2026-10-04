@@ -141,7 +141,21 @@ function element(tag, text, className) {
   if (className) node.className = className;
   return node;
 }
-function focusLesson() { activateView('lessons'); if (window.location && window.location.hash !== '#lessons') window.location.hash = 'lessons'; $('course-outline').open = false; $('lesson-title').focus({preventScroll: true}); $('lesson-title').scrollIntoView({block: 'start', behavior: 'instant'}); }
+function requestedLesson() {
+  const id = new URLSearchParams(window.location?.search || '').get('lesson');
+  return lessons.findIndex(lesson => lesson.id === id);
+}
+function lessonAddress() { return '/learn.html?lesson=' + encodeURIComponent(lessons[active].id) + '#lessons'; }
+function focusLesson() {
+  activateView('lessons');
+  if (window.history) {
+    const method = window.location.hash === '#lessons' ? 'replaceState' : 'pushState';
+    window.history[method](window.history.state, '', lessonAddress());
+  } else if (window.location) window.location.hash = 'lessons';
+  $('course-outline').open = false;
+  $('lesson-title').focus({preventScroll: true});
+  $('lesson-title').scrollIntoView({block: 'start', behavior: 'instant'});
+}
 function isLessonComplete(id) { return completed.has(id) && practiced.has(id); }
 function answerEffect(formId, correct) {
   const form = $(formId);
@@ -193,6 +207,8 @@ function showLesson(index) {
   renderScenery(window.location?.hash.slice(1) || 'dashboard');
   save('gameforge-active-lesson', lesson.id);
   $('lesson-meta').textContent = `LESSON ${index + 1} OF ${lessons.length} · ${lesson.topic}`;
+  $('lesson-link').href = lessonAddress();
+  $('lesson-link').setAttribute('aria-label', 'Link to lesson ' + (index + 1) + ': ' + lesson.title);
   const moduleIndex = modules.findIndex(module => module.ids.includes(lesson.id));
   const module = modules[moduleIndex];
   $('module-meta').textContent = `MODULE ${moduleIndex + 1} / ${modules.length} · ${module.title}`;
@@ -452,10 +468,15 @@ $('reset').addEventListener('click', () => {
   completed.clear(); practiced.clear();
   for (const lesson of lessons) answers[lesson.id] = {quiz: null, practice: ''};
   save('gameforge-answers', answers); save('gameforge-progress', []); save('gameforge-practice', []); showLesson(0);
+  if (window.location?.hash === '#lessons') focusLesson();
+  else window.history?.replaceState(window.history.state, '', window.location.pathname + window.location.hash);
 });
 const firstUnfinished = lessons.findIndex(l => !isLessonComplete(l.id));
 const lastActive = lessons.findIndex(l => l.id === read('gameforge-active-lesson', null));
-showLesson(lastActive >= 0 ? lastActive : firstUnfinished < 0 ? 0 : firstUnfinished); renderDrafts(); renderSnippets(); renderMilestones();
+const linkedLesson = requestedLesson();
+showLesson(linkedLesson >= 0 ? linkedLesson : lastActive >= 0 ? lastActive : firstUnfinished < 0 ? 0 : firstUnfinished);
+if (linkedLesson >= 0 && !window.location.hash) window.history?.replaceState(window.history.state, '', lessonAddress());
+renderDrafts(); renderSnippets(); renderMilestones();
 
 function activateView(id) {
   const names = {dashboard:'Overview',lessons:'C# lessons','start-here':'First steps',capstone:'Build a tiny RPG',community:'Community snippets'};
@@ -471,11 +492,14 @@ function activateView(id) {
 }
 function routeView() {
   const id = window.location?.hash.slice(1) || 'dashboard';
+  const linked = requestedLesson();
+  if (id === 'lessons' && linked >= 0 && linked !== active) showLesson(linked);
   activateView(id);
   if (id === 'lessons') { $('lesson-title').focus({preventScroll:true}); $('lesson-title').scrollIntoView({block:'start',behavior:'instant'}); }
   else document.querySelector?.('main')?.scrollIntoView({block:'start',behavior:'instant'});
 }
 window.addEventListener?.('hashchange',routeView);
+window.addEventListener?.('popstate',routeView);
 window.addEventListener?.('storage', event => {
   if (event.key === null || ['gameforge-progress', 'gameforge-practice'].includes(event.key)) {
     refreshRequiredProgress(); renderProgress();
