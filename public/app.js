@@ -3,43 +3,74 @@ import {lessons as foundations, snippets, validateDraft} from './content.js';
 import {milestones} from './course-extension.js';
 const {lessons, practices, lessonGuides, checkPractice, modules, labs, checkLab, debugging} = course;
 const $ = id => document.getElementById(id);
+let storageReliable = true;
 function read(key, fallback) { try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; } }
 function save(key, value) {
   try { localStorage.setItem(key, JSON.stringify(value)); return true; }
-  catch { $('storage-status').textContent = 'Browser storage is unavailable or full. Changes last only for this visit.'; return false; }
+  catch { storageReliable = false; $('storage-status').textContent = 'Browser storage is unavailable or full. Changes last only for this visit.'; return false; }
 }
 function savedSet(key, allowed) { const value = read(key, []); return new Set(Array.isArray(value) ? value.filter(id => allowed.includes(id)) : []); }
+function recordMap(key, ids, parse) {
+  const saved = read(key, {}), records = Object.create(null);
+  for (const id of ids) records[id] = parse(saved && typeof saved === 'object' && !Array.isArray(saved) ? saved[id] : null, id);
+  return records;
+}
+function saveRecord(key, records, id, parse) {
+  if (!storageReliable) return save(key, records);
+  const latest = recordMap(key, Object.keys(records), parse);
+  latest[id] = records[id];
+  Object.assign(records, latest);
+  return save(key, records);
+}
 const completed = savedSet('gameforge-progress', lessons.map(l => l.id));
 const practiced = savedSet('gameforge-practice', lessons.map(l => l.id));
-const savedLabs = read('gameforge-labs', {});
-const labWork = Object.create(null);
-const savedDebugNotes = read('gameforge-debug-notes', {});
-const debugNotes = Object.create(null);
-for (const module of modules) {
-  const value = savedDebugNotes && typeof savedDebugNotes === 'object' ? savedDebugNotes[module.id] : null;
-  debugNotes[module.id] = typeof value === 'string' ? value.slice(0, 2000) : '';
+function refreshRequiredProgress() {
+  if (!storageReliable) return;
+  for (const [key, target] of [['gameforge-progress', completed], ['gameforge-practice', practiced]]) {
+    const latest = savedSet(key, lessons.map(lesson => lesson.id));
+    target.clear(); for (const id of latest) target.add(id);
+  }
 }
-for (const lesson of lessons) {
-  const record = savedLabs && typeof savedLabs === 'object' && !Array.isArray(savedLabs) ? savedLabs[lesson.id] : null;
-  labWork[lesson.id] = {
+function passExercise(key, id) {
+  refreshRequiredProgress();
+  const target = key === 'gameforge-progress' ? completed : practiced;
+  target.add(id); save(key, [...target]);
+}
+function labRecord(record) {
+  return {
     answer: typeof record?.answer === 'string' ? record.answer.slice(0, 1000) : '',
     note: typeof record?.note === 'string' ? record.note.slice(0, 2000) : '',
     solved: record?.solved === true
   };
 }
+const labWork = recordMap('gameforge-labs', lessons.map(lesson => lesson.id), labRecord);
+const noteRecord = value => typeof value === 'string' ? value.slice(0, 2000) : '';
+const debugNotes = recordMap('gameforge-debug-notes', modules.map(module => module.id), noteRecord);
 const built = savedSet('gameforge-capstone', milestones.map(m => m.id));
 const savedDrafts = read('gameforge-drafts', []);
 let drafts = Array.isArray(savedDrafts) ? savedDrafts.filter(d => d && !validateDraft(d.title, d.code)).slice(0, 20) : [];
-const savedAnswers = read('gameforge-answers', {});
-const answers = Object.create(null);
-for (const lesson of lessons) {
-  const saved = savedAnswers && typeof savedAnswers === 'object' && !Array.isArray(savedAnswers) ? savedAnswers[lesson.id] : null;
-  answers[lesson.id] = {
-    quiz: Number.isInteger(saved?.quiz) && saved.quiz >= 0 && saved.quiz < lesson.answers.length
-      ? saved.quiz : completed.has(lesson.id) ? lesson.correct : null,
-    practice: typeof saved?.practice === 'string' && saved.practice.length <= 40
-      ? saved.practice : practiced.has(lesson.id) ? practices[lesson.id].answer : ''
+function refreshDrafts() {
+  if (!storageReliable) return;
+  const latest = read('gameforge-drafts', []);
+  drafts = Array.isArray(latest) ? latest.filter(d => d && !validateDraft(d.title, d.code)).slice(0, 20) : [];
+}
+function refreshMilestones() {
+  if (!storageReliable) return;
+  const latest = savedSet('gameforge-capstone', milestones.map(m => m.id));
+  built.clear(); for (const id of latest) built.add(id);
+}
+function answerRecord(lesson, value) {
+  return {
+    quiz: Number.isInteger(value?.quiz) && value.quiz >= 0 && value.quiz < lesson.answers.length
+      ? value.quiz : completed.has(lesson.id) ? lesson.correct : null,
+    practice: typeof value?.practice === 'string' && value.practice.length <= 40
+      ? value.practice : practiced.has(lesson.id) ? practices[lesson.id].answer : ''
   };
+}
+const parseAnswer = (value, id) => answerRecord(lessons.find(lesson => lesson.id === id), value);
+const answers = recordMap('gameforge-answers', lessons.map(lesson => lesson.id), parseAnswer);
+function saveLessonAnswer(id) {
+  saveRecord('gameforge-answers', answers, id, parseAnswer);
 }
 let active = 0;
 // Decorative scenes are text only and never participate in the lesson controls.
@@ -146,6 +177,12 @@ function renderProgress() {
   }));
 }
 function showLesson(index) {
+  refreshRequiredProgress();
+  if (storageReliable) {
+    Object.assign(answers, recordMap('gameforge-answers', Object.keys(answers), parseAnswer));
+    Object.assign(labWork, recordMap('gameforge-labs', Object.keys(labWork), labRecord));
+    Object.assign(debugNotes, recordMap('gameforge-debug-notes', Object.keys(debugNotes), noteRecord));
+  }
   $('challenge').className = ''; $('practice-form').className = '';
   active = index; const lesson = lessons[index];
   renderScenery(window.location?.hash.slice(1) || 'dashboard');
@@ -200,7 +237,7 @@ function showLesson(index) {
     const label = element('label', undefined, 'answer'), input = element('input');
     Object.assign(input, {type: 'radio', name: 'answer', value: String(i), required: true, checked: answers[lesson.id].quiz === i});
     input.addEventListener('change', () => {
-      answers[lesson.id].quiz = i; save('gameforge-answers', answers);
+      answers[lesson.id].quiz = i; saveLessonAnswer(lesson.id);
       $('feedback').textContent = '';
       $('challenge').className = '';
     });
@@ -216,7 +253,7 @@ function showLesson(index) {
 }
 $('practice-answer').addEventListener('input', () => {
   answers[lessons[active].id].practice = $('practice-answer').value;
-  save('gameforge-answers', answers); $('practice-feedback').textContent = '';
+  saveLessonAnswer(lessons[active].id); $('practice-feedback').textContent = '';
   $('practice-form').className = '';
 });
 $('challenge').addEventListener('submit', event => {
@@ -224,7 +261,7 @@ $('challenge').addEventListener('submit', event => {
   const lesson = lessons[active];
   answerEffect('challenge', Number(answer) === lesson.correct);
   if (Number(answer) === lesson.correct) {
-    completed.add(lesson.id); save('gameforge-progress', [...completed]);
+    passExercise('gameforge-progress', lesson.id);
     $('feedback').textContent = isLessonComplete(lesson.id) ? 'Correct! Both exercises passed. Lesson complete.' : 'Correct! Quiz passed (1 of 2). Solve the code blank below to complete this lesson.'; $('feedback').textContent += ' ' + lessonGuides[lesson.id].why[Number(answer)]; renderProgress();
   } else $('feedback').textContent = `Try again. ${lessonGuides[lesson.id].why[Number(answer)]} ${lesson.hint}`;
 });
@@ -232,7 +269,7 @@ $('practice-form').addEventListener('submit', event => {
   event.preventDefault(); const id = lessons[active].id;
   answerEffect('practice-form', checkPractice(id, $('practice-answer').value));
   if (checkPractice(id, $('practice-answer').value)) {
-    practiced.add(id); save('gameforge-practice', [...practiced]);
+    passExercise('gameforge-practice', id);
     $('practice-feedback').textContent = isLessonComplete(id) ? 'Correct! Both exercises passed. Lesson complete.' : 'Correct! Code blank passed (1 of 2). Pass the quiz above to complete this lesson.'; $('practice-feedback').textContent += ' ' + lessonGuides[id].practiceWhy; renderProgress();
   } else $('practice-feedback').textContent = `Try again. ${practices[id].hint}`;
 });
@@ -242,20 +279,20 @@ $('lab-form').addEventListener('submit', event => {
   labWork[id].answer = $('lab-answer').value.slice(0, 1000);
   const correct = checkLab(id, $('lab-answer').value);
   if (correct) labWork[id].solved = true;
-  save('gameforge-labs', labWork);
+  saveRecord('gameforge-labs', labWork, id, labRecord);
   $('lab-feedback').textContent = correct ? `Correct! ${labs[id].why}` : `Try again. ${labs[id].hint} Use one line for each printed line, without quotes.`;
 });
 $('debug-note').addEventListener('input', () => {
   const module = modules.find(module => module.ids.includes(lessons[active].id));
   debugNotes[module.id] = $('debug-note').value.slice(0, 2000);
-  const saved = save('gameforge-debug-notes', debugNotes);
+  const saved = saveRecord('gameforge-debug-notes', debugNotes, module.id, noteRecord);
   $('debug-save-status').textContent = saved ? 'Debugging note saved in this browser.' : 'This note lasts only for this visit.';
 });
 $('lab-hint').addEventListener('click', () => { $('lab-feedback').textContent = labs[lessons[active].id].hint; });
 for (const [field, property] of [['lab-answer', 'answer'], ['lab-note', 'note']]) {
   $(field).addEventListener('input', () => {
     labWork[lessons[active].id][property] = $(field).value.slice(0, property === 'answer' ? 1000 : 2000);
-    const saved = save('gameforge-labs', labWork);
+    const saved = saveRecord('gameforge-labs', labWork, lessons[active].id, labRecord);
     $('lab-save-status').textContent = saved ? 'Lab draft and notes saved in this browser.' : 'Storage unavailable. Copy your notes before leaving.';
     if (property === 'answer') $('lab-feedback').textContent = '';
   });
@@ -270,17 +307,23 @@ $('copy-code').addEventListener('click', async () => {
   try { await navigator.clipboard.writeText(lessons[active].code); $('copy-status').textContent = 'Example copied.'; }
   catch { $('copy-status').textContent = 'Copy is unavailable here. Select the code text and copy it manually.'; }
 });
-function snippetCard(snippet, draft = false, index = 0) {
+function snippetCard(snippet, draft = false) {
   const card = element('article', undefined, 'snippet');
   card.append(element('span', draft ? 'LOCAL DRAFT · NOT PUBLISHED' : snippet.author, 'eyebrow'), element('h3', snippet.title));
   const pre = element('pre'); pre.append(element('code', snippet.code)); card.append(pre);
   if (draft) {
     const remove = element('button', 'Delete draft', 'link-button'); remove.type = 'button';
-    remove.addEventListener('click', () => { drafts.splice(index, 1); save('gameforge-drafts', drafts); renderDrafts(); $('draft-status').textContent = 'Local draft deleted.'; });
+    remove.addEventListener('click', () => {
+      refreshDrafts();
+      const index = drafts.findIndex(draft => draft.title === snippet.title && draft.code === snippet.code);
+      if (index >= 0) drafts.splice(index, 1);
+      const saved = save('gameforge-drafts', drafts); renderDrafts();
+      $('draft-status').textContent = saved ? 'Local draft deleted.' : 'Draft removed for this visit only; browser storage failed.';
+    });
     card.append(remove);
   } return card;
 }
-function renderDrafts() { $('drafts').replaceChildren(...drafts.map((d, i) => snippetCard(d, true, i))); }
+function renderDrafts() { $('drafts').replaceChildren(...drafts.map(d => snippetCard(d, true))); }
 function renderSnippets() {
   const query = $('snippet-search').value.trim().toLowerCase();
   const results = snippets.filter(s => `${s.title} ${s.code}`.toLowerCase().includes(query));
@@ -322,6 +365,7 @@ snippetEditor.addEventListener('keydown', event => {
 $('snippet-form').addEventListener('submit', event => {
   event.preventDefault(); const title = $('snippet-title').value, code = $('snippet-code').value;
   const error = validateDraft(title, code);
+  refreshDrafts();
   if (error || drafts.length >= 20) { $('draft-status').textContent = error || 'Keep at most 20 local drafts. Delete one before adding another.'; return; }
   drafts.push({title: title.trim(), code}); const persisted = save('gameforge-drafts', drafts);
   renderDrafts(); event.currentTarget.reset();
@@ -335,6 +379,7 @@ function renderMilestones() {
       label.className = 'milestone';
       void label.offsetWidth;
       if (input.checked) label.className = 'milestone is-complete just-completed';
+      refreshMilestones();
       if (input.checked) built.add(m.id); else built.delete(m.id);
       save('gameforge-capstone', [...built]); $('capstone-progress').textContent = `${built.size} of ${milestones.length} milestones checked`;
     });
@@ -386,6 +431,13 @@ function routeView() {
   else document.querySelector?.('main')?.scrollIntoView({block:'start',behavior:'instant'});
 }
 window.addEventListener?.('hashchange',routeView);
+window.addEventListener?.('storage', event => {
+  if (event.key === null || ['gameforge-progress', 'gameforge-practice'].includes(event.key)) {
+    refreshRequiredProgress(); renderProgress();
+  }
+  if (event.key === null || event.key === 'gameforge-drafts') { refreshDrafts(); renderDrafts(); }
+  if (event.key === null || event.key === 'gameforge-capstone') { refreshMilestones(); renderMilestones(); }
+});
 $('menu-toggle').addEventListener('click',()=>{
   const expanded=$('menu-toggle').getAttribute('aria-expanded')==='true';
   $('menu-toggle').setAttribute('aria-expanded',String(!expanded));

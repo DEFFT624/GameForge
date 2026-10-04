@@ -7,13 +7,13 @@ import {readFileSync} from 'node:fs';
 import {lessons as foundations, snippets, validateDraft} from '../public/content.js';
 import {extraLessons, practices, milestones, checkPractice} from '../public/course-extension.js';
 const source = readFileSync(new URL('../public/app.js', import.meta.url), 'utf8').replace(/^import .*;\r?\n/gm, '');
-function load(storage = new Map(), confirm = true, hash = "") {
+function load(storage = new Map(), confirm = true, hash = "", storageFailure = false) {
   const location = {hash}, windowEvents = {};
   class Element {
     children = []; events = {}; value = ''; textContent = '';
     append(...items) { this.children.push(...items); }
     replaceChildren(...items) { this.children = items; }
-    setAttribute() {} focus() {} scrollIntoView() {}
+    setAttribute() {} focus() {} scrollIntoView() {} reset() {}
     addEventListener(name, fn) { this.events[name] = fn; }
     fire(name, extra = {}) { const event = {currentTarget: this, prevented: false, preventDefault() {this.prevented = true;}, ...extra}; this.events[name]?.(event); return event; }
     selectionStart = 0; selectionEnd = 0; maxLength = 8000;
@@ -25,11 +25,11 @@ function load(storage = new Map(), confirm = true, hash = "") {
   vm.runInNewContext(source, {
     course, lessonGuides, foundations, snippets, validateDraft, extraLessons, practices, milestones, checkPractice,
     document: {getElementById: get, createElement: () => new Element(), createTextNode: text => ({textContent: text})},
-    localStorage: {getItem: key => storage.get(key) ?? null, setItem: (key, value) => storage.set(key, value)},
+    localStorage: {getItem: key => storage.get(key) ?? null, setItem: (key, value) => { if(storageFailure)throw Error('Storage unavailable');storage.set(key, value); }},
     window: {confirm: () => confirm, location, addEventListener: (name,fn) => { windowEvents[name]=fn; }},
     FormData: class { get() { return get('answers').children.map(l => l.children[0]).find(i => i.checked)?.value ?? null; } }
   });
-  return {get, storage, navigate(hash) { location.hash=hash; windowEvents.hashchange(); }, choose(index) {
+  return {get, storage, sync(key) {windowEvents.storage?.({key});}, navigate(hash) { location.hash=hash; windowEvents.hashchange(); }, choose(index) {
     const radios = get('answers').children.map(l => l.children[0]);
     radios.forEach((r, i) => { r.checked = i === index; }); radios[index].fire('change');
   }, type(value) { get('practice-answer').value = value; get('practice-answer').fire('input'); },
@@ -133,6 +133,68 @@ test('all quizzes alone do not complete the course', () => {
   assert.equal(page.get('course-review-link').hidden, false);
   page.get('reset').fire('click');
   assert.equal(page.get('course-review-link').hidden, true);
+});
+test('two open workspaces do not overwrite different lesson completions or drafts',()=>{
+ const storage=new Map();const first=load(storage),second=load(storage);
+ first.choose(course.lessons[0].correct);first.get('challenge').fire('submit');
+ first.type(course.practices.health.answer);first.get('practice-form').fire('submit');
+ first.get('next').fire('click');first.get('next').fire('click');first.type('unfinished loop draft');
+ second.get('next').fire('click');second.choose(course.lessons[1].correct);second.get('challenge').fire('submit');
+ second.type(course.practices.decisions.answer);second.get('practice-form').fire('submit');
+ const refreshed=load(storage);assert.equal(refreshed.get('progress-count').textContent,'2 / 14');
+ refreshed.get('next').fire('click');assert.equal(refreshed.get('practice-answer').value,'unfinished loop draft');
+});
+test('storage failure preserves session answers and progress while warning that they cannot persist',()=>{
+ const page=load(new Map(),true,'',true);
+ page.choose(course.lessons[0].correct);page.get('challenge').fire('submit');
+ page.type(course.practices.health.answer);page.get('practice-form').fire('submit');
+ assert.equal(page.get('progress-count').textContent,'1 / 14');
+ page.get('next').fire('click');page.get('previous').fire('click');
+ assert.equal(page.get('progress-count').textContent,'1 / 14');
+ assert.equal(page.get('practice-answer').value,'int');assert.equal(page.selected(),course.lessons[0].correct);
+ assert.match(page.get('storage-status').textContent,/unavailable or full/);
+});
+test('progress counts and feedback access follow another tab including its reset',()=>{
+ const storage=new Map();const first=load(storage),second=load(storage);
+ first.choose(course.lessons[0].correct);first.get('challenge').fire('submit');
+ first.type(course.practices.health.answer);first.get('practice-form').fire('submit');
+ second.sync('gameforge-progress');second.sync('gameforge-practice');
+ assert.equal(second.get('progress-count').textContent,'1 / 14');
+ first.get('reset').fire('click');second.sync('gameforge-progress');
+ assert.equal(second.get('progress-count').textContent,'0 / 14');
+ second.get('next').fire('click');second.get('previous').fire('click');assert.equal(second.selected(),-1);
+});
+test('different lessons and modules retain optional notes from two open workspaces',()=>{
+ const storage=new Map();const first=load(storage),second=load(storage);
+ first.get('lab-note').value='First lab note';first.get('lab-note').fire('input');
+ second.get('next').fire('click');second.get('lab-note').value='Second lab note';second.get('lab-note').fire('input');
+ for(let i=0;i<3;i++)first.get('next').fire('click');
+ first.get('debug-note').value='Control-flow repair';first.get('debug-note').fire('input');
+ for(let i=0;i<5;i++)second.get('next').fire('click');
+ second.get('debug-note').value='Function repair';second.get('debug-note').fire('input');
+ const labs=JSON.parse(storage.get('gameforge-labs')),notes=JSON.parse(storage.get('gameforge-debug-notes'));
+ assert.equal(labs.health.note,'First lab note');assert.equal(labs.decisions.note,'Second lab note');
+ assert.equal(notes.control,'Control-flow repair');assert.equal(notes.actions,'Function repair');
+ first.get('previous').fire('click');first.get('previous').fire('click');
+ assert.equal(first.get('lab-note').value,'Second lab note');
+});
+test('draft additions and deletions keep unrelated drafts from another workspace',()=>{
+ const storage=new Map();const first=load(storage),second=load(storage);
+ first.get('snippet-title').value='First';first.get('snippet-code').value='int health = 100;';first.get('snippet-form').fire('submit');
+ second.get('snippet-title').value='Second';second.get('snippet-code').value='int coins = 2;';second.get('snippet-form').fire('submit');
+ assert.equal(JSON.parse(storage.get('gameforge-drafts')).length,2);
+ // The first page's delete button was rendered before the second draft existed.
+ first.get('drafts').children[0].children.at(-1).fire('click');
+ assert.equal(JSON.parse(storage.get('gameforge-drafts'))[0].title,'Second');
+ second.sync('gameforge-drafts');assert.equal(second.get('drafts').children.length,1);
+});
+test('project checklist changes merge across workspaces and honor unchecking',()=>{
+ const storage=new Map();const first=load(storage),second=load(storage);
+ const check=(page,index,checked)=>{const input=page.get('milestones').children[index].children[0].children[0];input.checked=checked;input.fire('change');};
+ check(first,0,true);check(second,1,true);
+ assert.deepEqual(JSON.parse(storage.get('gameforge-capstone')),['status','fight']);
+ check(first,0,false);assert.deepEqual(JSON.parse(storage.get('gameforge-capstone')),['fight']);
+ second.sync('gameforge-capstone');assert.equal(second.get('milestones').children[0].children[0].children[0].checked,false);
 });
 
 test('snippet editor indents selections, unindents, respects limits and lets Tab leave after Escape', () => {

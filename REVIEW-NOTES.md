@@ -27,3 +27,7 @@ Check `public/rpg-reference.cs`, its beginner reading guide in the capstone page
 ## Pending review: optional module debugging
 
 Four challenges in `course-plan.js` pair observed behavior with a minimal repair. Check beginner wording, the distinction between compile errors and logic mistakes, int argument/result handling, object references, and loop conditions. Saved explanations are optional; no automatic completion is granted. `npm run test:csharp` verifies all 36 first-party samples, while real-HTML contract tests catch missing controls and broken local links. Claude review remains pending because browser initialization still fails.
+
+## Pending review: persistence merge
+
+The two-tab regression failed before the fix and passes now. Review `recordMap`, `saveRecord`, `refreshRequiredProgress`, and storage event handling in app.js. Saves merge only known IDs and sanitized records; failure switches the visit to in-memory behavior so navigation does not discard unsaved work. Tests cover completions, drafts, optional notes, snippets, milestones, cross-tab reset, and failed storage. Same-record concurrent editing uses the latest save.

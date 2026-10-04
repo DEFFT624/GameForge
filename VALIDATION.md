@@ -68,3 +68,9 @@ All 14 first-party C# samples compiled with warnings as errors and produced the 
 - Four module debugging challenges, saved per-module notes, hints, repairs, and follow-up tests. Optional, independent of required completion.
 - `node tests/csharp-content.mjs`: all 36 samples compiled and their outputs matched; warnings treated as errors. This includes 14 lessons, 14 prediction labs, 4 bugs, and 4 repairs.
 - Website tests include debugging persistence, module-end visibility, malformed notes, real-page control IDs, and all local navigation/asset targets. Browser rendering is still unverified.
+
+## October 4: persistence review
+
+A regression test reproduced two workspace tabs overwriting different lesson completions (1 / 14 instead of 2 / 14). Saves now merge the latest validated records for other lessons and modules. Required progress refreshes before a pass; storage events refresh completion counts and reset state. Snippet additions/deletions and project checks preserve unrelated changes from other tabs.
+
+`node --test tests/*.test.mjs`: 44 tests pass, including multi-tab progress, notes, snippets, milestones, and storage-failure behavior. If saving fails, in-memory work remains usable for the visit and the existing warning explains that it cannot persist. Editing the same record concurrently still uses the latest save; this starter has no collaborative editing or accounts.

@@ -40,3 +40,7 @@ Maintainers with the .NET 10 SDK can run `npm run test:rpg` for compiled behavio
 ## Module debugging
 
 At the last lesson of each module, open Find and repair a bug. Compare the expected and actual output, write a repair note, and refresh. The note must return. Switch modules: notes should remain separate. Returning to a challenge closes its hint and repair so you can try again. Verify the lesson count remains unchanged. Maintainers can run `npm run test:csharp` with .NET 10 to check all lesson, lab, bug, and repair outputs.
+
+## Two-tab persistence
+
+Open two learning workspaces at the same address. Complete different lessons in each; refreshing must keep both completions. Write lab or debugging notes in different lessons/modules and confirm they both remain. Add a different snippet in each tab, then delete one: the other must remain. Check different RPG milestones and uncheck one; both tabs should show the latest checklist. Editing the same answer or note in both tabs uses the most recent save.
