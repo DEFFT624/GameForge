@@ -34,6 +34,16 @@ assert.match(potions, /Potions left: 0/);
 assert.match(potions, /No potions left\. No turn used/);
 assert.equal((potions.match(/Enemy attacks/g) || []).length, 4);
 assert.doesNotMatch(potions, /Hero health: 10[1-9]/);
+// The published turn walkthrough includes failed choices, capped healing, and a room transition.
+const walkthrough = play('abc\n2\n1\n1\n2\n1\n3\n');
+const menus = Array.from(walkthrough.matchAll(/Hero health: (\d+) \| Enemy health: (\d+)/g), match => [Number(match[1]), Number(match[2])]);
+assert.deepEqual(menus, [[100,25],[100,25],[100,25],[92,15],[84,5],[92,5],[92,25]]);
+assert.match(walkthrough, /Potion used\. Hero health: 100\nPotions left: 1\nEnemy attacks! Hero health: 92/);
+assert.match(walkthrough, /Attack! Enemy health: 0\nRoom 1 cleared!\nRoom 2: an enemy appears!/);
+assert.equal((walkthrough.match(/Enemy attacks!/g) || []).length, 3);
+assert.equal((walkthrough.match(/cleared!/g) || []).length, 1);
+assert.match(walkthrough, /You chose to quit/);
+assert.doesNotMatch(walkthrough, /Room 3|Victory|Defeat/);
 // Documented defeat experiment: start at 10 health. All other source is unchanged.
 const scratch = await mkdtemp(join(tmpdir(), 'gameforge-rpg-test-'));
 try {
@@ -49,4 +59,4 @@ try {
 } finally {
   await rm(scratch, {recursive: true, force: true});
 }
-console.log('RPG verified: victory, defeat experiment, quit, EOF, invalid input, potion limits, room transitions.');
+console.log('RPG verified: victory, defeat experiment, quit, EOF, invalid input, potion limits, room transitions, teaching walkthrough.');

@@ -178,6 +178,35 @@ test('progress counts and feedback access follow another tab including its reset
  assert.equal(second.get('progress-count').textContent,'0 / 18');
  second.get('next').fire('click');second.get('previous').fire('click');assert.equal(second.selected(),-1);
 });
+
+test('another tab resets the visible answer controls while preserving optional work',()=>{
+ const storage=new Map();const first=load(storage);
+ first.choose(course.lessons[0].correct);first.type('int');
+ first.get('challenge').fire('submit');first.get('practice-form').fire('submit');
+ const second=load(storage,true,'#lessons');
+ second.get('lab-note').value='Keep my prediction';second.get('lab-note').fire('input');
+ second.get('practice-lab').open=true;
+ first.get('reset').fire('click');
+ for(const key of ['gameforge-answers','gameforge-progress','gameforge-practice'])second.sync(key);
+ assert.equal(second.selected(),-1);assert.equal(second.get('practice-answer').value,'');
+ assert.equal(second.get('feedback').textContent,'');assert.equal(second.get('practice-feedback').textContent,'');
+ assert.equal(second.get('progress-count').textContent,'0 / 18');
+ assert.equal(second.get('lab-note').value,'Keep my prediction');assert.equal(second.get('practice-lab').open,true);
+});
+
+test('another lesson changing keeps active answer controls and feedback intact',()=>{
+ const storage=new Map();const first=load(storage),second=load(storage);
+ first.type('incomplete');first.choose(0);first.get('challenge').fire('submit');
+ const controls=first.get('answers').children;const feedback=first.get('feedback').textContent;
+ second.open('strings');second.type('str');second.choose(1);
+ first.sync('gameforge-answers');
+ assert.equal(first.get('answers').children,controls);
+ assert.equal(first.get('practice-answer').value,'incomplete');assert.equal(first.selected(),0);
+ assert.equal(first.get('feedback').textContent,feedback);
+ second.open('health');second.type('int');second.choose(1);first.sync('gameforge-answers');
+ assert.equal(first.get('answers').children,controls);assert.equal(first.get('practice-answer').value,'int');assert.equal(first.selected(),1);
+ assert.equal(first.get('feedback').textContent,'');
+});
 test('different lessons and modules retain optional notes from two open workspaces',()=>{
  const storage=new Map();const first=load(storage),second=load(storage);
  first.get('lab-note').value='First lab note';first.get('lab-note').fire('input');

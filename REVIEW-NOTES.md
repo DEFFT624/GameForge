@@ -1,57 +1,39 @@
-# C# modules and practice labs: milestone review
+# GameForge: focused Claude review handoff
 
-## Ready for review
+Review the current draft at https://github.com/DEFFT624/GameForge/pull/19, branch `guided-rpg-and-course-review`. Earlier reviews of the original course do not cover this expansion. Read SPEC.md and SECURITY.md first. Review only website-related code and content; do not access secrets, install packages, execute learner code, publish, or merge.
 
-Review `public/course-plan.js`, `public/app.js`, and the new module/lab sections of `public/index.html`. The milestone adds four modules and fourteen optional practice labs. All original lesson IDs and required completion rules stay stable.
+## Current scope
 
-Check explanations for beginner vocabulary, ambiguous phrasing, spelling, and whether each lab can be understood using the preceding lessons. Check object aliasing, loop boundaries, return versus print, parsing versus range validation, and switch break scope especially carefully.
+- 18 C# lessons in four modules. Four new prerequisites teach strings, booleans, combined conditions, and foreach before their applications.
+- A glossary, walkthrough, output, choice-specific feedback, code blank, optional prediction lab, and execution trace for every lesson.
+- Four optional module debugging challenges with saved notes and small repairs.
+- First steps includes a searchable glossary and five deliberate compiler/runtime/logic mistakes with verified repairs.
+- Six RPG build guides, a source-only complete console reference, and a turn-by-turn fight walkthrough.
+- Exact lesson links, multi-tab saving, visible answer synchronization, and a session-only fallback if saving fails.
 
-## Evidence
+## Review questions
 
-33 Node tests pass. Every new lab sample was compiled and run locally with its output checked against the answer. The browser does not execute code: prediction checks compare strings, and user notes render through text/value properties.
+1. Can a complete beginner follow the prerequisite order and locate each suggested edit? Identify jargon, ambiguity, spelling mistakes, and explanations that advance too quickly.
+2. Check boolean snapshot behavior, string joining, &&/||/!, loop boundaries, return versus printing, object aliasing, list indexes and foreach scope, parsing versus allowed range, and switch break versus while termination.
+3. Check healing wording: the simple Heal function caps the maximum but does not ignore negative amounts. The reference uses fixed positive healing. Damage is clamped in the Character example and reference.
+4. Trace the RPG's failed choices, full/empty potions, successful healing and counterattack, enemy defeat, room transitions, quit, EOF, and one ending. The default game cannot reach defeat; its guide/test uses the documented 10-health experiment.
+5. Check persistence helpers and storage events. Other lesson changes must preserve active controls and feedback; a reset in another tab must clear required answers without closing optional work. Editing the same answer concurrently uses the latest save, not collaborative merging.
+6. Confirm all earlier lesson IDs remain stable. Completion and the feedback gate require both exercises in all 18 lessons. Optional labs, notes, and self-reported RPG checks must not grant required completion. Local progress is not a credential.
+7. Review exact lesson URL validation, browser navigation, reset targeting, focus, and mobile layout. Localhost links work only on the computer running the site.
+8. Confirm dynamic content uses text/value properties, the server accepts no uploads, approved C# downloads remain source text, and the browser never executes C#.
 
-## Pending checks
+## Evidence and commands
 
-- Claude milestone review: not sent because browser controls failed to initialize. Review the current branch snapshot rather than the older main branch.
-- Desktop/mobile appearance, hover space, and keyboard navigation through the optional lab.
-- Refresh a partially typed lab answer and notes; switch lessons and return.
-- Complete only an optional lab and confirm main completion remains unchanged.
-- Open each module card and confirm it resumes the first unfinished lesson in that module.
+- `npm test`: 59 passing website/content/security/behavior/build checks.
+- `npm run test:csharp`: 66 compiled lesson/lab/debug/repair/experiment cases. Valid samples treat warnings as errors; the empty-list experiment checks the documented exception.
+- `npm run test:errors`: five deliberate error cases and their repaired outputs verified.
+- `npm run test:rpg`: compiled reference behavior, defeat experiment, and the published fight walkthrough verified.
+- `npm run build`: approved static assets and restrictive security policy only.
 
-Do not claim these pending checks have passed. No deployment is included.
+No application packages need installing. C# checks require the .NET 10 SDK. Only repository-owned programs are compiled. GitHub checks through commit de08d0aa6d49366c1ff2928e02cbbc32a9aeb36b passed on Linux/Node 22 and Windows/Node 24. Later visible-answer, RPG-walkthrough, and scoped-build changes await their own hosted run. Build fixtures verify stale output is removed, linked output is refused without touching its target, and a missing required asset fails before replacing a previous build.
 
-## Pending review: source-only RPG reference
+## Unperformed checks
 
-Check `public/rpg-reference.cs`, its beginner reading guide in the capstone page, and `tests/rpg-behavior.mjs`. Focus on continue vs switch break, preserving health between rooms, failed potions consuming no turn, EOF/quit preventing counterattacks, and one ending only. The normal settings cannot reach defeat; the guide and compiled test deliberately use the documented 10-health experiment. There are no packages or executable uploads. Browser connection is unavailable; this handoff has not yet been sent to Claude.
+This brief has not been sent to Claude: browser control fails to initialize because its kernel-assets path is unavailable. Current visual rendering, actual browser Back/Forward, hover space, keyboard flow, and screen-reader review remain pending. Source contracts and behavior tests do not replace those checks. No human beginner session has happened. No deployment or merge is included; license selection remains pending.
 
-## Pending review: optional module debugging
-
-Four challenges in `course-plan.js` pair observed behavior with a minimal repair. Check beginner wording, the distinction between compile errors and logic mistakes, int argument/result handling, object references, and loop conditions. Saved explanations are optional; no automatic completion is granted. `npm run test:csharp` verifies all 36 first-party samples, while real-HTML contract tests catch missing controls and broken local links. Claude review remains pending because browser initialization still fails.
-
-## Pending review: persistence merge
-
-The two-tab regression failed before the fix and passes now. Review `recordMap`, `saveRecord`, `refreshRequiredProgress`, and storage event handling in app.js. Saves merge only known IDs and sanitized records; failure switches the visit to in-memory behavior so navigation does not discard unsaved work. Tests cover completions, drafts, optional notes, snippets, milestones, cross-tab reset, and failed storage. Same-record concurrent editing uses the latest save.
-
-## Pending review: lesson execution traces
-
-`lesson-traces.js` follows all 14 examples. Output-column sequences match compiled lesson outputs; manually review the value descriptions, especially print-before-decrement/increment, object independence, and switch break versus loop termination. Tables have captions, column/row headers, a keyboard-focusable scrolling region, and no browser execution. Current visual rendering and Claude review remain pending.
-
-## Pending review: prerequisite expansion
-
-Review foundation-bridges.js: string joining, bool formatting and snapshot behavior, && versus ||, and foreach ordering/scope/collection mutation. All new examples and labs compile with correct output. Existing completion IDs survive; the whole-course feedback gate now requires both exercises in all 18 lessons. Upgrade tests explicitly protect 14 earlier completions and prevent premature review access.
-
-## Pending review: glossary
-
-Glossary entries reuse the current lesson definitions. Searches match word/meaning text without interpreting it, results are capped at 12, and lesson buttons navigate through the existing flow. No progress changes or network requests. Check the result announcements and keyboard flow when the browser connection is restored.
-
-## Pending review: troubleshooting
-
-Review help-examples.js and First steps' troubleshooting guide for beginner clarity. The compiler codes, list-index exception, and off-by-one output were observed by compiling the intentional mistakes; every repaired example was compiled and run. Microsoft Learn links were checked. No code runs in the browser. Check whether the nested disclosure flow is understandable and avoids overwhelming a learner who only needs one repair. Claude and visual review remain pending.
-
-## Pending review: exact lesson links
-
-Review app.js requestedLesson, lessonAddress, focusLesson, and routeView. Query IDs are matched against the known course IDs. Direct links select content without granting progress; Next/Previous update the address; reset clears stale targeting. Source behavior and page contracts pass. Verify actual browser Back/Forward, anchor copying, focus, and mobile placement once browser controls work. These links become remotely shareable only after a reviewed deployment.
-
-## Pending review: experiment wording
-
-All optional lab changes are now compiled as concrete experiments, including expected exception behavior for an empty-list read. Healing wording now honestly explains negative amounts reduce health, and the named-action lab uses a zero-iteration loop to avoid an unused-function warning. Review the suggested changes for clarity and whether a beginner can make each edit without guessing its location. Current prerequisite wording matches the 18-lesson order.
+Return a focused review with concrete corrections and remaining uncertainties. Coordinate file ownership before editing; do not claim an unperformed check passed.

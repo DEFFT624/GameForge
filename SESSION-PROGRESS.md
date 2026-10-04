@@ -9,10 +9,10 @@ Ready to try locally at http://127.0.0.1:4173/:
 - Searchable lesson glossary in First steps.
 - Beginner troubleshooting for compiler, runtime, and logic errors, with verified examples and repairs.
 - Exact lesson links that reopen the intended lesson without sharing personal progress.
-- Six RPG build guides and a complete source-only console game reference.
-- Safer saving across multiple workspace tabs, with a session-only fallback if browser storage fails.
+- Six RPG build guides, a complete source-only console reference, and a fight walkthrough.
+- Safer saving and visible answer updates across multiple workspace tabs, with a session-only fallback if browser storage fails.
 
-Verified so far: 54 website tests; 66 compiled C# teaching/experiment cases; five deliberate errors and their repairs; RPG behavior tests; static build. Hosted checks through troubleshooting and exact-lesson links passed on Linux/Node 22 and Windows/Node 24. The expanded experiment checks await their next hosted run. Review also corrected misleading healing wording and an experiment that caused an unused-function warning.
+Verified so far: 59 website tests; 66 compiled C# teaching/experiment cases; five deliberate errors and their repairs; RPG behavior and fight-walkthrough tests; static build. Hosted checks through the expanded experiment checks passed on Linux/Node 22 and Windows/Node 24. Visible-answer synchronization, the fight walkthrough, and scoped build cleanup await their next hosted run. Review also corrected misleading healing wording and an experiment that caused an unused-function warning.
 
 Draft: https://github.com/DEFFT624/GameForge/pull/19. No deployment or merge.
 

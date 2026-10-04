@@ -121,3 +121,17 @@ Expanded `npm run test:csharp` to 66 compiled cases: the 44 base teaching sample
 Review corrected an inaccurate claim that the healing example ignored negative amounts; it only caps the maximum. Replaced a remove-the-only-function-call experiment, which produced an unused-function warning, with a zero-iteration experiment that demonstrates the same distinction without that distraction. Prerequisite wording now matches the expanded course order. Common typo scanning and manual quiz/walkthrough review found no further specific corrections; this does not substitute for a human learner or Claude review.
 
 Hosted workflow 37195601203 passed the troubleshooting commit 7e5674165e0fb3abfaa98e0470a439d45d44ce58, and 37195906746 passed exact-lesson links at aa48ad3b737391e5ff113bcdedfe8f066d50169b, on both configured platforms. The new experiment checks await their hosted run.
+
+## October 4: visible answer synchronization and RPG walkthrough
+
+Two regressions reproduced stale visible answers after a reset or a same-lesson edit in another tab. Storage events now update existing required-answer controls only when their saved value changes, preserving the control nodes, unrelated feedback, optional notes, and open optional work. `npm test`: 56 pass. Direct browser verification remains pending.
+
+Added a collapsed fight walkthrough that follows invalid input, a full-health potion, two attacks, capped healing with a counterattack, and an enemy defeat. `npm run test:rpg` verifies the exact menu values, potion count, counterattack count, room transition, and quit for that sequence. The reference source is unchanged.
+
+Hosted workflow 37196381286 passed all 66 teaching/experiment cases at commit de08d0aa6d49366c1ff2928e02cbbc32a9aeb36b on both platforms. The later synchronization and walkthrough changes await their next hosted run. Claude's handoff was consolidated around the current implementation and pending checks.
+
+## October 4: scoped, repeatable static builds
+
+Build regression fixtures reproduced stale generated files surviving a rebuild. The build now validates all required regular source assets, refuses linked source/output directories, verifies its resolved output stays in this project, and replaces only its generated dist directory. Tests use fresh project fixtures; the output-junction test confirms its target remains unchanged. A missing required font fails before replacing a previous build. Repeated builds have the same files and one CSP meta declaration per page. No unapproved source file is copied.
+
+`npm test`: 59 pass. Local static build passes. This changes generated output only and does not add publishing or execution. The three new build checks are part of the existing website check command; hosted results remain pending until the saved branch runs them.

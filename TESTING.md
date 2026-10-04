@@ -45,6 +45,10 @@ At the last lesson of each module, open Find and repair a bug. Compare the expec
 
 Open two learning workspaces at the same address. Complete different lessons in each; refreshing must keep both completions. Write lab or debugging notes in different lessons/modules and confirm they both remain. Add a different snippet in each tab, then delete one: the other must remain. Check different RPG milestones and uncheck one; both tabs should show the latest checklist. Editing the same answer or note in both tabs uses the most recent save.
 
+Keep the same lesson open in both tabs. Reset required progress in one tab: the other should immediately clear its quiz choice and code blank while retaining optional notes and open labs. Change a different lesson in another tab: the active input and its feedback should remain intact.
+
+In the complete-reference section of the project guide, open Trace one fight before playing. Run its abc, 2, 1, 1, 2, 1 sequence in a fresh game and compare every value. Healing should print 100 before the counterattack, then the next menu should show 92. Defeating the enemy should advance to room 2 without losing health; one potion should remain. Type 3 to quit.
+
 ## Execution traces
 
 In Understand it, open Trace the values one step at a time. Compare the values after each row with the code; New output shows only the line printed during that step. Try the for and while loops, function return, inventory removal, and game-state loop. At narrow widths the table can scroll within its own box; focus the table region to scroll with the keyboard. Changing lessons closes the trace and replaces its caption and rows.

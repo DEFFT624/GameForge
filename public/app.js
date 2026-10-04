@@ -498,12 +498,32 @@ function routeView() {
   if (id === 'lessons') { $('lesson-title').focus({preventScroll:true}); $('lesson-title').scrollIntoView({block:'start',behavior:'instant'}); }
   else document.querySelector?.('main')?.scrollIntoView({block:'start',behavior:'instant'});
 }
+function syncRequiredAnswers() {
+  if (!storageReliable) return;
+  const id = lessons[active].id;
+  const quizPassed = completed.has(id), blankPassed = practiced.has(id);
+  refreshRequiredProgress();
+  Object.assign(answers, recordMap('gameforge-answers', Object.keys(answers), parseAnswer));
+  const record = answers[id];
+  const choices = Array.from($('answers').children, label => label.children[0]);
+  const quizChanged = choices.some((input, index) => input.checked !== (record.quiz === index));
+  if (quizChanged) choices.forEach((input, index) => { input.checked = record.quiz === index; });
+  if (quizChanged || quizPassed !== completed.has(id)) {
+    $('feedback').textContent = completed.has(id) ? 'You have completed this quiz. You can try it again anytime.' : '';
+    $('challenge').className = '';
+  }
+  const blankChanged = $('practice-answer').value !== record.practice;
+  if (blankChanged) $('practice-answer').value = record.practice;
+  if (blankChanged || blankPassed !== practiced.has(id)) {
+    $('practice-feedback').textContent = practiced.has(id) ? 'You have solved this code blank.' : '';
+    $('practice-form').className = '';
+  }
+  renderProgress();
+}
 window.addEventListener?.('hashchange',routeView);
 window.addEventListener?.('popstate',routeView);
 window.addEventListener?.('storage', event => {
-  if (event.key === null || ['gameforge-progress', 'gameforge-practice'].includes(event.key)) {
-    refreshRequiredProgress(); renderProgress();
-  }
+  if (event.key === null || ['gameforge-progress', 'gameforge-practice', 'gameforge-answers'].includes(event.key)) syncRequiredAnswers();
   if (event.key === null || event.key === 'gameforge-drafts') { refreshDrafts(); renderDrafts(); }
   if (event.key === null || event.key === 'gameforge-capstone') { refreshMilestones(); renderMilestones(); }
 });
