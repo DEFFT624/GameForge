@@ -21,3 +21,6 @@ Build static assets with `node build.mjs`. A future private Sites deployment can
 This is a browser-local learning prototype, not a public community service. Quizzes check selected answers; code blanks compare trimmed text. Neither compiles or runs learner code. There are no accounts, uploads, analytics, network integrations, public submissions, or remote execution. Drafts and progress use this browser's local storage and can be lost when browser data is cleared. Do not put secrets in drafts. Local progress is editable by the learner and is not a credential.
 
 See [SPEC.md](SPEC.md), [SECURITY.md](SECURITY.md), and [CONTRIBUTING.md](CONTRIBUTING.md). Repository: https://github.com/DEFFT624/GameForge. The proposed license is MIT; owner and license approval are required before an open-source release. No release license has been granted yet.
+
+## Quest Radio
+Choose local audio files in the bottom-left player, then press Play. Playback continues between lessons. Use the playlist, previous/next, volume, repeat-song, and Clear controls. Click the Quest Radio heading to collapse it. Select up to 30 files, each at most 100 MB; browser format support varies. Files are not uploaded or stored by GameForge, and must be reselected after refresh.
