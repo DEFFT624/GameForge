@@ -54,3 +54,11 @@ All 14 first-party C# samples compiled with warnings as errors and produced the 
 - Persistent Previous/Next controls show the next lesson title; switching lessons focuses and immediately scrolls to its heading.
 - Browser verified desktop and 390px mobile navigation, no horizontal overflow, and final-lesson project reveal. Music does not overlap mobile lesson controls.
 - Figma connection reported installed, but no Figma design tools were available during this change. This implementation is not a Figma-produced design.
+
+## October 4: compiled tiny RPG reference
+
+- `node --test tests/*.test.mjs`: 34 passing website tests.
+- `node tests/rpg-behavior.mjs`: compiled .NET 10 reference and low-health experiment; victory, defeat, quit, EOF, invalid input, potion limits, room transitions passed. Warnings treated as errors.
+- `node build.mjs`: approved static assets only, including source text.
+- Preview reference endpoint returned HTTP 200 with text/plain and nosniff; POST and binary paths are rejected in server tests.
+- Browser automation still fails during initialization with a missing kernel-assets path. Current visual inspection and Claude review remain pending; these are not claimed as passed.

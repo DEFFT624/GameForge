@@ -31,3 +31,9 @@ Choose local audio files in the bottom-left player, then press Play. Playback co
 
 ## Friend feedback session
 Open /beginner-test.html after finishing both required exercises in all fourteen C# lessons. The full-course review uses the same browser and website address as the saved progress; it includes locally saved notes and Copy feedback. No results are submitted automatically, and the RPG project is optional for the review. A hosted URL is required before a friend on another computer can use it. Existing completion IDs are preserved.
+
+### Complete tiny RPG reference
+
+The project guide now links to `public/rpg-reference.cs`, a first-party source-only example. Learners copy it into Program.cs in a new console project and use the guided reading passes and test checklist. No uploaded source or executable is accepted or run.
+
+For maintainers, `dotnet run --project examples/tiny-rpg/GameForgeRpg.csproj` runs the reference with .NET 10. `npm run test:rpg` compiles it with warnings treated as errors and checks victory, quit, EOF, invalid input, potion limits, room transitions, and the documented low-health defeat experiment. Build outputs stay ignored and are not shipped. .NET 10 support: https://dotnet.microsoft.com/en-us/platform/support/policy.

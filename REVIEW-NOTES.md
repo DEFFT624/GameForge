@@ -19,3 +19,7 @@ Check explanations for beginner vocabulary, ambiguous phrasing, spelling, and wh
 - Open each module card and confirm it resumes the first unfinished lesson in that module.
 
 Do not claim these pending checks have passed. No deployment is included.
+
+## Pending review: source-only RPG reference
+
+Check `public/rpg-reference.cs`, its beginner reading guide in the capstone page, and `tests/rpg-behavior.mjs`. Focus on continue vs switch break, preserving health between rooms, failed potions consuming no turn, EOF/quit preventing counterattacks, and one ending only. The normal settings cannot reach defeat; the guide and compiled test deliberately use the documented 10-health experiment. There are no packages or executable uploads. Browser connection is unavailable; this handoff has not yet been sent to Claude.
