@@ -17,3 +17,9 @@ Twelve automated checks pass, including fresh page initialization, per-lesson dr
 
 ## Fourteen-lesson progression and friend test preparation
 All 14 first-party C# samples compiled with warnings as errors and produced the guide output using installed Roslyn. Twenty-two automated checks pass, including ordering, completion migration, course content, and radio/security regressions. Browser completed all six new quizzes and code blanks and verified refresh persistence. Friend test notes survived refresh and Copy feedback succeeded. Human learner feedback remains pending. Sites currently reports zero versions and no live URL.
+
+## Lesson layout and navigation
+- Compact lesson picker; wider reading panel; introductory, project, and snippet content can be expanded on demand.
+- Persistent Previous/Next controls show the next lesson title; switching lessons focuses and immediately scrolls to its heading.
+- Browser verified desktop and 390px mobile navigation, no horizontal overflow, and final-lesson project reveal. Music does not overlap mobile lesson controls.
+- Figma connection reported installed, but no Figma design tools were available during this change. This implementation is not a Figma-produced design.
