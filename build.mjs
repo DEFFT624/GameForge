@@ -3,13 +3,13 @@ const root = new URL('./', import.meta.url);
 const dist = new URL('dist/', root);
 await mkdir(dist, {recursive: true});
 for (const name of await readdir(new URL('public/', root))) {
-  if (!['index.html','style.css','app.js','content.js','course-extension.js','radio.js','learner-guides.js','home.html'].includes(name)) continue;
+  if (!['index.html','style.css','app.js','content.js','course-extension.js','radio.js','learner-guides.js','home.html','course-plan.js','beginner-test.html','beginner-test.js'].includes(name)) continue;
   await copyFile(new URL('public/' + name, root), new URL(name === 'index.html' ? 'learn.html' : name, dist));
 }
 const headers = "/*\n  Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'none'; media-src blob:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: no-referrer\n  Permissions-Policy: camera=(), microphone=(), geolocation=()\n";
 await writeFile(new URL('_headers', dist), headers);
 await copyFile(new URL('home.html', dist), new URL('index.html', dist));
-for (const page of ['index.html', 'home.html', 'learn.html']) {
+for (const page of ['index.html', 'home.html', 'learn.html', 'beginner-test.html']) {
 const index = new URL(page, dist);
 let html = await readFile(index, 'utf8');
 // Meta CSP covers static hosts that ignore _headers. Framing must be enforced by the host header.

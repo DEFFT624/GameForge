@@ -1,8 +1,8 @@
 # Gameforge
 
-The home page introduces the course at `/`; `/learn.html` opens the learning workspace. A new First steps guide teaches instructions, output, execution order, and text variables. All eight lessons include goals, glossaries, walkthroughs, expected output, common mistakes, small prediction exercises, and answer-specific feedback. Existing saved answers and progress are preserved.
+The home page introduces the course at `/`; `/learn.html` opens the learning workspace. A new First steps guide teaches instructions, output, execution order, and text variables. All fourteen lessons include goals, glossaries, walkthroughs, expected output, common mistakes, small prediction exercises, and answer-specific feedback. Existing saved answers and progress are preserved.
 
-A beginner-friendly game development learning website. This first local MVP has a responsive dashboard, eight C# lessons with quizzes and code blanks, browser-local progress, two starter snippets, local text draft creation/deletion, snippet search, and a six-step RPG project checklist.
+A beginner-friendly game development learning website. This first local MVP has a responsive dashboard, fourteen C# lessons with quizzes and code blanks, browser-local progress, two starter snippets, local text draft creation/deletion, snippet search, and a six-step RPG project checklist.
 
 See [TESTING.md](TESTING.md) for the short user test checklist. On Windows, you can also open START-GAMEFORGE.cmd.
 
@@ -26,3 +26,6 @@ See [SPEC.md](SPEC.md), [SECURITY.md](SECURITY.md), and [CONTRIBUTING.md](CONTRI
 
 ## Quest Radio
 Choose local audio files in the bottom-left player, then press Play. Playback continues between lessons. Use the playlist, previous/next, volume, repeat-song, and Clear controls. Click the Quest Radio heading to collapse it. Select up to 30 files, each at most 100 MB; browser format support varies. Files are not uploaded or stored by GameForge, and must be reselected after refresh.
+
+## Friend feedback session
+Open /beginner-test.html for a 15–20 minute moderated test script and locally saved notes with Copy feedback. No results are submitted automatically. A hosted URL is still required before a friend on another computer can use it. The six new lessons introduce function calls, parameters and returns, class fields, while loops, enums, and switch before the original application lessons. Old completion IDs are preserved; the new lessons begin unfinished.

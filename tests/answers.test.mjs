@@ -1,3 +1,4 @@
+import {course} from '../public/course-plan.js';
 import {lessonGuides} from '../public/learner-guides.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -21,7 +22,7 @@ function load(storage = new Map(), confirm = true) {
   const nodes = new Map();
   const get = id => { if (!nodes.has(id)) nodes.set(id, new Element()); return nodes.get(id); };
   vm.runInNewContext(source, {
-    lessonGuides, foundations, snippets, validateDraft, extraLessons, practices, milestones, checkPractice,
+    course, lessonGuides, foundations, snippets, validateDraft, extraLessons, practices, milestones, checkPractice,
     document: {getElementById: get, createElement: () => new Element(), createTextNode: text => ({textContent: text})},
     localStorage: {getItem: key => storage.get(key) ?? null, setItem: (key, value) => storage.set(key, value)},
     window: {confirm: () => confirm},
@@ -45,21 +46,21 @@ test('unfinished and completed answers survive navigation and a fresh page load'
   assert.equal(page.selected(), 2); assert.equal(page.get('practice-answer').value, '<=');
   page.get('previous').fire('click');
   assert.equal(page.selected(), 1); assert.equal(page.get('practice-answer').value, ' int ');
-  assert.equal(page.get('progress-count').textContent, '1 / 8');
+  assert.equal(page.get('progress-count').textContent, '1 / 14');
   page.type(''); page = load(page.storage); assert.equal(page.get('practice-answer').value, '');
 });
 test('old completions restore canonical answers without losing progress', () => {
   const page = load(new Map([['gameforge-progress', '["health"]'], ['gameforge-practice', '["health"]']]));
   page.get('previous').fire('click');
   assert.equal(page.selected(), 1); assert.equal(page.get('practice-answer').value, 'int');
-  assert.equal(page.get('progress-count').textContent, '1 / 8');
+  assert.equal(page.get('progress-count').textContent, '1 / 14');
 });
 test('reset clears saved answers and progress but preserves drafts and project milestones', () => {
   let page = load(new Map([['gameforge-drafts', '[]'], ['gameforge-capstone', '["status"]']]));
   page.choose(1); page.type('int'); page.get('challenge').fire('submit'); page.get('practice-form').fire('submit');
   page.get('reset').fire('click'); page = load(page.storage);
   assert.equal(page.selected(), -1); assert.equal(page.get('practice-answer').value, '');
-  assert.equal(page.get('progress-count').textContent, '0 / 8');
+  assert.equal(page.get('progress-count').textContent, '0 / 14');
   assert.equal(page.storage.get('gameforge-capstone'), '["status"]');
   assert.equal(page.storage.get('gameforge-drafts'), '[]');
 });
@@ -77,25 +78,25 @@ test('lesson completion requires both exercises, in either order, and survives r
     const blank = () => { page.type('int'); page.get('practice-form').fire('submit'); };
     (quizFirst ? quiz : blank)();
     page = load(page.storage);
-    assert.equal(page.get('progress-count').textContent, '0 / 8');
+    assert.equal(page.get('progress-count').textContent, '0 / 14');
     assert.match(page.get('lesson-list').children[0].children[0].textContent, /IN PROGRESS/);
     page.get('continue').fire('click');
     assert.equal(page.get('lesson-title').textContent, foundations[0].title);
     (quizFirst ? blank : quiz)();
     page = load(page.storage);
-    assert.equal(page.get('progress-count').textContent, '1 / 8');
+    assert.equal(page.get('progress-count').textContent, '1 / 14');
     assert.match(page.get('lesson-list').children[0].children[0].textContent, /COMPLETE/);
     page.get('continue').fire('click');
     assert.equal(page.get('lesson-title').textContent, foundations[1].title);
   }
 });
 test('all quizzes alone do not complete the course', () => {
-  const ids = [...foundations, ...extraLessons].map(l => l.id);
+  const ids = course.lessons.map(l => l.id);
   let page = load(new Map([['gameforge-progress', JSON.stringify(ids)]]));
-  assert.equal(page.get('progress-count').textContent, '0 / 8');
+  assert.equal(page.get('progress-count').textContent, '0 / 14');
   assert.equal(page.get('completion').hidden, true);
   page.storage.set('gameforge-practice', JSON.stringify(ids)); page = load(page.storage);
-  assert.equal(page.get('progress-count').textContent, '8 / 8');
+  assert.equal(page.get('progress-count').textContent, '14 / 14');
   assert.equal(page.get('completion').hidden, false);
 });
 
@@ -120,4 +121,10 @@ test('quiz feedback explains the selected mistake and the successful answer', ()
  page.choose(1);page.get('challenge').fire('submit');assert.match(page.get('feedback').textContent,/100 - 25/);
  page.type('int');page.get('practice-form').fire('submit');assert.match(page.get('practice-feedback').textContent,/whole-number/);
  assert.ok(page.get('lesson-steps').children.length>=3);assert.equal(page.get('lesson-output').textContent,'75');
+});
+test('existing eight completions survive expansion but new lessons remain unfinished',()=>{
+ const oldIds=[...foundations,...extraLessons].map(l=>l.id);
+ const page=load(new Map([['gameforge-progress',JSON.stringify(oldIds)],['gameforge-practice',JSON.stringify(oldIds)]]));
+ assert.equal(page.get('progress-count').textContent,'8 / 14');assert.equal(page.get('completion').hidden,true);
+ page.get('continue').fire('click');assert.equal(page.get('lesson-title').textContent,'Call a named action');
 });

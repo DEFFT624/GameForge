@@ -14,3 +14,6 @@ No user-submitted code is compiled or run. Compilation above covers only our own
 ## Answer persistence fix
 
 Twelve automated checks pass, including fresh page initialization, per-lesson drafts, completed-answer migration, malformed storage, and reset behavior. Browser reload preserves the selected quiz answer, code-blank text, completion, and active lesson. Legacy completions display canonical correct answers because exact prior entries were not stored.
+
+## Fourteen-lesson progression and friend test preparation
+All 14 first-party C# samples compiled with warnings as errors and produced the guide output using installed Roslyn. Twenty-two automated checks pass, including ordering, completion migration, course content, and radio/security regressions. Browser completed all six new quizzes and code blanks and verified refresh persistence. Friend test notes survived refresh and Copy feedback succeeded. Human learner feedback remains pending. Sites currently reports zero versions and no live URL.

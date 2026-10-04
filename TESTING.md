@@ -24,3 +24,5 @@ There are no public accounts, file uploads, public submissions, or code executio
 Snippet editor: Tab inserts four spaces; select multiple lines to indent them together. Shift+Tab removes one indentation level. Press Escape then Tab to move to Save local draft. Indentation must remain in a saved draft after refresh.
 
 Quest Radio: select two local audio files, press Play, switch lessons, and confirm playback continues. Check next/previous, playlist selection, volume, repeat, Clear, and collapsing the heading. Refresh should empty the playlist without affecting learning progress. Invalid or oversized selections should show feedback.
+
+Expanded course: verify 14 lesson cards, including two small function lessons, class fields, and while/enum/switch introductions. Existing eight completions should show 8 / 14 after upgrade. Continue should select the first unfinished new lesson. Friend feedback page: type a disposable note, refresh, verify persistence, copy the report, and remove the test note. No real beginner session has been conducted yet.
