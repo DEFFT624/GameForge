@@ -20,3 +20,9 @@ Review SPEC.md and SECURITY.md before editing. Review public/content.js for begi
 ## Publishing this starter
 
 The owner created the public repository DEFFT624/GameForge. License selection remains pending. The starter is in GitHub. Claude received the review brief and manually checked the original four lessons; Codex applied the verified improvements. Never enter tokens into source files or chat.
+
+## Current validation commands
+
+Run `npm test` and `npm run build` for website changes. There are no application packages to install. Curriculum or RPG changes also require the .NET 10 SDK: run `npm run test:csharp` and `npm run test:rpg`. The first command verifies every lesson, lab, bug, and repair output; the second exercises the complete RPG and documented defeat experiment. Only repository-owned C# examples are compiled. Browser rendering, keyboard flow, and screen-reader checks still need a real browser; automated source/behavior tests do not replace them.
+
+The checks workflow uses official GitHub setup actions pinned to verified release commits, contents:read permissions, no persisted checkout credentials, and no deployment or publishing step. It checks Linux/Node 22 and Windows/Node 24 with .NET 10. Pin updates should be verified against the official repositories. Repository rules requiring these checks are a separate owner setting.

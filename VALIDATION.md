@@ -74,3 +74,9 @@ All 14 first-party C# samples compiled with warnings as errors and produced the 
 A regression test reproduced two workspace tabs overwriting different lesson completions (1 / 14 instead of 2 / 14). Saves now merge the latest validated records for other lessons and modules. Required progress refreshes before a pass; storage events refresh completion counts and reset state. Snippet additions/deletions and project checks preserve unrelated changes from other tabs.
 
 `node --test tests/*.test.mjs`: 44 tests pass, including multi-tab progress, notes, snippets, milestones, and storage-failure behavior. If saving fails, in-memory work remains usable for the visit and the existing warning explains that it cannot persist. Editing the same record concurrently still uses the latest save; this starter has no collaborative editing or accounts.
+
+## October 4: automated check preparation
+
+Prepared `.github/workflows/checks.yml` for Linux/Node 22 and Windows/Node 24. Official actions checkout v7.0.1, setup-node v7.0.0, and setup-dotnet v6.0.0 release tags and action manifests were verified against their upstream GitHub repositories; uses are pinned to full commit SHAs. Workflow has contents:read only, no persisted checkout credentials, and no publishing step. `global.json` selects stable .NET 10 feature bands.
+
+The website test launcher enumerates only .test.mjs files explicitly, avoiding shell glob differences and accidental execution of the browser feedback script by generic Node test discovery. Local launcher: 44 passing tests. Hosted workflow results are pending until GitHub executes the saved workflow.
