@@ -54,21 +54,21 @@ test('unfinished and completed answers survive navigation and a fresh page load'
   assert.equal(page.selected(), 2); assert.equal(page.get('practice-answer').value, '<=');
   page.open('health');
   assert.equal(page.selected(), 1); assert.equal(page.get('practice-answer').value, ' int ');
-  assert.equal(page.get('progress-count').textContent, '1 / 22');
+  assert.equal(page.get('progress-count').textContent, `1 / ${course.lessons.length}`);
   page.type(''); page = load(page.storage); assert.equal(page.get('practice-answer').value, '');
 });
 test('old completions restore canonical answers without losing progress', () => {
   const page = load(new Map([['gameforge-progress', '["health"]'], ['gameforge-practice', '["health"]']]));
   page.get('previous').fire('click');
   assert.equal(page.selected(), 1); assert.equal(page.get('practice-answer').value, 'int');
-  assert.equal(page.get('progress-count').textContent, '1 / 22');
+  assert.equal(page.get('progress-count').textContent, `1 / ${course.lessons.length}`);
 });
 test('optional lab answers and notes survive navigation and reload without completing the main exercises',()=>{
  let page=load();
  page.get('lab-answer').value='70';page.get('lab-answer').fire('input');
  page.get('lab-note').value='Track each assignment.';page.get('lab-note').fire('input');
  page.get('lab-form').fire('submit');assert.match(page.get('lab-feedback').textContent,/Correct/);
- assert.equal(page.get('progress-count').textContent,'0 / 22');
+ assert.equal(page.get('progress-count').textContent,`0 / ${course.lessons.length}`);
  page.get('next').fire('click');page.get('previous').fire('click');
  assert.equal(page.get('lab-answer').value,'70');
  page=load(page.storage);assert.equal(page.get('lab-note').value,'Track each assignment.');
@@ -89,7 +89,7 @@ test('module debugging notes persist independently and appear only at module end
  page.get('module-debug').open=true;page.get('debug-repair').open=true;
  page=load(page.storage);assert.equal(page.get('debug-note').value,'Zero is not alive.');
  assert.equal(page.get('module-debug').open,false);assert.equal(page.get('debug-repair').open,false);
- assert.equal(page.get('progress-count').textContent,'0 / 22');
+ assert.equal(page.get('progress-count').textContent,`0 / ${course.lessons.length}`);
  page.get('next').fire('click');assert.equal(page.get('module-debug').hidden,true);
  for(const raw of ['null','[]','{','{"control":42}']) assert.equal(load(new Map([['gameforge-debug-notes',raw]])).get('debug-note').value,'');
 });
@@ -105,7 +105,7 @@ test('reset clears saved answers and progress but preserves drafts and project m
   page.choose(1); page.type('int'); page.get('challenge').fire('submit'); page.get('practice-form').fire('submit');
   page.get('reset').fire('click'); page = load(page.storage);
   assert.equal(page.selected(), -1); assert.equal(page.get('practice-answer').value, '');
-  assert.equal(page.get('progress-count').textContent, '0 / 22');
+  assert.equal(page.get('progress-count').textContent, `0 / ${course.lessons.length}`);
   assert.equal(page.storage.get('gameforge-capstone'), '["status"]');
   assert.equal(page.storage.get('gameforge-drafts'), '[]');
 });
@@ -123,13 +123,13 @@ test('lesson completion requires both exercises, in either order, and survives r
     const blank = () => { page.type('int'); page.get('practice-form').fire('submit'); };
     (quizFirst ? quiz : blank)();
     page = load(page.storage);
-    assert.equal(page.get('progress-count').textContent, '0 / 22');
+    assert.equal(page.get('progress-count').textContent, `0 / ${course.lessons.length}`);
     assert.match(page.get('lesson-list').children[0].children[2].children[0].children[0].textContent, /IN PROGRESS/);
     page.get('continue').fire('click');
     assert.equal(page.get('lesson-title').textContent, foundations[0].title);
     (quizFirst ? blank : quiz)();
     page = load(page.storage);
-    assert.equal(page.get('progress-count').textContent, '1 / 22');
+    assert.equal(page.get('progress-count').textContent, `1 / ${course.lessons.length}`);
     assert.match(page.get('lesson-list').children[0].children[2].children[0].children[0].textContent, /COMPLETE/);
     page.get('continue').fire('click');
     assert.equal(page.get('lesson-title').textContent, 'Give your hero a text greeting');
@@ -138,11 +138,11 @@ test('lesson completion requires both exercises, in either order, and survives r
 test('all quizzes alone do not complete the course', () => {
   const ids = course.lessons.map(l => l.id);
   let page = load(new Map([['gameforge-progress', JSON.stringify(ids)]]));
-  assert.equal(page.get('progress-count').textContent, '0 / 22');
+  assert.equal(page.get('progress-count').textContent, `0 / ${course.lessons.length}`);
   assert.equal(page.get('completion').hidden, true);
   assert.equal(page.get('course-review-link').hidden, true);
   page.storage.set('gameforge-practice', JSON.stringify(ids)); page = load(page.storage);
-  assert.equal(page.get('progress-count').textContent, '22 / 22');
+  assert.equal(page.get('progress-count').textContent, `${course.lessons.length} / ${course.lessons.length}`);
   assert.equal(page.get('completion').hidden, false);
   assert.equal(page.get('course-review-link').hidden, false);
   page.get('reset').fire('click');
@@ -155,16 +155,16 @@ test('two open workspaces do not overwrite different lesson completions or draft
  first.open('loops');first.type('unfinished loop draft');
  second.open('decisions');second.choose(course.lessons.find(lesson=>lesson.id==='decisions').correct);second.get('challenge').fire('submit');
  second.type(course.practices.decisions.answer);second.get('practice-form').fire('submit');
- const refreshed=load(storage);assert.equal(refreshed.get('progress-count').textContent,'2 / 22');
+ const refreshed=load(storage);assert.equal(refreshed.get('progress-count').textContent,`2 / ${course.lessons.length}`);
  refreshed.open('loops');assert.equal(refreshed.get('practice-answer').value,'unfinished loop draft');
 });
 test('storage failure preserves session answers and progress while warning that they cannot persist',()=>{
  const page=load(new Map(),true,'',true);
  page.choose(course.lessons[0].correct);page.get('challenge').fire('submit');
  page.type(course.practices.health.answer);page.get('practice-form').fire('submit');
- assert.equal(page.get('progress-count').textContent,'1 / 22');
+ assert.equal(page.get('progress-count').textContent,`1 / ${course.lessons.length}`);
  page.get('next').fire('click');page.get('previous').fire('click');
- assert.equal(page.get('progress-count').textContent,'1 / 22');
+ assert.equal(page.get('progress-count').textContent,`1 / ${course.lessons.length}`);
  assert.equal(page.get('practice-answer').value,'int');assert.equal(page.selected(),course.lessons[0].correct);
  assert.match(page.get('storage-status').textContent,/unavailable or full/);
 });
@@ -173,9 +173,9 @@ test('progress counts and feedback access follow another tab including its reset
  first.choose(course.lessons[0].correct);first.get('challenge').fire('submit');
  first.type(course.practices.health.answer);first.get('practice-form').fire('submit');
  second.sync('gameforge-progress');second.sync('gameforge-practice');
- assert.equal(second.get('progress-count').textContent,'1 / 22');
+ assert.equal(second.get('progress-count').textContent,`1 / ${course.lessons.length}`);
  first.get('reset').fire('click');second.sync('gameforge-progress');
- assert.equal(second.get('progress-count').textContent,'0 / 22');
+ assert.equal(second.get('progress-count').textContent,`0 / ${course.lessons.length}`);
  second.get('next').fire('click');second.get('previous').fire('click');assert.equal(second.selected(),-1);
 });
 
@@ -190,7 +190,7 @@ test('another tab resets the visible answer controls while preserving optional w
  for(const key of ['gameforge-answers','gameforge-progress','gameforge-practice'])second.sync(key);
  assert.equal(second.selected(),-1);assert.equal(second.get('practice-answer').value,'');
  assert.equal(second.get('feedback').textContent,'');assert.equal(second.get('practice-feedback').textContent,'');
- assert.equal(second.get('progress-count').textContent,'0 / 22');
+ assert.equal(second.get('progress-count').textContent,`0 / ${course.lessons.length}`);
  assert.equal(second.get('lab-note').value,'Keep my prediction');assert.equal(second.get('practice-lab').open,true);
 });
 
@@ -265,7 +265,7 @@ test('quiz feedback explains the selected mistake and the successful answer', ()
 test('existing eight completions survive expansion but new lessons remain unfinished',()=>{
  const oldIds=[...foundations,...extraLessons].map(l=>l.id);
  const page=load(new Map([['gameforge-progress',JSON.stringify(oldIds)],['gameforge-practice',JSON.stringify(oldIds)]]));
- assert.equal(page.get('progress-count').textContent,'8 / 22');assert.equal(page.get('completion').hidden,true);
+ assert.equal(page.get('progress-count').textContent,`8 / ${course.lessons.length}`);assert.equal(page.get('completion').hidden,true);
  page.get('continue').fire('click');assert.equal(page.get('lesson-title').textContent,'Give your hero a text greeting');
 });
 
@@ -281,7 +281,7 @@ test('glossary search finds a concept, opens its lesson, and handles literal hos
  page.get('glossary-search').value='CONCATENATION';page.get('glossary-search').fire('input');
  assert.equal(page.get('glossary-results').children.length,1);assert.match(page.get('glossary-status').textContent,/1 match/);
  page.get('glossary-results').children[0].children[1].fire('click');
- assert.equal(page.get('lesson-title').textContent,'Give your hero a text greeting');assert.equal(page.get('progress-count').textContent,'0 / 22');
+ assert.equal(page.get('lesson-title').textContent,'Give your hero a text greeting');assert.equal(page.get('progress-count').textContent,`0 / ${course.lessons.length}`);
  page.get('glossary-search').value='<script>alert(1)</script>';page.get('glossary-search').fire('input');
  assert.equal(page.get('glossary-results').children.length,0);assert.match(page.get('glossary-status').textContent,/No matching/);
  page.get('glossary-search').value='a';page.get('glossary-search').fire('input');
@@ -293,14 +293,14 @@ test('troubleshooting renders deliberate mistakes and repairs without running co
  assert.match(first.children[0].textContent,/CS1002/);
  assert.equal(first.children[2].children[0].textContent,'Console.WriteLine("Hello")');
  assert.equal(first.children[4].children[1].children[0].textContent,'Console.WriteLine("Hello");');
- assert.equal(page.get('progress-count').textContent,'0 / 22');
+ assert.equal(page.get('progress-count').textContent,`0 / ${course.lessons.length}`);
 });
 test('all fourteen earlier completions survive while four new lessons keep the review locked',()=>{
  const newIds=new Set(['strings','booleans','combined-conditions','list-loop']);
  const oldIds=course.lessons.slice(0,18).filter(lesson=>!newIds.has(lesson.id)).map(lesson=>lesson.id);
  assert.equal(oldIds.length,14);
  const page=load(new Map([['gameforge-progress',JSON.stringify(oldIds)],['gameforge-practice',JSON.stringify(oldIds)]]));
- assert.equal(page.get('progress-count').textContent,'14 / 22');
+ assert.equal(page.get('progress-count').textContent,`14 / ${course.lessons.length}`);
  assert.equal(page.get('course-review-link').hidden,true);
  page.get('continue').fire('click');assert.equal(page.get('lesson-title').textContent,'Give your hero a text greeting');
 });
@@ -309,7 +309,7 @@ test('eighteen saved completions resume at the new toolbox without unlocking the
  const oldIds=course.lessons.slice(0,18).map(lesson=>lesson.id);
  const storage=new Map([['gameforge-progress',JSON.stringify(oldIds)],['gameforge-practice',JSON.stringify(oldIds)]]);
  const page=load(storage);
- assert.equal(page.get('progress-count').textContent,'18 / 22');
+ assert.equal(page.get('progress-count').textContent,`18 / ${course.lessons.length}`);
  assert.equal(page.get('course-review-link').hidden,true);
  page.get('continue').fire('click');
  assert.equal(page.get('lesson-title').textContent,'Build a readable status message');
@@ -323,9 +323,9 @@ test('new toolbox exercises require both answers, save drafts, and restore their
   assert.equal(page.get('lesson-title').textContent,lesson.title);
   assert.equal(page.get('lesson-output').textContent,course.lessonGuides[lesson.id].output);
   page.choose(lesson.correct);page.get('challenge').fire('submit');
-  assert.equal(page.get('progress-count').textContent,'0 / 22');
+  assert.equal(page.get('progress-count').textContent,`0 / ${course.lessons.length}`);
   page.type(course.practices[lesson.id].answer);page.get('practice-form').fire('submit');
-  assert.equal(page.get('progress-count').textContent,'1 / 22');
+  assert.equal(page.get('progress-count').textContent,`1 / ${course.lessons.length}`);
   page.get('lab-answer').value='unfinished prediction';page.get('lab-answer').fire('input');
   const restored=load(storage,true,'#lessons',false,'?lesson='+lesson.id);
   assert.equal(restored.selected(),lesson.correct);
@@ -359,7 +359,7 @@ test('an exact lesson link opens that lesson without changing earned progress',(
  const page=load(storage,true,'#lessons',false,'?lesson=characters');
  assert.equal(page.get('lesson-title').textContent,course.lessons.find(lesson=>lesson.id==='characters').title);
  assert.equal(page.get('lessons').hidden,false);
- assert.equal(page.get('progress-count').textContent,'1 / 22');
+ assert.equal(page.get('progress-count').textContent,`1 / ${course.lessons.length}`);
  assert.equal(page.get('lesson-link').href,'/learn.html?lesson=characters#lessons');
  page.get('next').fire('click');
  assert.equal(page.location.search,'?lesson=input');
@@ -368,7 +368,7 @@ test('an exact lesson link opens that lesson without changing earned progress',(
  const recipient=load(new Map(),true,'',false,'?lesson=strings');
  assert.equal(recipient.get('lessons').hidden,false);
  assert.equal(recipient.get('lesson-title').textContent,'Give your hero a text greeting');
- assert.equal(recipient.get('progress-count').textContent,'0 / 22');
+ assert.equal(recipient.get('progress-count').textContent,`0 / ${course.lessons.length}`);
 });
 
 test('lesson URLs ignore unknown IDs, restore browser navigation, and follow reset',()=>{
@@ -395,7 +395,7 @@ test('module chooser groups every lesson and opens the current module after navi
   module.ids.forEach((id,lessonIndex)=>assert.equal(groups[index].children[2].children[lessonIndex].children[1].textContent,course.lessons.find(lesson=>lesson.id===id).title));
  });
  page.open('arrays');
- assert.match(page.get('outline-summary').textContent,/Module 5 of 5/);
+ assert.match(page.get('outline-summary').textContent,new RegExp(`Module 5 of ${course.modules.length}`));
  assert.equal(page.get('course-outline').open,false);
  const restored=load(page.storage);
  assert.equal(restored.get('lesson-title').textContent,page.get('lesson-title').textContent);
@@ -411,4 +411,14 @@ test('lesson changes scroll to the chooser while focusing the lesson title',()=>
  assert.equal(page.get('lessons').lastScroll.behavior,'instant');
  page.navigate('dashboard');page.navigate('lessons');
  assert.equal(page.get('lessons').lastScroll.block,'start');
+});
+
+test('all previously completed 22 lessons remain saved but cannot unlock the expanded course review',()=>{
+ const oldIds=course.lessons.slice(0,22).map(lesson=>lesson.id);
+ const page=load(new Map([['gameforge-progress',JSON.stringify(oldIds)],['gameforge-practice',JSON.stringify(oldIds)]]));
+ assert.equal(page.get('progress-count').textContent,'22 / 39');
+ assert.equal(page.get('course-review-link').hidden,true);
+ page.get('continue').fire('click');
+ assert.equal(page.get('lesson-title').textContent,'Give your code a home');
+ assert.match(page.get('module-meta').textContent,/MODULE 6/);
 });

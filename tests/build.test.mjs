@@ -21,9 +21,10 @@ test('static builds remove stale output, ignore unapproved source, and keep secu
     assert.equal(result.status, 0, result.stderr);
     const files = await readdir(join(project, 'dist'));
     assert.ok(!files.includes('old') && !files.includes('unapproved.dll'));
-    assert.ok(files.includes('learn.html') && files.includes('rpg-reference.cs') && files.includes('_headers'));
+    assert.ok(files.includes('learn.html') && files.includes('rpg-reference.cs') && files.includes('_headers') && files.includes('test-guide.html') && files.includes('foundations-finish.js'));
     const html = await readFile(join(project, 'dist/learn.html'), 'utf8');
     assert.equal((html.match(/http-equiv="Content-Security-Policy"/g) || []).length, 1);
+    assert.match(await readFile(join(project, 'dist/test-guide.html'), 'utf8'), /http-equiv="Content-Security-Policy"/);
     assert.match(await readFile(join(project, 'dist/_headers'), 'utf8'), /object-src 'none'/);
     await writeFile(join(project, 'dist/stale.exe'), 'stale fixture');
     result = build(); assert.equal(result.status, 0, result.stderr);

@@ -39,15 +39,34 @@ const labChanges = [
   assert.equal(code.split(before).length, 2, 'Experiment must change exactly one part: ' + id);
   return {id: 'experiment-' + id + '-' + index, code: code.replace(before, after), output, exception};
 });
-const cases = [
+const reviewedCases = [
+  ['properties', 'hero.TakeDamage(25);', 'hero.TakeDamage(25);\nhero.Heal(10);', '85'],
+  ['properties', 'hero.TakeDamage(25);', 'hero.TakeDamage(25);\nhero.Heal(int.MaxValue);', '100'],
+  ['properties', 'hero.TakeDamage(25);', 'hero.TakeDamage(25);\nhero.Heal(-10);', '75'],
+  ['save-file', 'File.ReadAllText(path)', 'File.ReadAllText(path + ".missing")', 'Save unavailable'],
+  ['json-load', 'string json = "{\\"Coins\\":-5}";', 'string json = "null";', 'Invalid save'],
+  ['json-load', 'string json = "{\\"Coins\\":-5}";', 'string json = "broken";', 'Unreadable save'],
+  ['json-load', 'string json = "{\\"Coins\\":-5}";', 'string json = "{\\"coins\\":5}";', '0']
+].map(([id,before,after,output],index)=>{
+  const code=course.lessons.find(lesson=>lesson.id===id).code;
+  assert.equal(code.split(before).length,2,'Review check changes exactly one part: '+id);
+  return {id:'review-'+id+'-'+index,code:code.replace(before,after),output};
+});
+const allCases = [
   ...course.lessons.map(lesson => ({id: 'lesson-' + lesson.id, code: lesson.code, output: course.lessonGuides[lesson.id].output})),
   ...Object.entries(course.labs).map(([id, lab]) => ({id: 'lab-' + id, code: lab.code, output: lab.output})),
   ...Object.entries(course.debugging).flatMap(([id, bug]) => [
     {id: 'bug-' + id, code: bug.code, output: bug.actual},
     {id: 'repair-' + id, code: bug.fixed, output: bug.expected}
   ]),
-  ...labChanges
+  ...labChanges, ...reviewedCases,
+  ...Object.entries(course.labs).filter(([,lab])=>lab.changeCode).map(([id,lab])=>({id:'experiment-'+id,code:lab.changeCode,output:lab.changeOutput}))
 ];
+// Focused reruns only select known first-party samples; CI still runs all by default.
+const selection = process.argv.find(arg=>arg.startsWith('--lessons='))?.slice(10).split(',');
+if (selection) assert.ok(selection.every(id=>course.lessons.some(lesson=>lesson.id===id)),'Unknown lesson selection');
+const cases = selection ? allCases.filter(sample=>selection.some(id=>['lesson-','lab-','experiment-','review-'].some(prefix=>sample.id===prefix+id || sample.id.startsWith(prefix+id+'-')))) : allCases;
+assert.ok(cases.length,'No sample selected');
 const scratch = await mkdtemp(join(tmpdir(), 'gameforge-csharp-test-'));
 function run(args) {
   const result = spawnSync('dotnet', args, {encoding: 'utf8', timeout: 60000});

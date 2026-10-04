@@ -5,7 +5,8 @@ import {lessons} from '../public/content.js';
 import {extraLessons, milestones} from '../public/course-extension.js';
 test('every lesson has a valid quiz and a non-executing code-blank challenge', () => {
   const all = course.lessons;
-  assert.equal(all.length, 22);
+  assert.equal(all.length, 39);
+  assert.equal(course.modules.length, 10);
   assert.equal(new Set(all.map(l => l.id)).size, all.length);
   for (const l of all) {
     assert.ok(Number.isInteger(l.correct) && l.correct >= 0 && l.correct < l.answers.length);
@@ -88,4 +89,9 @@ test('troubleshooting distinguishes compiler, runtime, and logic failures with f
   assert.notEqual(example.broken,example.fixed);assert.ok(example.source.startsWith('https://learn.microsoft.com/'));
   if(example.kind!=='logic')assert.ok(example.diagnostic);
  }
+});
+
+test('new foundation lab variations have explicit executable expectations',()=>{
+ for(const lesson of course.lessons.slice(22)){const lab=course.labs[lesson.id];assert.ok(lab.changeCode && typeof lab.changeOutput==='string');assert.match(course.lessonGuides[lesson.id].why[lesson.correct],/Correct:/);assert.notEqual(lab.changeCode,lab.code);}
+ assert.deepEqual(course.modules.slice(5).map(module=>module.id),['organization','object-rules','design','save-test','finish-project']);
 });

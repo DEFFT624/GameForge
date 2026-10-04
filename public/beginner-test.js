@@ -7,6 +7,11 @@ const tasks = [
  ['Using the website','How did navigation, saved drafts, quizzes, code blanks, and feedback work for you? Mention phone layout or accessibility problems and steps to reproduce any bug.'],
  ['Your next project','Does the tiny RPG guide feel approachable? If you tried it, what happened? What would help you move into Unity or game art next? Building the RPG is optional.']
 ];
+tasks.push(
+ ['Object design and error handling','Explain one use for a private setter, an interface, or composition. Were the examples small enough? What was unclear about guards, exceptions, or namespaces?'],
+ ['Saving and testing','What is the difference between JSON text and a saved file? Which checks protect against null or invalid data? Describe a boundary test without copying an answer.'],
+ ['Finishing the course','How did the final project lessons connect earlier ideas? Did the module lengths, traces, and feedback support learning at your pace? Which lesson should we revise first?']
+);
 const key='gameforge-course-feedback-v2';
 let saved={};try{const value=JSON.parse(localStorage.getItem(key)||'{}');if(value && typeof value==='object' && !Array.isArray(value))saved=value;}catch{}
 const $=id=>document.getElementById(id),fields=[];

@@ -32,12 +32,18 @@ test('the direct review page stays locked for the previously complete fourteen-l
  const oldIds=course.lessons.slice(0,18).filter(lesson=>!newIds.has(lesson.id)).map(lesson=>lesson.id);
  const page=load(new Map([['gameforge-progress',JSON.stringify(oldIds)],['gameforge-practice',JSON.stringify(oldIds)]]));
  assert.equal(page.get('review-content').hidden,true);
- assert.match(page.get('review-progress').textContent,/14 \/ 22/);
+ assert.match(page.get('review-progress').textContent,new RegExp(`14 / ${course.lessons.length}`));
 });
 
 test('previously complete eighteen-lesson learners need the added toolbox lessons for the review',()=>{
  const oldIds=course.lessons.slice(0,18).map(lesson=>lesson.id);
  const page=load(new Map([['gameforge-progress',JSON.stringify(oldIds)],['gameforge-practice',JSON.stringify(oldIds)]]));
  assert.equal(page.get('review-content').hidden,true);
- assert.match(page.get('review-progress').textContent,/18 \/ 22/);
+ assert.match(page.get('review-progress').textContent,new RegExp(`18 / ${course.lessons.length}`));
+});
+
+test('the complete former 22-lesson course does not unlock the 39-lesson review',()=>{
+ const oldIds=course.lessons.slice(0,22).map(lesson=>lesson.id);
+ const page=load(new Map([['gameforge-progress',JSON.stringify(oldIds)],['gameforge-practice',JSON.stringify(oldIds)]]));
+ assert.equal(page.get('review-content').hidden,true);assert.match(page.get('review-progress').textContent,/22 \/ 39/);
 });

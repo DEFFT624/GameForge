@@ -332,3 +332,7 @@ pre,code,textarea,#practice-answer{font-family:Consolas,'Courier New',monospace;
 
 .learning-page .course-outline{width:100%}
 .learning-page #lessons{scroll-margin-top:12px}
+
+/* Test instructions stay readable rather than squeezing into narrow cards. */
+.test-guide .home-path{grid-template-columns:1fr}
+.test-guide .home-path article p,.test-guide .home-path article a{font-size:22px;line-height:1.5}

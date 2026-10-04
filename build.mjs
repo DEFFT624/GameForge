@@ -7,7 +7,7 @@ const projectPath = await realpath(fileURLToPath(root));
 const sourcePath = resolve(projectPath, 'public');
 const sourceInfo = await lstat(sourcePath);
 if (sourceInfo.isSymbolicLink() || !sourceInfo.isDirectory() || await realpath(sourcePath) !== sourcePath) throw Error('Refusing a linked source directory');
-const assets = ['vt323-regular.ttf','vt323-OFL.txt','index.html','style.css','app.js','content.js','course-extension.js','radio.js','learner-guides.js','lesson-traces.js','foundation-bridges.js','game-data-lessons.js','help-examples.js','home.html','home-tabs.js','course-plan.js','beginner-test.html','beginner-test.js','rpg-reference.cs'];
+const assets = ['vt323-regular.ttf','vt323-OFL.txt','index.html','style.css','app.js','content.js','course-extension.js','radio.js','learner-guides.js','lesson-traces.js','foundation-bridges.js','game-data-lessons.js','foundations-finish.js','help-examples.js','home.html','home-tabs.js','course-plan.js','test-guide.html','beginner-test.html','beginner-test.js','rpg-reference.cs'];
 // Check all required inputs before replacing a previous generated build.
 for (const name of assets) {
   if (!(await lstat(new URL('public/' + name, root))).isFile()) throw Error('Expected a regular source asset: ' + name);
@@ -27,7 +27,7 @@ for (const name of assets) {
 const headers = "/*\n  Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; connect-src 'none'; media-src blob:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: no-referrer\n  Permissions-Policy: camera=(), microphone=(), geolocation=()\n";
 await writeFile(new URL('_headers', dist), headers);
 await copyFile(new URL('home.html', dist), new URL('index.html', dist));
-for (const page of ['index.html', 'home.html', 'learn.html', 'beginner-test.html']) {
+for (const page of ['index.html', 'home.html', 'learn.html', 'test-guide.html', 'beginner-test.html']) {
 const index = new URL(page, dist);
 let html = await readFile(index, 'utf8');
 // Meta CSP covers static hosts that ignore _headers. Framing must be enforced by the host header.
