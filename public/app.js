@@ -1,7 +1,7 @@
-import {lessonGuides} from './learner-guides.js';
+import {course} from './course-plan.js';
 import {lessons as foundations, snippets, validateDraft} from './content.js';
-import {extraLessons, practices, milestones, checkPractice} from './course-extension.js';
-const lessons = [...foundations, ...extraLessons];
+import {milestones} from './course-extension.js';
+const {lessons, practices, lessonGuides, checkPractice} = course;
 const $ = id => document.getElementById(id);
 function read(key, fallback) { try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; } }
 function save(key, value) {

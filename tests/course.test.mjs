@@ -1,10 +1,11 @@
+import {course} from '../public/course-plan.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {lessons} from '../public/content.js';
-import {extraLessons, practices, milestones, checkPractice} from '../public/course-extension.js';
+import {extraLessons, milestones} from '../public/course-extension.js';
 test('every lesson has a valid quiz and a non-executing code-blank challenge', () => {
-  const all = [...lessons, ...extraLessons];
-  assert.equal(all.length, 8);
+  const all = course.lessons;
+  assert.equal(all.length, 14);
   assert.equal(new Set(all.map(l => l.id)).size, all.length);
   for (const l of all) {
     assert.ok(Number.isInteger(l.correct) && l.correct >= 0 && l.correct < l.answers.length);
@@ -24,10 +25,15 @@ test('capstone has unique stable saved-state keys', () => {
   assert.equal(new Set(milestones.map(m => m.id)).size, milestones.length);
   for (const m of milestones) assert.ok(m.title && m.detail);
 });
-import {lessonGuides} from '../public/learner-guides.js';
+const {practices, checkPractice, lessonGuides} = course;
 test('every lesson has a complete beginner guide and feedback for every quiz choice', () => {
- for(const lesson of [...lessons,...extraLessons]){
+ for(const lesson of course.lessons){
   const guide=lessonGuides[lesson.id];assert.ok(guide.goal && guide.before && guide.mistake && guide.tryIt && guide.solution && guide.practiceWhy);
   assert.equal(guide.why.length,lesson.answers.length);assert.ok(guide.steps.length>=3);assert.ok(guide.words.length>=4);assert.ok(guide.output);
  }
+});
+test('small lessons come before their combined applications without changing old quiz IDs',()=>{
+ const ids=course.lessons.map(l=>l.id);
+ for(const [before,after] of [['call-function','function-inputs'],['function-inputs','methods'],['class-fields','characters'],['while-loop','enum-state'],['enum-state','switch-choice'],['switch-choice','states']]) assert.ok(ids.indexOf(before)<ids.indexOf(after));
+ for(const old of [...lessons,...extraLessons]) assert.equal(course.lessons.find(l=>l.id===old.id),old);
 });
