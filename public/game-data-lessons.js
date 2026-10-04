@@ -14,7 +14,7 @@ export const gameDataLessons = [
       words: [['interpolation', 'Insert the result of an expression into string text.'], ['$', 'Before the opening quote, enables interpolation.'], ['{health}', 'Read health and insert its value while creating this string.'], ['snapshot', 'A value created at one moment; it does not automatically refresh later.']],
       steps: ['Create heroName with Nova and health with 80.', 'Build status now: replace the braces with Nova and 80.', 'Change health to 60. The already-created status still contains 80.', 'Print the stored status, then build and print a fresh message containing 60.'],
       output: 'Nova: 80 HP\nNova: 60 HP',
-      mistake: 'Without $, braces are just ordinary text inside the quotes. A stored string is not a live display: rebuild it when the values change.',
+      mistake: 'Without $, braces are just ordinary text inside the quotes. A stored string is not a live display: rebuild it when the values change. Inside an interpolated string, write {{ or }} to print a literal brace.',
       tryIt: 'Move health = 60; above the status assignment. What do both lines print?',
       solution: 'Both print Nova: 60 HP. Both strings are now created after health changes.',
       why: ['60 is used by the second message, created after the change.', 'Correct: status was built when health was 80.', 'The $ tells C# to insert the values instead of printing the braces and names.'],
@@ -27,7 +27,7 @@ export const gameDataLessons = [
     id: 'arrays', title: 'Put rooms in a fixed set of slots', topic: 'Arrays · indices & Length', minutes: 9,
     body: 'An array stores a fixed number of items of one type. string[] means an array of strings. Like a List, its first index is zero. Use Length to find how many slots the array has.',
     code: 'string[] rooms = { "Forest", "Cave", "Tower" };\nrooms[1] = "Mine";\nConsole.WriteLine(rooms[1]);\nConsole.WriteLine(rooms.Length);',
-    explanation: 'The three slots have indices 0, 1, and 2. Assigning rooms[1] replaces Cave with Mine; it does not add a slot. Length remains 3. The array object keeps its length, while a List can add and remove items.',
+    explanation: 'The three slots have indices 0, 1, and 2. Assigning rooms[1] replaces Cave with Mine; it does not add a slot. Length remains 3. The array object keeps its length, while a List can add and remove items. The initializer without new, as shown here, belongs in a declaration. When assigning a new array to an existing variable, use new string[] { "Forest", "Cave" } instead.',
     question: 'Which pair of output lines appears?', answers: ['Forest, then 3', 'Mine, then 4', 'Mine, then 3'], correct: 2,
     hint: 'Index 1 is the second slot. Replacing an item does not change the number of slots.',
     practice: {prompt: 'Read the number of slots in this array.', code: 'Console.WriteLine(rooms.____);', answer: 'Length', hint: 'Arrays use this property; Lists use Count. Keep the capital L.'},
@@ -48,7 +48,7 @@ export const gameDataLessons = [
     id: 'constructors', title: 'Give each new enemy a starting value', topic: 'Classes · constructors', minutes: 10,
     body: 'A constructor runs when an object is created. It has the same name as its class and no return type. Give it parameters when each new enemy needs its own starting name or health.',
     code: 'Enemy slime = new Enemy("Slime", 25);\nEnemy bat = new Enemy("Bat", 15);\nslime.Health = 10;\nConsole.WriteLine($"{slime.Name}: {slime.Health}");\nConsole.WriteLine($"{bat.Name}: {bat.Health}");\n\nclass Enemy\n{\n    public string Name;\n    public int Health;\n\n    public Enemy(string name, int health)\n    {\n        Name = name;\n        Health = health;\n    }\n}',
-    explanation: 'Each new call creates a separate Enemy and runs its constructor. name and health are inputs for that call; Name and Health are the fields receiving them. C# distinguishes uppercase and lowercase names. This class has a two-input constructor, so these calls supply both inputs.',
+    explanation: 'Each new Enemy(...) expression creates a separate object and runs its constructor. name and health are inputs for that call; Name and Health are the fields receiving them. C# distinguishes uppercase and lowercase names. This class has a two-input constructor, so these calls supply both inputs.',
     question: 'What does the bat have after slime.Health changes?', answers: ['Health 15', 'Health 10', 'Health 25'], correct: 0,
     hint: 'There are two new Enemy calls, creating two objects.',
     practice: {prompt: 'Complete the constructor name inside class Enemy.', code: 'public ____(string name, int health)', answer: 'Enemy', hint: 'A constructor has the same name and capitalization as its class.'},
@@ -57,7 +57,7 @@ export const gameDataLessons = [
       before: 'You know classes, fields, arguments, and interpolation. A constructor connects these ideas when an instance is created.',
       words: [['constructor', 'Special code that initializes a new instance.'], ['new Enemy(...)', 'Create an Enemy and supply its constructor arguments.'], ['Name = name', 'Store the lowercase parameter value in the uppercase field.'], ['no return type', 'A constructor has no int, string, or void before its name.']],
       steps: ['Create slime; its constructor receives Slime and 25 and stores those fields.', 'Create bat; a separate constructor call stores Bat and 15 in a separate object.', 'Change only slime.Health to 10.', 'Print each object: Slime: 10 and Bat: 15.'], output: 'Slime: 10\nBat: 15',
-      mistake: 'Writing void Enemy(...) inside class Enemy is invalid C#: a constructor has the class name and no return type. An ordinary method needs a different name. This constructor stores exactly what it receives; it does not validate negative health. We use positive starting values here.',
+      mistake: 'Writing void Enemy(...) inside class Enemy is invalid C#: a constructor has the class name and no return type. An ordinary method needs a different name. Once you add this constructor, new Enemy() with no arguments no longer compiles: update each creation to pass a name and health. If you adapt your existing Character class this way, update its new Character() calls too. This constructor stores exactly what it receives; it does not validate negative health. We use positive starting values here.',
       tryIt: 'Change the bat constructor argument from 15 to 30. Does the slime change?', solution: 'No. The lines become Slime: 10 and Bat: 30. Each constructor initializes its own new object.',
       why: ['Correct: bat is a separate object initialized with 15.', 'Only slime receives the assignment to 10.', '25 belongs to the slime starting value, not the bat.'],
       practiceWhy: 'Enemy matches the class name. Constructors initialize instances and do not declare a return type.'
@@ -69,7 +69,7 @@ export const gameDataLessons = [
     id: 'dictionary', title: 'Look up an item by its name', topic: 'Dictionaries · safe lookup', minutes: 10,
     body: 'A Dictionary connects unique keys to values. An item price table can connect a string name to an int price. TryGetValue checks whether a key exists and gives you its value if it does.',
     code: 'using System.Collections.Generic;\n\nDictionary<string, int> prices = new Dictionary<string, int>();\nprices.Add("Potion", 5);\nprices.Add("Sword", 12);\nstring item = "Potion";\nif (prices.TryGetValue(item, out int price))\n{\n    Console.WriteLine($"{item}: {price} coins");\n}\nelse\n{\n    Console.WriteLine("Item not found");\n}',
-    explanation: 'string is the key type and int is the value type. Potion exists, so TryGetValue returns true and writes 5 into price. The if branch prints its price. A missing key returns false; this code prints a helpful message instead of directly indexing a missing entry.',
+    explanation: 'string is the key type and int is the value type. Potion exists, so TryGetValue returns true and writes 5 into price. The if branch prints its price. A missing key returns false; this code prints a helpful message instead of directly indexing a missing entry. This dictionary matches text keys exactly: "potion" does not find "Potion".',
     question: 'What happens if item is changed to "Shield"?', answers: ['It prints Shield: 0 coins', 'It prints Item not found', 'It adds Shield to prices'], correct: 1,
     hint: 'Shield was never added. Follow the false result into else.',
     practice: {prompt: 'Use the method that checks a key and retrieves its value safely.', code: 'if (prices.____(item, out int price))', answer: 'TryGetValue', hint: 'Its name starts with Try and ends with Value. Match the capitals.'},
@@ -91,8 +91,8 @@ export const gameDataLessons = [
 export const gameDataModule = {
   id: 'toolbox', title: 'Expand your game data toolbox', ids: gameDataLessons.map(lesson => lesson.id),
   goal: 'Build status text, store fixed room data, initialize enemies, and look up item prices.',
-  project: 'Extend your RPG one piece at a time: add a status line, named rooms, different enemy starting values, then a price table. You can revisit the simpler RPG first.',
-  recap: ['Interpolated strings read values when each message is built.', 'Arrays have a fixed Length; a valid index is below Length.', 'A constructor initializes each new instance with its arguments.', 'Dictionary keys identify entries; handle a missing key before using its value.']
+  project: 'Extend your RPG one piece at a time: add a status line, named rooms, different enemy starting values, then optionally use a price table to display known item prices. The simpler RPG has no shop or coin balance yet; that lookup is an extra experiment. You can revisit the simpler RPG first.',
+  recap: ['Interpolated strings read values when each message is built.', 'Arrays have a fixed Length; a valid index is at least 0 and less than Length.', 'A constructor initializes each new instance with its arguments.', 'Dictionary keys identify entries; handle a missing key before using its value.']
 };
 
 export const gameDataDebug = {
