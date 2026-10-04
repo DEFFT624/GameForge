@@ -5,7 +5,7 @@ import {lessons} from '../public/content.js';
 import {extraLessons, milestones} from '../public/course-extension.js';
 test('every lesson has a valid quiz and a non-executing code-blank challenge', () => {
   const all = course.lessons;
-  assert.equal(all.length, 14);
+  assert.equal(all.length, 18);
   assert.equal(new Set(all.map(l => l.id)).size, all.length);
   for (const l of all) {
     assert.ok(Number.isInteger(l.correct) && l.correct >= 0 && l.correct < l.answers.length);
@@ -74,4 +74,10 @@ test('small lessons come before their combined applications without changing old
  const ids=course.lessons.map(l=>l.id);
  for(const [before,after] of [['call-function','function-inputs'],['function-inputs','methods'],['class-fields','characters'],['while-loop','enum-state'],['enum-state','switch-choice'],['switch-choice','states']]) assert.ok(ids.indexOf(before)<ids.indexOf(after));
  for(const old of [...lessons,...extraLessons]) assert.equal(course.lessons.find(l=>l.id===old.id),old);
+});
+test('text, booleans, combined conditions, and list iteration precede their applications',()=>{
+ const ids=course.lessons.map(lesson=>lesson.id);
+ for(const [before,after] of [['health','strings'],['strings','booleans'],['booleans','decisions'],['decisions','combined-conditions'],['combined-conditions','input'],['inventory','list-loop'],['list-loop','characters']]) {
+  assert.ok(ids.includes(before),before);assert.ok(ids.indexOf(before)<ids.indexOf(after));
+ }
 });

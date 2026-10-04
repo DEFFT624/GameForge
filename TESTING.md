@@ -8,7 +8,7 @@ For local testing on Windows, open START-GAMEFORGE.cmd, leave that window runnin
 
 1. Choose Continue learning. Read lesson 1 and try an incorrect quiz answer, then the correct one. Feedback should explain the mistake and the lesson should show In progress. The completed-lesson count should increase only after both the quiz and code blank are passed.
 2. Fill in the code blank. Try the Hint button. Check the answer, then refresh the page. Quiz and code-blank progress, your selected answer, and the exact text in the blank should remain saved. Try refreshing with an unfinished answer, then switching lessons and returning. The last viewed lesson should reopen.
-3. Use Next and Previous. Open the inventory, character and game-state lessons from the learning path. All 14 lessons should be available.
+3. Use Next and Previous. Open the inventory, character and game-state lessons from the learning path. All 18 lessons should be available.
 4. Check a milestone under Dungeon of Three Rooms. Refresh and confirm it stays checked. Uncheck it if it was only a test.
 5. Search starter snippets for health. Save a harmless local snippet draft, refresh, open the draft section, and delete it. Drafts never publish or run.
 6. Try a narrow browser window. Text and controls should fit without horizontal scrolling.
@@ -25,7 +25,7 @@ Snippet editor: Tab inserts four spaces; select multiple lines to indent them to
 
 Quest Radio: select two local audio files, press Play, switch lessons, and confirm playback continues. Check next/previous, playlist selection, volume, repeat, Clear, and collapsing the heading. Refresh should empty the playlist without affecting learning progress. Invalid or oversized selections should show feedback.
 
-Expanded course: verify 14 lesson cards, including two small function lessons, class fields, and while/enum/switch introductions. Existing eight completions should show 8 / 14 after upgrade. Continue should select the first unfinished new lesson. The full-course feedback page stays locked until all 14 quizzes and code blanks are passed. Optional labs and RPG milestones do not affect that gate. Use a disposable browser profile for this test; complete all lessons, then type a disposable feedback note, refresh, verify persistence, copy the report, and remove the test note. No real beginner session has been conducted yet.
+Expanded course: verify 18 lesson cards, including two small function lessons, class fields, and while/enum/switch introductions. Existing eight completions should show 8 / 18 after upgrade. Continue should select the first unfinished new lesson. The full-course feedback page stays locked until all 18 quizzes and code blanks are passed. Optional labs and RPG milestones do not affect that gate. Use a disposable browser profile for this test; complete all lessons, then type a disposable feedback note, refresh, verify persistence, copy the report, and remove the test note. No real beginner session has been conducted yet.
 
 ## Modules and optional labs
 
@@ -48,3 +48,5 @@ Open two learning workspaces at the same address. Complete different lessons in 
 ## Execution traces
 
 In Understand it, open Trace the values one step at a time. Compare the values after each row with the code; New output shows only the line printed during that step. Try the for and while loops, function return, inventory removal, and game-state loop. At narrow widths the table can scroll within its own box; focus the table region to scroll with the keyboard. Changing lessons closes the trace and replaces its caption and rows.
+
+Upgrade check: if you previously completed all 14 earlier lessons, the dashboard now shows 14 / 18 and Continue opens Give your hero a text greeting. Existing answers remain saved. Finish the four new lessons to reopen the full-course review.

@@ -49,6 +49,7 @@ const buildGuides = {
     "goal": "Create your hero before adding enemies or menus.",
     "review": [
       "health",
+      "strings",
       "class-fields",
       "characters"
     ],
@@ -85,6 +86,7 @@ const buildGuides = {
   "menu": {
     "goal": "Read one player choice safely, then connect it to combat.",
     "review": [
+      "combined-conditions",
       "input",
       "while-loop",
       "switch-choice"

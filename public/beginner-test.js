@@ -17,7 +17,7 @@ function updateAccess() {
  const count=course.lessons.filter(lesson=>quizzes.has(lesson.id)&&blanks.has(lesson.id)).length;
  const ready=count===course.lessons.length;
  $('review-lock').hidden=ready; $('review-content').hidden=!ready;
- $('review-progress').textContent=`${count} / ${course.lessons.length} lessons complete. The review opens after all 14.`;
+ $('review-progress').textContent=`${count} / ${course.lessons.length} lessons complete. The review opens after all ${course.lessons.length}.`;
 }
 updateAccess();
 window.addEventListener('storage',updateAccess);

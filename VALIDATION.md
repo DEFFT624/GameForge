@@ -86,3 +86,12 @@ The website test launcher enumerates only .test.mjs files explicitly, avoiding s
 Added optional execution traces for all 14 lesson examples. Rows distinguish values after a step from the new output during it. Traced output matches every lesson guide; changing lessons closes the trace. `npm test`: 46 pass. RPG tests and static build pass after aligning the source damage clamp with the Character lesson.
 
 GitHub workflow runs 37193013438 and 37193012933 completed successfully at commit 073aaaab326f10a99f60b82696c966e44ec42090, including Linux/Node 22 and Windows/Node 24 checks, all 36 C# samples, RPG behavior, and static build. Later trace changes await their own hosted run. The workflow now triggers pull requests and pushes to main only, avoiding duplicate branch/PR runs for the same update.
+
+## October 4: four prerequisite lessons
+
+The foundations path now has 18 lessons: added strings, booleans, combined conditions, and foreach list iteration before their later applications. Each has a glossary, walkthrough, output, choice-specific feedback, code blank, optional prediction lab, and execution trace. The four existing modules retain their IDs and every earlier lesson retains its ID.
+
+- `npm test`: 49 tests pass, including upgrade from 8 or all 14 earlier completions, with new lessons unfinished and direct review access locked until 18 / 18.
+- `npm run test:csharp`: all 44 first-party samples compile with warnings treated as errors and match their outputs (18 lessons, 18 labs, 4 bugs, 4 repairs).
+- `npm run build`: passes. New module endpoint returns HTTP 200 in the preview.
+- Current home/workspace/review wording and roadmap now state 18 lessons. Browser rendering and Claude review remain pending.

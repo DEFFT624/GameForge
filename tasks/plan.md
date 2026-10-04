@@ -17,3 +17,5 @@ Stop work by 07:13 America/Chicago (12:13 UTC). Check the clock after each miles
 - Local preview serves changed assets successfully.
 - No arbitrary uploads or browser-side code execution.
 - Browser/Claude limitations explicitly recorded; no pending approval prompt used as a stop condition.
+
+Additional teaching milestone after the initial checks: add four short prerequisite lessons (strings, bools, combined conditions, foreach), preserve every old completion ID, expand the four module groups, and keep direct and linked feedback access locked until all current lessons are complete. Verify every new example/lab with the compiler and update the static counts and upgrade tests.

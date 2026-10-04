@@ -4,7 +4,7 @@ GameForge teaches a complete small-game workflow in manageable paths. The curren
 
 ## Release order
 
-1. Finish and playtest C# foundations: 14 lessons, both exercises per lesson, followed by an optional console RPG. Unlock the full-course feedback review after all 14 lessons; the project is not required.
+1. Finish and playtest C# foundations: 18 lessons, both exercises per lesson, followed by an optional console RPG. Unlock the full-course feedback review after all 18 lessons; the project is not required.
 2. Unity basics: introduce the editor, scenes, GameObjects, components, transforms, C# scripting, movement, collision, UI, and a playable build. Start with simple shapes and explain Unity's lifecycle separately from console programs.
 3. Krita game art: introduce the canvas, layers, colors, sprites, transparency, and export. Make a character and items for a small 2D Unity game.
 4. Blender foundations: introduce navigation, transforms, mesh editing, low-poly props, materials, UV mapping, and export. Build a treasure chest.

@@ -109,6 +109,11 @@ const sectionScenes = {
        /     \ `
 };
 const lessonScenes = {
+"strings": " .------------.\n | Welcome,   |\n |   Nova!    |\n `------------'\n       |",
+"booleans": " [ TRUE ]\n     |\n [ FALSE ]\n  YES / NO",
+"combined-conditions": "   KEY + HP\n      |\n    .-----.\n    |DOOR |\n    |  o  |\n    |_____|",
+"list-loop": " [SWORD] -> [POTION]\n     1          2\n        foreach",
+
   health: '  __  __\n /  \\/  \\\n \\      /\n  \\____/\n HP [|||||] 100',
   decisions: '    [ HP > 0 ? ]\n       /    \\\n    YES      NO\n     |        |\n  [PLAY]   [REST]',
   loops: '    /\\     /\\     /\\\n   (oo)   (oo)   (oo)\n   /||\\   /||\\   /||\\\n    /\\     /\\     /\\\n   WAVE 1 -> 2 -> 3',
@@ -154,7 +159,7 @@ function renderProgress() {
   $('course-review-link').hidden = completeCount !== lessons.length;
   $('course-review-status').textContent = completeCount === lessons.length
     ? 'Your full C# foundations review is ready. Share what helped and what needs a clearer explanation.'
-    : `Complete both exercises in all 14 lessons to unlock the course review (${completeCount} / 14 complete).`;
+    : `Complete both exercises in all ${lessons.length} lessons to unlock the course review (${completeCount} / ${lessons.length} complete).`;
   $('navigation-status').textContent = `Lesson ${active + 1} / ${lessons.length} · ${isLessonComplete(lessons[active].id) ? 'Complete' : 'Keep going'}`;
   $('outline-summary').textContent = `Choose a lesson · ${active + 1} of ${lessons.length}`;
   $('lesson-list').replaceChildren(...lessons.map((lesson, index) => {

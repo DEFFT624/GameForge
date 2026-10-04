@@ -5,8 +5,8 @@ export const lessons = [
  {id:'methods',title:'Create a reusable ability',topic:'Methods',minutes:12,body:'A method names a reusable piece of logic. Parameters are inputs; return sends a result back to the caller. A pure calculation is easy to understand and test.',code:'static int Heal(int health, int amount)\n{\n    return Math.Min(100, health + amount);\n}\n\nConsole.WriteLine(Heal(90, 25));',explanation:'Math.Min selects the smaller number. Healing adds 25, then caps the result at 100. Try tracing Heal(40, 10) on paper: its result is 50. In this top-level program, Heal is a local function. The static modifier prevents it from capturing local variables from the surrounding code; health and amount are its own parameters. It returns a new value rather than changing a caller variable. This beginner example assumes health is between 0 and 100 and amount is between 0 and 100. Negative amounts would reduce health.',question:'What does Heal(90, 25) return?',answers:['115','25','100'],correct:2,hint:'Add first, then choose the smaller of that result and 100.'}
 ];
 export const snippets = [
- {title:'Keep health in bounds',author:'Gameforge starter',code:'int TakeDamage(int health, int damage)\n{\n    return Math.Max(0, health - Math.Max(0, damage));\n}'},
- {title:'Check a level-up threshold',author:'Gameforge starter',code:'bool CanLevelUp(int experience)\n{\n    return experience >= 100;\n}'}
+ {title:'Keep health in bounds',author:'GameForge starter',code:'int TakeDamage(int health, int damage)\n{\n    return Math.Max(0, health - Math.Max(0, damage));\n}'},
+ {title:'Check a level-up threshold',author:'GameForge starter',code:'bool CanLevelUp(int experience)\n{\n    return experience >= 100;\n}'}
 ];
 export function validateDraft(title, code) {
  if (typeof title !== 'string' || typeof code !== 'string' || !title.trim() || !code.trim()) return 'Add a title and some source code.';

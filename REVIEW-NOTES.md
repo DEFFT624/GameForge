@@ -35,3 +35,7 @@ The two-tab regression failed before the fix and passes now. Review `recordMap`,
 ## Pending review: lesson execution traces
 
 `lesson-traces.js` follows all 14 examples. Output-column sequences match compiled lesson outputs; manually review the value descriptions, especially print-before-decrement/increment, object independence, and switch break versus loop termination. Tables have captions, column/row headers, a keyboard-focusable scrolling region, and no browser execution. Current visual rendering and Claude review remain pending.
+
+## Pending review: prerequisite expansion
+
+Review foundation-bridges.js: string joining, bool formatting and snapshot behavior, && versus ||, and foreach ordering/scope/collection mutation. All new examples and labs compile with correct output. Existing completion IDs survive; the whole-course feedback gate now requires both exercises in all 18 lessons. Upgrade tests explicitly protect 14 earlier completions and prevent premature review access.

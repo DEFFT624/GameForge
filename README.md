@@ -1,8 +1,8 @@
 # Gameforge
 
-The home page introduces the course at `/`; `/learn.html` opens the learning workspace. A new First steps guide teaches instructions, output, execution order, and text variables. All fourteen lessons include goals, glossaries, walkthroughs, expected output, common mistakes, small prediction exercises, and answer-specific feedback. Existing saved answers and progress are preserved.
+The home page introduces the course at `/`; `/learn.html` opens the learning workspace. A new First steps guide teaches instructions, output, execution order, and text variables. All eighteen lessons include goals, glossaries, walkthroughs, expected output, common mistakes, small prediction exercises, and answer-specific feedback. Existing saved answers and progress are preserved.
 
-A beginner-friendly game development learning website. This first local MVP has a responsive dashboard, fourteen C# lessons with quizzes and code blanks, browser-local progress, two starter snippets, local text draft creation/deletion, snippet search, and a six-step RPG project checklist.
+A beginner-friendly game development learning website. This first local MVP has a responsive dashboard, eighteen C# lessons with quizzes and code blanks, browser-local progress, two starter snippets, local text draft creation/deletion, snippet search, and a six-step RPG project checklist.
 
 The C# path is organized into four modules: values and control flow; reusable actions; inventory, characters, and input; and game states. Each lesson also offers an optional output-prediction lab with hints, explained answers, a small-change exercise, and saved notes. Optional labs do not change the required quiz-and-code-blank completion rules. Home-page tabs introduce future Unity, Krita, and Blender paths with their own color themes; those courses are planned.
 
@@ -30,7 +30,7 @@ See [SPEC.md](SPEC.md), [SECURITY.md](SECURITY.md), and [CONTRIBUTING.md](CONTRI
 Choose local audio files in the bottom-left player, then press Play. Playback continues between lessons. Use the playlist, previous/next, volume, repeat-song, and Clear controls. Click the Quest Radio heading to collapse it. Select up to 30 files, each at most 100 MB; browser format support varies. Files are not uploaded or stored by GameForge, and must be reselected after refresh.
 
 ## Friend feedback session
-Open /beginner-test.html after finishing both required exercises in all fourteen C# lessons. The full-course review uses the same browser and website address as the saved progress; it includes locally saved notes and Copy feedback. No results are submitted automatically, and the RPG project is optional for the review. A hosted URL is required before a friend on another computer can use it. Existing completion IDs are preserved.
+Open /beginner-test.html after finishing both required exercises in all eighteen C# lessons. The full-course review uses the same browser and website address as the saved progress; it includes locally saved notes and Copy feedback. No results are submitted automatically, and the RPG project is optional for the review. A hosted URL is required before a friend on another computer can use it. Existing completion IDs are preserved.
 
 ### Complete tiny RPG reference
 
@@ -40,6 +40,6 @@ For maintainers, `dotnet run --project examples/tiny-rpg/GameForgeRpg.csproj` ru
 
 ### Optional module debugging
 
-Each module ends with a small program that compiles but behaves incorrectly. Learners compare expected and actual output, write a saved explanation, reveal a hint or repair, and try two test cases. These challenges never change required completion. `npm run test:csharp` compiles and checks all 36 first-party lesson, lab, bug, and repair samples with .NET 10.
+Each module ends with a small program that compiles but behaves incorrectly. Learners compare expected and actual output, write a saved explanation, reveal a hint or repair, and try two test cases. These challenges never change required completion. `npm run test:csharp` compiles and checks all 44 first-party lesson, lab, bug, and repair samples with .NET 10.
 
 Every lesson also includes an optional execution trace table. It follows the current example and separates changing values from newly printed output. The trace opens on demand so the main lesson stays focused.

@@ -15,7 +15,7 @@ test('full course review needs both exercises in every lesson and updates across
  const storage=new Map([['gameforge-progress',JSON.stringify(ids)],['gameforge-practice',JSON.stringify(ids.slice(0,-1))]]);
  const page=load(storage);
  assert.equal(page.get('review-content').hidden,true);
- assert.match(page.get('review-progress').textContent,/13 \/ 14/);
+ assert.equal(page.get('review-progress').textContent, `${ids.length-1} / ${ids.length} lessons complete. The review opens after all ${ids.length}.`);
  storage.set('gameforge-practice',JSON.stringify(ids));page.events.storage();
  assert.equal(page.get('review-content').hidden,false);
  storage.set('gameforge-progress','[]');page.events.storage();
@@ -26,4 +26,11 @@ test('malformed or unrelated progress does not unlock feedback',()=>{
   const page=load(new Map([['gameforge-progress',value],['gameforge-practice',value]]));
   assert.equal(page.get('review-content').hidden,true);
  }
+});
+test('the direct review page stays locked for the previously complete fourteen-lesson course',()=>{
+ const newIds=new Set(['strings','booleans','combined-conditions','list-loop']);
+ const oldIds=course.lessons.filter(lesson=>!newIds.has(lesson.id)).map(lesson=>lesson.id);
+ const page=load(new Map([['gameforge-progress',JSON.stringify(oldIds)],['gameforge-practice',JSON.stringify(oldIds)]]));
+ assert.equal(page.get('review-content').hidden,true);
+ assert.match(page.get('review-progress').textContent,/14 \/ 18/);
 });
