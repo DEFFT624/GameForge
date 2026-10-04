@@ -42,6 +42,17 @@ function load(storage = new Map(), confirm = true, hash = "", storageFailure = f
   }, type(value) { get('practice-answer').value = value; get('practice-answer').fire('input'); },
   selected() { return get('answers').children.findIndex(l => l.children[0].checked); }};
 }
+test('lesson counters restart within each module and agree at top and bottom', () => {
+  const page = load();
+  for (const module of course.modules) {
+    for (const [index, id] of module.ids.entries()) {
+      page.open(id);
+      assert.ok(page.get('lesson-meta').textContent.startsWith(`LESSON ${index + 1} OF ${module.ids.length} ·`));
+      assert.ok(page.get('navigation-status').textContent.startsWith(`Lesson ${index + 1} / ${module.ids.length} ·`));
+    }
+  }
+});
+
 test('unfinished and completed answers survive navigation and a fresh page load', () => {
   let page = load();
   page.choose(0); page.type('in'); // Unsubmitted work must survive too.

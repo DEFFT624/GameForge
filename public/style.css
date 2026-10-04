@@ -336,3 +336,6 @@ pre,code,textarea,#practice-answer{font-family:Consolas,'Courier New',monospace;
 /* Test instructions stay readable rather than squeezing into narrow cards. */
 .test-guide .home-path{grid-template-columns:1fr}
 .test-guide .home-path article p,.test-guide .home-path article a{font-size:22px;line-height:1.5}
+
+.learning-page #module-meta{max-width:1056px;margin:0 auto 24px;color:var(--green);font-size:22px}
+@media(max-width:1000px){.learning-page #navigation-status{order:-1;flex-basis:100%;text-align:center;white-space:nowrap}}

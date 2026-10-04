@@ -178,8 +178,9 @@ function renderProgress() {
   $('course-review-status').textContent = completeCount === lessons.length
     ? 'Your full C# foundations review is ready. Share what helped and what needs a clearer explanation.'
     : `Complete both exercises in all ${lessons.length} lessons to unlock the course review (${completeCount} / ${lessons.length} complete).`;
-  $('navigation-status').textContent = `Lesson ${active + 1} / ${lessons.length} · ${isLessonComplete(lessons[active].id) ? 'Complete' : 'Keep going'}`;
   const currentModule = modules.findIndex(module => module.ids.includes(lessons[active].id));
+  const activeModule = modules[currentModule];
+  $('navigation-status').textContent = `Lesson ${activeModule.ids.indexOf(lessons[active].id) + 1} / ${activeModule.ids.length} · ${isLessonComplete(lessons[active].id) ? 'Complete' : 'Keep going'}`;
   $('outline-summary').textContent = `Choose a module · Module ${currentModule + 1} of ${modules.length}`;
   $('lesson-list').replaceChildren(...modules.map((module, moduleIndex) => {
     const group = element('details', undefined, 'outline-module');
@@ -224,11 +225,12 @@ function showLesson(index) {
   active = index; const lesson = lessons[index];
   renderScenery(window.location?.hash.slice(1) || 'dashboard');
   save('gameforge-active-lesson', lesson.id);
-  $('lesson-meta').textContent = `LESSON ${index + 1} OF ${lessons.length} · ${lesson.topic}`;
   $('lesson-link').href = lessonAddress();
-  $('lesson-link').setAttribute('aria-label', 'Link to lesson ' + (index + 1) + ': ' + lesson.title);
   const moduleIndex = modules.findIndex(module => module.ids.includes(lesson.id));
   const module = modules[moduleIndex];
+  const moduleLesson = module.ids.indexOf(lesson.id) + 1;
+  $('lesson-meta').textContent = `LESSON ${moduleLesson} OF ${module.ids.length} · ${lesson.topic}`;
+  $('lesson-link').setAttribute('aria-label', `Link to module ${moduleIndex + 1}, lesson ${moduleLesson}: ${lesson.title}`);
   $('module-meta').textContent = `MODULE ${moduleIndex + 1} / ${modules.length} · ${module.title}`;
   $('module-recap').hidden = module.ids.at(-1) !== lesson.id;
   $('module-recap').open = false;
