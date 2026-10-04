@@ -1,3 +1,4 @@
+import {lessonGuides} from '../public/learner-guides.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import vm from 'node:vm';
@@ -20,7 +21,7 @@ function load(storage = new Map(), confirm = true) {
   const nodes = new Map();
   const get = id => { if (!nodes.has(id)) nodes.set(id, new Element()); return nodes.get(id); };
   vm.runInNewContext(source, {
-    foundations, snippets, validateDraft, extraLessons, practices, milestones, checkPractice,
+    lessonGuides, foundations, snippets, validateDraft, extraLessons, practices, milestones, checkPractice,
     document: {getElementById: get, createElement: () => new Element(), createTextNode: text => ({textContent: text})},
     localStorage: {getItem: key => storage.get(key) ?? null, setItem: (key, value) => storage.set(key, value)},
     window: {confirm: () => confirm},
@@ -113,4 +114,10 @@ test('snippet editor indents selections, unindents, respects limits and lets Tab
   editor.fire('keydown', {key: 'Escape'});
   assert.equal(editor.fire('keydown', {key: 'Tab'}).prevented, false);
   assert.equal(editor.fire('keydown', {key: 'Tab', ctrlKey: true}).prevented, false);
+});
+test('quiz feedback explains the selected mistake and the successful answer', () => {
+ const page=load();page.choose(0);page.get('challenge').fire('submit');assert.match(page.get('feedback').textContent,/starting value/);
+ page.choose(1);page.get('challenge').fire('submit');assert.match(page.get('feedback').textContent,/100 - 25/);
+ page.type('int');page.get('practice-form').fire('submit');assert.match(page.get('practice-feedback').textContent,/whole-number/);
+ assert.ok(page.get('lesson-steps').children.length>=3);assert.equal(page.get('lesson-output').textContent,'75');
 });
