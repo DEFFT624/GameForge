@@ -3,41 +3,46 @@ import {readCharacterProgress} from './character-progress.js';
 const $ = id => document.getElementById(id);
 const appearances = [
   {level:1, name:'New adventurer', art:String.raw`     .---.
-     | o |
-     '---'
+     |o o|
+     \_-_/
+       |
       /|\
      / | \
+       |
       / \
-     /   \
+    _/   \_
   ~~~~~~~~~~~`},
-  {level:4, name:'Trail explorer', art:String.raw`      /\
-     /__\
-     | o |    /
-     '---'   /
-      /|\___/
-     / |     
+  {level:4, name:'Trail explorer', art:String.raw`       ^
       / \
-     /   \
-  ~~~~~~~~~~~`},
-  {level:8, name:'Code guardian', art:String.raw`     .===.
-     | o |     /\
-     '---'     ||
-   __/|\__    _||_
-  [#] |   \___ ||
-  [#] |        ||
-     / \
-    /   \
-  ~~~~~~~~~~~`},
-  {level:12, name:'Quest champion', art:String.raw`     /\ /\ /\
-     '====='
-     | o |      /\
-     '---'      ||
-   __/|\__     _||_
-  [#] |   \____ ||
-  [#] |  /\     ||
-     / \/  \
-    /   \___\
-  ~~~~~~~~~~~~~`}
+     /___\    _
+     |o o|    |
+     \_-_/    |
+      /|\     |
+     / | \____|
+       |      |
+      / \     |
+    _/   \_   |
+  ~~~~~~~~~~~~~~~`},
+  {level:8, name:'Code guardian', art:String.raw`     [===]    /\
+     |o o|    ||
+     \_-_/    ||
+ [#]__/|\_____||_
+ [#]   |      ||
+       |
+      / \
+    _/   \_
+  ~~~~~~~~~~~~~~~`},
+  {level:12, name:'Quest champion', art:String.raw`     \^ ^/    /\
+     [===]    ||
+     |o o|    ||
+     \_-_/   _||_
+ [#]__/|\_____||
+ [#] / | \    ||
+    /  |  \
+   /___|___\
+      / \
+    _/   \_
+  ~~~~~~~~~~~~~~~`}
 ];
 function render() {
   let progress;

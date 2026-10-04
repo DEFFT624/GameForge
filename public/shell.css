@@ -24,7 +24,7 @@ body.sidebar-collapsed .site-sidebar nav a:is(:hover,:focus-visible) .nav-label{
 .character-grid{display:grid;grid-template-columns:minmax(250px,.9fr) minmax(300px,1.2fr);gap:28px;margin-top:36px}
 .character-stage,.character-info article{border:1px solid #587461;background:linear-gradient(155deg,#324b3ed9,#101c16ed 60%,#080c0a);box-shadow:inset 0 1px #d4ffe638;border-radius:8px;padding:30px}
 .character-stage{text-align:center;align-self:start}
-.character-stage pre{white-space:pre;font-family:Consolas,monospace;font-size:22px;line-height:1.45;background:transparent;border:0;color:var(--green);padding:32px 0;margin:0;overflow-wrap:normal;overflow-x:auto;max-width:100%}
+.character-stage pre{white-space:pre;text-align:left;width:max-content;font-family:Consolas,monospace;font-size:22px;line-height:1.15;background:transparent;border:0;color:var(--green);padding:32px 0;margin:0 auto;overflow-wrap:normal;overflow-x:auto;max-width:100%}
 .character-stage h2{font-size:34px;margin:12px 0}
 .character-stage label{display:block;color:var(--muted);margin-top:26px}
 .character-stage progress{height:16px;margin-top:10px}
