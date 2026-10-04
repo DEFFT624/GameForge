@@ -51,34 +51,48 @@ body{color:var(--text);font-family:Inter,'Segoe UI',system-ui,sans-serif}button,
 @media(max-width:1000px){.learning-page aside{width:205px;padding:24px 18px}.learning-page main{margin-left:205px;padding:0 28px 24px}}
 @media(max-width:700px){.learning-page aside{position:static;width:100%;padding:18px 20px;display:block;border-bottom:1px solid var(--line);border-right:0}.learning-page aside>.brand{display:inline-block;padding-top:7px}.learning-page #menu-toggle{display:block;float:right;padding:8px 14px;font-size:12px}.learning-page aside nav{display:none;clear:both;margin-top:18px}.learning-page aside[data-menu-open=true] nav{display:grid;grid-template-columns:1fr 1fr}.learning-page aside .radio{display:none}.learning-page aside[data-menu-open=true] .radio{display:block}.learning-page main{margin:0;padding:0 20px 24px}.learning-page header{font-size:11px;padding:18px 0}.workspace-home{display:none}.learning-page .learning{gap:18px}.learning-page .lesson-block,.learning-page .lesson-goal{padding:20px}.learning-page .lesson-block pre{font-size:12px;padding:14px}.learning-page .lesson-navigation{margin:24px -8px 0;padding:10px}.learning-page #lesson-title{font-size:30px;letter-spacing:-.8px}.learning-page #navigation-status{order:-1;flex-basis:100%}.learning-page .lesson-navigation #next{max-width:65%;font-size:12px}.learning-page .radio{max-width:none;width:100%}}
 /* Fade a separate glass layer; gradients themselves cannot interpolate smoothly. */
-body :is(button,.button-link){
+body :is(button,.button-link,#workspace-nav a){
   position:relative;isolation:isolate;
   transition:transform 150ms cubic-bezier(.2,.8,.2,1),box-shadow 240ms ease,color 240ms ease;
   -webkit-tap-highlight-color:transparent;
 }
-body :is(button,.button-link)::before{
+body :is(button,.button-link,#workspace-nav a)::before{
   content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;border-radius:inherit;
   background:linear-gradient(175deg,rgba(220,255,210,.16),rgba(160,220,155,.035) 65%,transparent),#060a07;
   opacity:0;transition:opacity 240ms ease;
 }
 @media(hover:hover) and (pointer:fine){
-  body :is(button,.button-link):not(:disabled):hover::before{opacity:1}
-  body :is(button,.button-link):not(:disabled):hover{
+  body :is(button,.button-link,#workspace-nav a):not(:disabled):hover::before{opacity:1}
+  body :is(button,.button-link,#workspace-nav a):not(:disabled):hover{
     color:#efffe8!important;
     box-shadow:inset 0 1px 0 #ffffff45,inset 0 0 0 1px #adff66,0 0 0 1px #adff66,0 0 18px #99ff4438;
     transform:translateY(-1px);filter:none;
   }
 }
-body :is(button,.button-link):not(:disabled):is(:focus-visible,:active)::before{opacity:1}
-body :is(button,.button-link):not(:disabled):focus-visible{
+body :is(button,.button-link,#workspace-nav a):not(:disabled):is(:focus-visible,:active)::before{opacity:1}
+body :is(button,.button-link,#workspace-nav a):not(:disabled):focus-visible{
   color:#efffe8!important;box-shadow:inset 0 1px 0 #ffffff45,0 0 0 1px #adff66,0 0 18px #99ff4438;
 }
-body :is(button,.button-link):not(:disabled):active{
+body :is(button,.button-link,#workspace-nav a):not(:disabled):active{
   transform:translateY(1px) scale(.97);color:#efffe8!important;
   box-shadow:inset 0 2px 8px #0009,inset 0 0 0 1px #adff66,0 0 10px #99ff4440;
   transition-duration:65ms,240ms,240ms;filter:none;
 }
 @media(prefers-reduced-motion:reduce){
-  body :is(button,.button-link),body :is(button,.button-link)::before{transition:none}
-  body :is(button,.button-link):not(:disabled):is(:hover,:active){transform:none}
+  body :is(button,.button-link,#workspace-nav a),body :is(button,.button-link,#workspace-nav a)::before{transition:none}
+  body :is(button,.button-link,#workspace-nav a):not(:disabled):is(:hover,:active){transform:none}
 }
+
+/* Native details retain keyboard behavior while their content expands and fades. */
+summary{display:flex;align-items:center;gap:12px;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"";width:7px;height:7px;flex:0 0 7px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(-45deg);transition:transform 280ms cubic-bezier(.2,.8,.2,1)}
+details[open]>summary::before{transform:rotate(45deg)}
+.radio-heading strong{flex:1}
+@supports(interpolate-size:allow-keywords){
+  details::details-content{interpolate-size:allow-keywords;block-size:0;opacity:0;overflow:clip;transition:block-size 280ms cubic-bezier(.2,.8,.2,1),opacity 220ms ease,content-visibility 280ms allow-discrete}
+  details[open]::details-content{block-size:auto;opacity:1}
+}
+#workspace-nav a:hover{background-color:transparent}
+#workspace-nav a[aria-current=page]:hover{background-color:#1d2518}
+@media(prefers-reduced-motion:reduce){summary::before,details::details-content{transition:none}}
