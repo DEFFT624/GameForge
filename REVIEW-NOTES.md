@@ -51,3 +51,7 @@ Review help-examples.js and First steps' troubleshooting guide for beginner clar
 ## Pending review: exact lesson links
 
 Review app.js requestedLesson, lessonAddress, focusLesson, and routeView. Query IDs are matched against the known course IDs. Direct links select content without granting progress; Next/Previous update the address; reset clears stale targeting. Source behavior and page contracts pass. Verify actual browser Back/Forward, anchor copying, focus, and mobile placement once browser controls work. These links become remotely shareable only after a reviewed deployment.
+
+## Pending review: experiment wording
+
+All optional lab changes are now compiled as concrete experiments, including expected exception behavior for an empty-list read. Healing wording now honestly explains negative amounts reduce health, and the named-action lab uses a zero-iteration loop to avoid an unused-function warning. Review the suggested changes for clarity and whether a beginner can make each edit without guessing its location. Current prerequisite wording matches the 18-lesson order.

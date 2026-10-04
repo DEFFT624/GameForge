@@ -18,7 +18,7 @@ npm start
 
 Open http://127.0.0.1:4173. Run `npm test` for the security and content checks. Stop the server with Ctrl+C. The server binds only to this computer. Serve through this server to get the security headers; opening index.html directly is unsupported.
 
-Build static assets with `node build.mjs`. A future private Sites deployment can use those assets; publishing is currently blocked and no hosted build is live. GitHub remains the source of truth.
+Build static assets with `node build.mjs`. The reviewed assets can be used for a future static deployment; no hosted build is live. License selection and release review are still pending. GitHub remains the source of truth.
 
 ## Honest boundaries
 
@@ -40,8 +40,12 @@ For maintainers, `dotnet run --project examples/tiny-rpg/GameForgeRpg.csproj` ru
 
 ### Optional module debugging
 
-Each module ends with a small program that compiles but behaves incorrectly. Learners compare expected and actual output, write a saved explanation, reveal a hint or repair, and try two test cases. These challenges never change required completion. `npm run test:csharp` compiles and checks all 44 first-party lesson, lab, bug, and repair samples with .NET 10.
+Each module ends with a small program that compiles but behaves incorrectly. Learners compare expected and actual output, write a saved explanation, reveal a hint or repair, and try two test cases. These challenges never change required completion. `npm run test:csharp` compiles lesson, lab, bug, repair, and suggested-experiment samples with .NET 10 and checks their documented behavior.
 
 Every lesson also includes an optional execution trace table. It follows the current example and separates changing values from newly printed output. The trace opens on demand so the main lesson stays focused.
 
 First steps also has a searchable glossary that links definitions to the lessons where they appear. Searching or opening a definition does not complete a lesson.
+
+The troubleshooting guide distinguishes compiler errors, runtime errors, and logic mistakes using deliberate examples and repairs. `npm run test:errors` verifies the documented diagnostics and repaired outputs. These are first-party samples; learner code is never executed by the site or tests.
+
+Each lesson has a direct link using its stable ID, such as `/learn.html?lesson=strings#lessons`. Opening a shared lesson does not share progress. Localhost addresses work only on the computer running the site; use a reviewed hosted address for a friend on another computer.

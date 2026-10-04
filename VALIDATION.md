@@ -113,3 +113,11 @@ Added five first-party error/repair pairs under First steps. `npm run test:error
 Lesson links use validated stable IDs in the query string and open the requested lesson before falling back to saved progress. Lesson navigation updates the address; leaving another activity for a lesson creates a browser history entry, while Next/Previous replace the current lesson address. Browser navigation restores the requested activity/lesson. Reset removes stale lesson targeting without changing a non-lesson activity.
 
 `npm test`: 54 pass, including direct-link selection, refresh, independent recipient progress, unknown/hostile IDs, history restoration, and reset. Real-HTML checks confirm the link control exists. Visual and actual browser history/keyboard review still need a functioning browser connection. Localhost remains local-only, with no publication.
+
+## October 4: suggested-experiment review
+
+Expanded `npm run test:csharp` to 66 compiled cases: the 44 base teaching samples plus 22 small lab changes, including empty output, parsing boundaries, object independence, negative healing, and an intentionally invalid empty-list read. All pass; the empty-list case checks its documented ArgumentOutOfRangeException rather than expecting successful execution. Warnings remain errors for valid samples.
+
+Review corrected an inaccurate claim that the healing example ignored negative amounts; it only caps the maximum. Replaced a remove-the-only-function-call experiment, which produced an unused-function warning, with a zero-iteration experiment that demonstrates the same distinction without that distraction. Prerequisite wording now matches the expanded course order. Common typo scanning and manual quiz/walkthrough review found no further specific corrections; this does not substitute for a human learner or Claude review.
+
+Hosted workflow 37195601203 passed the troubleshooting commit 7e5674165e0fb3abfaa98e0470a439d45d44ce58, and 37195906746 passed exact-lesson links at aa48ad3b737391e5ff113bcdedfe8f066d50169b, on both configured platforms. The new experiment checks await their hosted run.

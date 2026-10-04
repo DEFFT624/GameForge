@@ -12,7 +12,7 @@ export const lessonGuides = {
  },
  decisions: {
   goal: 'Choose one of two messages by checking the player’s health.',
-  before: 'Finish variables first. Here we ask a true-or-false question about a stored number.',
+  before: 'You can store numbers and booleans. Now use a true-or-false condition to choose an action.',
   words: [['condition', 'A question with a true or false answer.'], ['if / else', 'Run the first block if the condition is true; otherwise run the else block.'], ['<=', 'Less than or equal to. 0 <= 0 is true; 1 <= 0 is false.'], ['{ }', 'Braces group the instructions in each block. Indentation helps humans see the groups.']],
   steps: ['Start with health equal to 0.', 'Evaluate health <= 0. Zero is equal to zero, so the condition is true.', 'Enter the first pair of braces and print Game over.', 'Skip the else block. The program does not run both branches.'],
   output: 'Game over', mistake: 'The = symbol stores a value. To test equality in a condition, use ==. The <= symbol includes the boundary value zero; < alone does not.',
@@ -20,7 +20,7 @@ export const lessonGuides = {
   why: ['Keep going belongs to else, which is skipped when health is zero.', 'Only one branch runs in this if/else pair.', 'Game over is correct because zero satisfies “less than or equal to zero”.'], practiceWhy: '<= includes both negative health and exactly zero. The order of the symbols matters.'
  },
  loops: {
-  goal: 'Trace a repeating action without counting an extra turn.', before: 'Use variables and true-or-false conditions from the first two lessons.',
+  goal: 'Trace a repeating action without counting an extra turn.', before: 'Use the variables and true-or-false conditions you have already learned.',
   words: [['for', 'A loop with a starting step, a condition, and an update step.'], ['enemy++', 'Increase enemy by one after the body finishes.'], ['<', 'Strictly less than: 2 < 3 is true; 3 < 3 is false.'], ['iteration', 'One trip through the loop body.']],
   steps: ['Run int enemy = 0 once, before the first check.', 'Check 0 < 3: true. Print the message, then increase enemy to 1.', 'Check 1 < 3: true. Print again, then increase enemy to 2.', 'Check 2 < 3: true. Print again, then increase enemy to 3.', 'Check 3 < 3: false. Stop without printing another message.'], output:'Enemy spawned\nEnemy spawned\nEnemy spawned',
   mistake:'Starting at zero does not mean zero actions occur. The counter values 0, 1, and 2 represent three turns. Changing < to <= would add a fourth turn.',
@@ -36,7 +36,7 @@ export const lessonGuides = {
   why:['115 is the sum before Math.Min applies the upper limit.','25 is the healing input, not the resulting health.','100 is correct because the upper limit prevents healing past 100.'],practiceWhy:'return sends the calculated value to the caller. Printing a number and returning it are different operations.'
  },
  inventory:{
-  goal:'Follow how a list changes and read an item by its position.',before:'You have used numbers. Here string means text, written inside double quotes.',
+  goal:'Follow how a list changes and read an item by its position.',before:'You can store text in a string. Now keep several text values together in an ordered list.',
   words:[['List<string>','A growable ordered collection of text values. The angle brackets specify the item type.'],['new','Create a new object: here, a list.'],['Add / Remove','Add puts an item at the end; Remove deletes the first matching item if present.'],['index','An item’s numbered position, starting at zero. Square brackets select that position.']],
   steps:['using System.Collections.Generic makes the List type available by its short name.', 'Create the list: index 0 is Sword, index 1 is Potion.', 'Add Key: the list becomes Sword, Potion, Key.', 'Remove Potion: Key moves to index 1. The list is now Sword, Key.', 'inventory[1] reads Key, and WriteLine prints it.'],output:'Key',
   mistake:'The second item has index 1, not 2. After removing an item, later indexes shift. Check Count before reading an index; an empty list has no index 0.',

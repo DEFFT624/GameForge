@@ -12,7 +12,7 @@ Ready to try locally at http://127.0.0.1:4173/:
 - Six RPG build guides and a complete source-only console game reference.
 - Safer saving across multiple workspace tabs, with a session-only fallback if browser storage fails.
 
-Verified so far: 54 website tests; 44 compiled C# teaching samples; five deliberate errors and their repairs; RPG behavior tests; static build. Hosted checks through the glossary passed on Linux/Node 22 and Windows/Node 24. Troubleshooting and exact-lesson links await their next hosted runs.
+Verified so far: 54 website tests; 66 compiled C# teaching/experiment cases; five deliberate errors and their repairs; RPG behavior tests; static build. Hosted checks through troubleshooting and exact-lesson links passed on Linux/Node 22 and Windows/Node 24. The expanded experiment checks await their next hosted run. Review also corrected misleading healing wording and an experiment that caused an unused-function warning.
 
 Draft: https://github.com/DEFFT624/GameForge/pull/19. No deployment or merge.
 

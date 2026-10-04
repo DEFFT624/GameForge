@@ -6,15 +6,45 @@ import {mkdtemp, writeFile, rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {course} from '../public/course-plan.js';
-const scratch = await mkdtemp(join(tmpdir(), 'gameforge-csharp-test-'));
+// Small changes suggested by the optional labs, checked as real console programs.
+const labChanges = [
+  ['health', 'health - 40', 'health - 100', '10'],
+  ['health', 'health - 40', 'health - 120', '-10'],
+  ['strings', '" found"', '"found"', 'Coinfound'],
+  ['booleans', 'health = 0', 'health = 1', 'True'],
+  ['decisions', 'health = 0', 'health = 1', 'Continue'],
+  ['decisions', 'health = 0', 'health = -1', 'Defeated'],
+  ['combined-conditions', 'hasKey = false', 'hasKey = true', 'Open'],
+  ['loops', 'room <= 3', 'room < 3', '1\n2'],
+  ['while-loop', 'charges = 2', 'charges = 0', 'Empty'],
+  ['call-function', 'turn < 2', 'turn < 0', ''],
+  ['function-inputs', 'int reward = AddBonus(3);\nConsole.WriteLine(reward);', 'AddBonus(3);', ''],
+  ['methods', 'Heal(95, 20)', 'Heal(95, -20)', '75'],
+  ['inventory', 'inventory.Remove("Potion");', 'inventory.Remove("Potion");\ninventory.Remove("Coin");', null, 'ArgumentOutOfRangeException'],
+  ['list-loop', 'new List<string> { "Sword", "Potion", "Key" }', 'new List<string>()', ''],
+  ['class-fields', 'hero.Health = 60;\n', '', '100'],
+  ['characters', 'Character echo = hero;', 'Character echo = new Character();', '100'],
+  ['input', '"0"', '"abc"', 'Try again'],
+  ['input', '"0"', '"3"', 'Accepted'],
+  ['input', '"0"', '"4"', 'Try again'],
+  ['enum-state', 'state = GameState.Victory;\n', '', 'Exploring'],
+  ['switch-choice', 'choice = 2', 'choice = 9', 'Quit\nDone'],
+  ['states', 'GameState state = GameState.GameOver;', 'GameState state = GameState.Exploring;', 'Playing\nFinished']
+].map(([id, before, after, output, exception], index) => {
+  const code = course.labs[id].code;
+  assert.equal(code.split(before).length, 2, 'Experiment must change exactly one part: ' + id);
+  return {id: 'experiment-' + id + '-' + index, code: code.replace(before, after), output, exception};
+});
 const cases = [
   ...course.lessons.map(lesson => ({id: 'lesson-' + lesson.id, code: lesson.code, output: course.lessonGuides[lesson.id].output})),
   ...Object.entries(course.labs).map(([id, lab]) => ({id: 'lab-' + id, code: lab.code, output: lab.output})),
   ...Object.entries(course.debugging).flatMap(([id, bug]) => [
     {id: 'bug-' + id, code: bug.code, output: bug.actual},
     {id: 'repair-' + id, code: bug.fixed, output: bug.expected}
-  ])
+  ]),
+  ...labChanges
 ];
+const scratch = await mkdtemp(join(tmpdir(), 'gameforge-csharp-test-'));
 function run(args) {
   const result = spawnSync('dotnet', args, {encoding: 'utf8', timeout: 60000});
   assert.equal(result.status, 0, result.error?.message || result.stdout + result.stderr);
@@ -26,8 +56,12 @@ try {
   for (const sample of cases) {
     await writeFile(join(scratch, 'Program.cs'), sample.code);
     run(['build', project, '--nologo', '--no-incremental']);
-    assert.equal(run([join(scratch, 'bin/Debug/net10.0/Sample.dll')]), sample.output, sample.id);
-    console.log(sample.id + ': compiled and output verified');
+    if (sample.exception) {
+      const result = spawnSync('dotnet', [join(scratch, 'bin/Debug/net10.0/Sample.dll')], {encoding: 'utf8', timeout: 60000});
+      assert.notEqual(result.status, 0, sample.id);
+      assert.ok(result.stderr?.includes(sample.exception), sample.id + ': ' + result.stderr);
+    } else assert.equal(run([join(scratch, 'bin/Debug/net10.0/Sample.dll')]), sample.output, sample.id);
+    console.log(sample.id + ': compiled and ' + (sample.exception ? 'documented exception' : 'output') + ' verified');
   }
 } finally {
   await rm(scratch, {recursive: true, force: true});
