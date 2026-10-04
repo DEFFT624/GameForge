@@ -25,6 +25,17 @@ test('capstone has unique stable saved-state keys', () => {
   assert.equal(new Set(milestones.map(m => m.id)).size, milestones.length);
   for (const m of milestones) assert.ok(m.title && m.detail);
 });
+
+test('project guides point to existing lessons and cover build and verification steps', () => {
+  const ids = new Set(course.lessons.map(lesson => lesson.id));
+  for (const milestone of milestones) {
+    assert.ok(milestone.guide.goal && milestone.guide.stuck);
+    assert.ok(milestone.guide.steps.length >= 3);
+    assert.ok(milestone.guide.checks.length >= 2);
+    assert.ok(milestone.guide.review.every(id => ids.has(id)));
+  }
+  assert.ok(course.lessons.findIndex(l => l.id === 'while-loop') < course.lessons.findIndex(l => l.id === 'input'));
+});
 const {practices, checkPractice, lessonGuides} = course;
 test('every lesson has a complete beginner guide and feedback for every quiz choice', () => {
  for(const lesson of course.lessons){

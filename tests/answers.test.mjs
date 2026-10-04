@@ -127,9 +127,24 @@ test('existing eight completions survive expansion but new lessons remain unfini
  const oldIds=[...foundations,...extraLessons].map(l=>l.id);
  const page=load(new Map([['gameforge-progress',JSON.stringify(oldIds)],['gameforge-practice',JSON.stringify(oldIds)]]));
  assert.equal(page.get('progress-count').textContent,'8 / 14');assert.equal(page.get('completion').hidden,true);
- page.get('continue').fire('click');assert.equal(page.get('lesson-title').textContent,'Call a named action');
+ page.get('continue').fire('click');assert.equal(page.get('lesson-title').textContent,'Repeat until a condition changes');
 });
 
+
+test('snippet search uses singular wording and reset keeps the current section art',()=>{
+ const page=load();page.get('snippet-search').value='level';page.get('snippet-search').fire('input');
+ assert.equal(page.get('search-status').textContent,'1 starter example');
+ page.navigate('#community');const art=page.get('section-art').textContent;
+ page.get('reset').fire('click');assert.equal(page.get('section-art').textContent,art);
+});
+
+test('project guide links navigate to prerequisites without changing milestone completion',()=>{
+ const page=load(new Map([['gameforge-capstone','["status"]']]));
+ const card=page.get('milestones').children[0];const review=card.children[1].children[2];
+ review.children[1].fire('click');
+ assert.equal(page.get('lesson-title').textContent,course.lessons[0].title);
+ assert.equal(page.storage.get('gameforge-capstone'),'["status"]');
+});
 
 test('workspace routes reveal one activity and Continue opens the saved course',()=>{
   const page=load();assert.equal(page.get('dashboard').hidden,false);assert.equal(page.get('lessons').hidden,true);

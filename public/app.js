@@ -26,6 +26,63 @@ for (const lesson of lessons) {
   };
 }
 let active = 0;
+// Decorative scenes are text only and never participate in the lesson controls.
+const forestScene = '    /\\      /\\\n   /__\\ O  /__\\\n    || /|\\  ||\n       / \\\n ~~~~~~~~~~~~~~~';
+const sectionScenes = {
+  'start-here': String.raw`       O
+      /|_
+     / |
+      / \
+    _/   \_
+  . . . . . .`,
+  lessons: String.raw`   _______ _______
+  /       V       \
+ |  ====  |  ====  |
+ |  ====  |  ====  |
+ |  ====  |  ====  |
+ |________|________|
+  \_______^_______/`,
+  capstone: String.raw`    .------------.
+    |            |
+    |____________|
+          |  |
+          |  |
+          |  |
+          |  |
+          |__|`,
+  community: String.raw`   ___         ___
+  /   \       /   \
+ (     )     (     )
+  \___/\     /\___/
+        \   /
+         \ /
+          X
+         / \
+        /   \
+       /     \ `
+};
+const lessonScenes = {
+  health: '  __  __\n /  \\/  \\\n \\      /\n  \\____/\n HP [|||||] 100',
+  decisions: '    [ HP > 0 ? ]\n       /    \\\n    YES      NO\n     |        |\n  [PLAY]   [REST]',
+  loops: '    /\\     /\\     /\\\n   (oo)   (oo)   (oo)\n   /||\\   /||\\   /||\\\n    /\\     /\\     /\\\n   WAVE 1 -> 2 -> 3',
+  'call-function': '     \\ O /\n       |\n      / \\\n   [ Cheer() ]\n     READY!',
+  'function-inputs': '   .--------.\n10 -> BONUS +5 -> 15\n   \'--------\'\n       ($)',
+  methods: '     /|\n    / |   *\n   /__|  /\n     || /\n   [ CAST() ]',
+  inventory: '    .--------.\n   /________/|\n   | [] []  ||\n   | POTION ||\n   |________|/\n     [0] [1]',
+  'class-fields': '  +-------------+\n  | CHARACTER   |\n  | Name: Nova  |\n  | Health: 100 |\n  +-------------+',
+  characters: '     O       O\n    /|\\     /|\\\n    / \\     / \\\n   NOVA     ECHO\n  HP 100   HP 80',
+  input: '   +------------+\n   | 1. ATTACK  |\n   | 2. POTION  |\n   | 3. QUIT    |\n   +------------+\n     > _',
+  'while-loop': '    .----------.\n    | HP > 0 ? |\n    \'----+-----\'\n   ^     |\n   |  [ TURN ]\n   +-----+',
+  'enum-state': '   [EXPLORE]\n       |\n    [BATTLE]\n       |\n   [VICTORY]',
+  'switch-choice': '     [ CHOICE ]\n      /  |  \\\n     1   2   3\n    /    |    \\\n SWORD  HEAL  EXIT',
+  states: '  /\\        /\\\n /__\\  ->  /__\\\n |[]|      |[]|\n [ROOM] -> [FIGHT]\n    \\       /\n     [VICTORY]'
+};
+function renderScenery(sectionId) {
+  const art = sectionScenes[sectionId] || forestScene;
+  $('section-art').textContent = art;
+  const background = sectionId === 'lessons' ? lessonScenes[lessons[active].id] || art : art;
+  $('lesson-scenery').replaceChildren(...Array.from({length: 12}, () => element('pre', background)));
+}
 function element(tag, text, className) {
   const node = document.createElement(tag);
   if (text !== undefined) node.textContent = text;
@@ -34,6 +91,12 @@ function element(tag, text, className) {
 }
 function focusLesson() { activateView('lessons'); if (window.location && window.location.hash !== '#lessons') window.location.hash = 'lessons'; $('course-outline').open = false; $('lesson-title').focus({preventScroll: true}); $('lesson-title').scrollIntoView({block: 'start', behavior: 'instant'}); }
 function isLessonComplete(id) { return completed.has(id) && practiced.has(id); }
+function answerEffect(formId, correct) {
+  const form = $(formId);
+  form.className = '';
+  void form.offsetWidth; // Restart feedback even when the same answer is checked again.
+  form.className = correct ? 'answer-correct' : 'answer-incorrect';
+}
 function renderProgress() {
   const completeCount = lessons.filter(l => isLessonComplete(l.id)).length;
   $('progress-count').textContent = `${completeCount} / ${lessons.length}`;
@@ -51,7 +114,9 @@ function renderProgress() {
   }));
 }
 function showLesson(index) {
+  $('challenge').className = ''; $('practice-form').className = '';
   active = index; const lesson = lessons[index];
+  renderScenery(window.location?.hash.slice(1) || 'dashboard');
   save('gameforge-active-lesson', lesson.id);
   $('lesson-meta').textContent = `LESSON ${index + 1} OF ${lessons.length} · ${lesson.topic}`;
   $('lesson-title').textContent = lesson.title; $('lesson-body').textContent = lesson.body;
@@ -73,6 +138,7 @@ function showLesson(index) {
     input.addEventListener('change', () => {
       answers[lesson.id].quiz = i; save('gameforge-answers', answers);
       $('feedback').textContent = '';
+      $('challenge').className = '';
     });
     label.append(input, document.createTextNode(answer)); return label;
   }));
@@ -87,10 +153,12 @@ function showLesson(index) {
 $('practice-answer').addEventListener('input', () => {
   answers[lessons[active].id].practice = $('practice-answer').value;
   save('gameforge-answers', answers); $('practice-feedback').textContent = '';
+  $('practice-form').className = '';
 });
 $('challenge').addEventListener('submit', event => {
   event.preventDefault(); const answer = new FormData(event.currentTarget).get('answer'); if (answer === null) return;
   const lesson = lessons[active];
+  answerEffect('challenge', Number(answer) === lesson.correct);
   if (Number(answer) === lesson.correct) {
     completed.add(lesson.id); save('gameforge-progress', [...completed]);
     $('feedback').textContent = isLessonComplete(lesson.id) ? 'Correct! Both exercises passed. Lesson complete.' : 'Correct! Quiz passed (1 of 2). Solve the code blank below to complete this lesson.'; $('feedback').textContent += ' ' + lessonGuides[lesson.id].why[Number(answer)]; renderProgress();
@@ -98,6 +166,7 @@ $('challenge').addEventListener('submit', event => {
 });
 $('practice-form').addEventListener('submit', event => {
   event.preventDefault(); const id = lessons[active].id;
+  answerEffect('practice-form', checkPractice(id, $('practice-answer').value));
   if (checkPractice(id, $('practice-answer').value)) {
     practiced.add(id); save('gameforge-practice', [...practiced]);
     $('practice-feedback').textContent = isLessonComplete(id) ? 'Correct! Both exercises passed. Lesson complete.' : 'Correct! Code blank passed (1 of 2). Pass the quiz above to complete this lesson.'; $('practice-feedback').textContent += ' ' + lessonGuides[id].practiceWhy; renderProgress();
@@ -119,7 +188,7 @@ function snippetCard(snippet, draft = false, index = 0) {
   card.append(element('span', draft ? 'LOCAL DRAFT · NOT PUBLISHED' : snippet.author, 'eyebrow'), element('h3', snippet.title));
   const pre = element('pre'); pre.append(element('code', snippet.code)); card.append(pre);
   if (draft) {
-    const remove = element('button', 'Delete draft', 'link-button');
+    const remove = element('button', 'Delete draft', 'link-button'); remove.type = 'button';
     remove.addEventListener('click', () => { drafts.splice(index, 1); save('gameforge-drafts', drafts); renderDrafts(); $('draft-status').textContent = 'Local draft deleted.'; });
     card.append(remove);
   } return card;
@@ -129,7 +198,7 @@ function renderSnippets() {
   const query = $('snippet-search').value.trim().toLowerCase();
   const results = snippets.filter(s => `${s.title} ${s.code}`.toLowerCase().includes(query));
   $('snippets').replaceChildren(...results.map(s => snippetCard(s)));
-  $('search-status').textContent = results.length ? `${results.length} starter examples` : 'No matching examples. Try “health” or “level”.';
+  $('search-status').textContent = results.length ? `${results.length} starter ${results.length === 1 ? 'example' : 'examples'}` : 'No matching examples. Try “health” or “level”.';
 }
 $('snippet-search').addEventListener('input', renderSnippets);
 const snippetEditor = $('snippet-code');
@@ -174,12 +243,30 @@ $('snippet-form').addEventListener('submit', event => {
 function renderMilestones() {
   $('milestones').replaceChildren(...milestones.map(m => {
     const label = element('label', undefined, 'milestone'), input = element('input'); input.type = 'checkbox'; input.checked = built.has(m.id);
+    label.className = input.checked ? 'milestone is-complete' : 'milestone';
     input.addEventListener('change', () => {
+      label.className = 'milestone';
+      void label.offsetWidth;
+      if (input.checked) label.className = 'milestone is-complete just-completed';
       if (input.checked) built.add(m.id); else built.delete(m.id);
       save('gameforge-capstone', [...built]); $('capstone-progress').textContent = `${built.size} of ${milestones.length} milestones checked`;
     });
     const description = element('span'); description.append(element('strong', m.title), element('small', m.detail));
-    label.append(input, description); return label;
+    label.append(input, description);
+    const card = element('article', undefined, 'build-step');
+    const guide = element('details', undefined, 'build-guide');
+    guide.append(element('summary', 'Build guide: ' + m.title.slice(3)), element('p', m.guide.goal));
+    const review = element('div', undefined, 'build-review');
+    review.append(element('p', 'Review these lessons if you get stuck:'));
+    for (const lessonId of m.guide.review) {
+      const index = lessons.findIndex(lesson => lesson.id === lessonId);
+      const button = element('button', lessons[index].title, 'secondary'); button.type = 'button';
+      button.addEventListener('click', () => { showLesson(index); focusLesson(); }); review.append(button);
+    }
+    const steps = element('ol'); steps.append(...m.guide.steps.map(text => element('li', text)));
+    const checks = element('ul'); checks.append(...m.guide.checks.map(text => element('li', text)));
+    guide.append(review, element('h3', 'Build it in small steps'), steps, element('h3', 'Test before checking this off'), checks, element('p', m.guide.stuck, 'build-tip'));
+    card.append(label, guide); return card;
   }));
   $('capstone-progress').textContent = `${built.size} of ${milestones.length} milestones checked`;
 }
@@ -196,6 +283,7 @@ showLesson(lastActive >= 0 ? lastActive : firstUnfinished < 0 ? 0 : firstUnfinis
 function activateView(id) {
   const names = {dashboard:'Overview',lessons:'C# lessons','start-here':'First steps',capstone:'Build a tiny RPG',community:'Community snippets'};
   const current = Object.hasOwn(names,id) ? id : 'dashboard';
+  renderScenery(current);
   for (const key of Object.keys(names)) $(key).hidden = key !== current;
   $('view-name').textContent = names[current];
   const disclosure = $(current).querySelector?.(':scope > details.workspace-disclosure');

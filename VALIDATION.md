@@ -1,5 +1,15 @@
 # Validation — October 3, 2026
 
+## Guided project and review pass
+
+- Current suite: 27 passing tests. New checks cover project prerequisite links, while-loop ordering before input, singular search feedback, and preserving section artwork on reset.
+- All 14 first-party lesson examples compiled with warnings as errors and matched their expected output. The new setup input sample also compiled with nullable analysis enabled; name input, an empty line, and end-of-input produced the expected results.
+- Claude manually reviewed the supplied 14-lesson snapshot: code traces, outputs, quiz indices, feedback, blanks, prerequisite order, and spelling. A second manual review covered the six new guides, setup HTML, and app.js. Claude did not execute tests or inspect the entire website. No misspellings were reported in those supplied texts.
+- Addressed review findings: earlier while-loop teaching, stale prerequisites, collection-initializer explanation, guided project setup, persistent enemy scope, counterattack conditions, explicit state-based quitting/end-of-input, and reproducible defeat/potion tests. Corrected singular snippet-search wording and reset artwork behavior.
+- The project now has setup guidance and six expandable build guides with prerequisite navigation, implementation steps, test cases, and hints. Stable lesson/milestone IDs preserve existing saved progress.
+- The accumulated visual changes include self-hosted VT323 with its license, ASCII section and lesson art, glass panels, answer feedback, and radio/hover spacing. Fonts are served from the same origin under the CSP.
+- These checks are not a guarantee of zero defects. Human beginner testing and a complete cross-browser/accessibility audit remain outstanding. No public deployment is included.
+
 ## v0.2 test build
 
 - Eight Node tests pass: all eight lessons have unique IDs, valid quiz answers and corresponding code blanks; code blanks reject hostile/non-string inputs; capstone IDs are stable; draft limits and text-direction controls are checked; literal rendering avoids HTML and execution sinks; local server rejects writes and private-file routes.

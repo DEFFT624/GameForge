@@ -90,9 +90,178 @@ summary::before{content:"";width:7px;height:7px;flex:0 0 7px;border-right:2px so
 details[open]>summary::before{transform:rotate(45deg)}
 .radio-heading strong{flex:1}
 @supports(interpolate-size:allow-keywords){
-  details::details-content{interpolate-size:allow-keywords;block-size:0;opacity:0;overflow:clip;transition:block-size 280ms cubic-bezier(.2,.8,.2,1),opacity 220ms ease,content-visibility 280ms allow-discrete}
+  details::details-content{interpolate-size:allow-keywords;block-size:0;opacity:0;overflow:clip;overflow-clip-margin:24px;transition:block-size 280ms cubic-bezier(.2,.8,.2,1),opacity 220ms ease,content-visibility 280ms allow-discrete}
   details[open]::details-content{block-size:auto;opacity:1}
 }
 #workspace-nav a:hover{background-color:transparent}
 #workspace-nav a[aria-current=page]:hover{background-color:#1d2518}
 @media(prefers-reduced-motion:reduce){summary::before,details::details-content{transition:none}}
+
+/* Leave room for the learning-path glow inside the animated disclosure. */
+#start-here .workspace-disclosure > .button-link{margin:0 12px 12px;max-width:calc(100% - 24px)}
+
+/* Native radio behavior with a softly expanding selected dot. */
+.answer{align-items:center;cursor:pointer}
+.answer input[type=radio]{appearance:none;display:grid;place-content:center;width:19px;height:19px;flex:0 0 19px;margin:0 2px 0 0;border:1px solid #85917f;border-radius:50%;background:#0e1012;transition:border-color 200ms ease,box-shadow 200ms ease}
+.answer input[type=radio]::before{content:"";width:11px;height:11px;border-radius:50%;background:var(--green);transform:scale(0);transition:transform 220ms cubic-bezier(.2,.8,.2,1)}
+.answer input[type=radio]:checked{border-color:var(--green);box-shadow:0 0 10px #c8f58220}
+.answer input[type=radio]:checked::before{transform:scale(1)}
+
+/* Result symbols sit next to the submit button; text feedback remains announced. */
+#challenge::after,#practice-form .button-row::after{display:inline-block;vertical-align:middle;margin-left:12px;font-size:26px;font-weight:750;line-height:1;min-width:24px}
+#challenge.answer-correct::after,#practice-form.answer-correct .button-row::after{content:"✓";color:var(--green);animation:answer-pop 360ms cubic-bezier(.2,.8,.2,1)}
+#challenge.answer-incorrect::after,#practice-form.answer-incorrect .button-row::after{content:"×";color:#ff9292;animation:answer-pop 260ms ease-out}
+#practice-form .button-row::after{order:1;margin-left:0;align-self:center}
+#practice-hint{order:2}
+#challenge.answer-incorrect > button,#practice-form.answer-incorrect .button-row > button:first-child{animation:answer-red 650ms ease-out}
+#challenge.answer-incorrect > button::before,#practice-form.answer-incorrect .button-row > button:first-child::before{animation:answer-red-glass 650ms ease-out}
+@keyframes answer-pop{0%{opacity:0;transform:scale(.4)}65%{opacity:1;transform:scale(1.18)}100%{opacity:1;transform:scale(1)}}
+@keyframes answer-red{0%,100%{box-shadow:none}25%,55%{background-color:#912d38;color:#fff;box-shadow:0 0 0 2px #ff9292,0 0 18px #ff555544}}
+@keyframes answer-red-glass{25%,55%{opacity:0}}
+
+/* Milestones save immediately; the visual confirmation follows the fill. */
+.milestone{position:relative;isolation:isolate;overflow:hidden;align-items:flex-start;transition:border-color 240ms ease}
+.milestone::before,.milestone::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;border-radius:inherit}
+.milestone::before{background:linear-gradient(90deg,#405b28,#293b20);transform:scaleX(0);transform-origin:left;transition:transform 480ms cubic-bezier(.2,.7,.2,1)}
+.milestone::after{background:#fff;opacity:0}
+.milestone.is-complete{border-color:#85b85a}
+.milestone.is-complete::before{transform:scaleX(1)}
+.milestone.just-completed::before{animation:milestone-fill 480ms cubic-bezier(.2,.7,.2,1)}
+.milestone.just-completed::after{animation:milestone-glint 300ms ease-out 480ms}
+.milestone.just-completed{animation:milestone-bounce 320ms ease-out 700ms}
+.milestone input[type=checkbox]{appearance:none;display:grid;place-content:center;flex:0 0 22px;width:22px;height:22px;margin:3px 0 0;padding:0;border:1px solid #91a18a;border-radius:5px;background:#0e1012}
+.milestone input[type=checkbox]::before{content:"✓";color:var(--green);font-size:19px;font-weight:750;line-height:1;transform:scale(0);transition:transform 160ms ease-out}
+.milestone input[type=checkbox]:checked::before{transform:scale(1)}
+.milestone.just-completed input[type=checkbox]::before{animation:milestone-check 920ms ease-out}
+.milestone.is-complete small{color:#d0dac9}
+@keyframes milestone-fill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes milestone-glint{0%,100%{opacity:0}35%{opacity:.22}}
+@keyframes milestone-check{0%,80%{transform:scale(0)}92%{transform:scale(1.2)}100%{transform:scale(1)}}
+@keyframes milestone-bounce{0%,100%{transform:translateY(0)}45%{transform:translateY(-3px)}75%{transform:translateY(1px)}}
+/* One-shot result burst: the written feedback remains after the particles fade. */
+#challenge::after,#practice-form .button-row::after{content:none!important;display:none}
+.answer-fx{position:relative;display:inline-grid;place-items:center;width:44px;height:44px;margin-left:8px;vertical-align:middle;pointer-events:none;color:var(--green)}
+#practice-form .answer-fx{margin-left:0;order:1}
+.answer-symbol{font-size:28px;line-height:1;font-weight:750;opacity:0}
+.answer-correct .answer-symbol::before{content:"✓"}
+.answer-incorrect .answer-symbol::before{content:"×"}
+.answer-incorrect .answer-fx{color:#ff9292}
+:is(.answer-correct,.answer-incorrect) .answer-symbol{animation:result-pop-away 1000ms ease-out both}
+.answer-fx i{position:absolute;left:21px;top:21px;width:2px;height:8px;background:currentColor;opacity:0;--ray:0deg}
+.answer-fx i:nth-of-type(2){--ray:45deg}.answer-fx i:nth-of-type(3){--ray:90deg}.answer-fx i:nth-of-type(4){--ray:135deg}.answer-fx i:nth-of-type(5){--ray:180deg}.answer-fx i:nth-of-type(6){--ray:225deg}.answer-fx i:nth-of-type(7){--ray:270deg}.answer-fx i:nth-of-type(8){--ray:315deg}
+:is(.answer-correct,.answer-incorrect) .answer-fx i{animation:result-rays 650ms ease-out 100ms both}
+@keyframes result-pop-away{0%{opacity:0;transform:scale(.3)}22%{opacity:1;transform:scale(1.2)}36%,72%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(.85) translateY(-5px)}}
+@keyframes result-rays{0%{opacity:0;transform:rotate(var(--ray)) translateY(-10px) scaleY(.3)}20%{opacity:1}100%{opacity:0;transform:rotate(var(--ray)) translateY(-26px) scaleY(.2)}}
+
+/* ASCII adventure shell. The chosen pixel typeface will be added separately. */
+:root{--radius:3px;--bg:#090d0b;--panel:#121915;--line:#354339}
+body{background-color:var(--bg);background-image:linear-gradient(#b5ed8510 1px,transparent 1px),linear-gradient(90deg,#b5ed8510 1px,transparent 1px);background-size:32px 32px}
+.learning-page main,.home-main{background:#090d0beb}
+.learning-page aside{border-right:1px solid #536d43;box-shadow:4px 0 0 #000}
+body :is(.hero-panel,.lesson-card,.lesson-panel,.stats article,.snippet,.milestone,details,pre,.home-cards article,.home-path article,.lesson-goal,.lesson-block,.lesson-note,.learning-page .radio-disclosure,.learning-page .lesson-navigation,.completion){border-radius:3px}
+body :is(button,.button-link,#workspace-nav a){border-radius:3px}
+.learning-page :is(.lesson-block,.lesson-goal),.home-cards article,.home-path article{box-shadow:4px 4px 0 #0007}
+.learning-page :is(.course-outline,.radio-disclosure),.hero-panel{border-color:#526647}
+.hero-panel{background:#030604;box-shadow:6px 6px 0 #1e301a}
+.eyebrow,.tiny,.tag,.ascii-label,.ascii-caption{font-family:Consolas,'Courier New',monospace}
+.ascii-scene{background:radial-gradient(ellipse,#a9ed6d0c,transparent 70%);border:1px dashed #536d43;padding:16px 6px}
+.ascii-divider{padding:20px 0 0;color:#789967;pointer-events:none;overflow:hidden}
+.ascii-divider pre{font:12px/1.25 Consolas,'Courier New',monospace;white-space:pre;background:none;border:0;padding:0;margin:0;color:inherit}
+.learning-page header{border-bottom-style:dashed}
+.learning-page nav a[aria-current=page]{box-shadow:inset 3px 0 var(--green)}
+.lesson-block h3,.brand{text-shadow:2px 2px 0 #365121}
+.lesson-block pre{border-left:3px solid #66824f}
+@media(max-width:700px){.ascii-divider pre{font-size:9px}.ascii-divider{padding-top:16px}.learning-page aside{box-shadow:none}.answer-fx{margin-left:4px}}
+@media(prefers-reduced-motion:reduce){
+  :is(.answer-correct,.answer-incorrect) .answer-symbol{animation:none;opacity:1}
+  :is(.answer-correct,.answer-incorrect) .answer-fx i{animation:none;opacity:0}
+  .answer input[type=radio],.answer input[type=radio]::before,.milestone,.milestone::before,.milestone input[type=checkbox]::before{transition:none}
+  #challenge::after,#practice-form .button-row::after,#challenge > button,#challenge > button::before,#practice-form .button-row > button,#practice-form .button-row > button::before,.milestone.just-completed,.milestone.just-completed::before,.milestone.just-completed::after,.milestone.just-completed input[type=checkbox]::before{animation:none}
+  #challenge.answer-incorrect > button,#practice-form.answer-incorrect .button-row > button:first-child{border:2px solid #ff9292}
+}
+
+/* Lesson scenery stays behind the reading surface and ignores pointer input. */
+.learning-page{isolation:isolate;background-image:none}
+#lesson-scenery{position:fixed;inset:-40px;z-index:-1;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));align-content:space-around;gap:48px 24px;overflow:hidden;pointer-events:none;user-select:none;opacity:.22}
+#lesson-scenery pre{color:#a5d88f;border:0;background:none;padding:0;margin:0;white-space:pre;font:18px/1.35 Consolas,'Courier New',monospace;justify-self:center;align-self:center}
+.learning-page main{background:#080e0980}
+.ascii-divider{padding:20px 0;color:#a9d78d}
+.ascii-divider pre{font-size:13px;line-height:1.2;letter-spacing:0}
+/* A bright upper reflection fades into dark glass, like the existing buttons. */
+body :is(.hero-panel,.stats article,.snippet,.milestone,details,.starter-grid article,.home-cards article,.home-path article),
+.learning-page :is(.lesson-block,.lesson-goal,.lesson-note,.course-outline,.radio-disclosure,.lesson-navigation),
+.learning-page #lesson-list .lesson-card{
+  background:linear-gradient(165deg,#d9ffe526 0%,#b3eac90c 34%,#00000000 55%),linear-gradient(180deg,#16281ceb,#070e0bef);
+  border:1px solid #75978188;border-radius:12px;
+  box-shadow:inset 0 1px 0 #effffb50,inset 0 -1px 0 #0009,0 8px 24px #0005;
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+}
+.learning-page .workspace-disclosure{background:transparent;border:0;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none}
+.learning-page .lesson-block pre{background:linear-gradient(160deg,#b4ffca0d,transparent 55%),#060e0ded;border:1px solid #527163;border-radius:8px;box-shadow:inset 0 1px 5px #0008}
+.learning-page .lesson-block .output{background:transparent;border:0;box-shadow:none}
+.milestone.is-complete{border-color:#a7eb7b}
+.learning-page #lesson-list .lesson-card[aria-pressed=true]{background:linear-gradient(165deg,#dcffd92b,transparent 55%),#23371fed;border-color:#b5ec8b}
+.ascii-scene{background:transparent;border:0}
+@media(max-width:700px){#lesson-scenery{grid-template-columns:repeat(2,minmax(0,1fr));gap:36px 8px;opacity:.16}#lesson-scenery pre{font-size:12px}.ascii-divider pre{font-size:11px}}
+
+/* Scrollable lesson buttons need room for the outer glow at every edge. */
+.course-outline #lesson-list{padding:20px;gap:20px;scroll-padding:20px}
+body :is(button,.button-link){overflow-wrap:anywhere;max-width:100%}
+
+/* Center the radio and reserve room inside its animated clipping boundary. */
+.learning-page .radio-disclosure{text-align:center}
+.learning-page .radio-heading{position:relative;display:grid;justify-items:center;justify-content:center;gap:4px;padding:0 14px}
+.learning-page .radio-heading::before{position:absolute;left:0;top:18px}
+.learning-page .radio-heading strong{line-height:1.2;white-space:nowrap}
+.learning-page .radio-heading>span{display:block}
+.radio-queue-label,#radio-queue,#radio-track,#radio-status{text-align:center}
+.radio-position{justify-content:center;text-align:center}
+.radio-position label,.radio-position #radio-time{flex-basis:100%}
+.radio-volume{flex-direction:column;justify-content:center;gap:4px}
+.radio-volume input{min-width:0}
+.radio-actions{justify-content:center;align-items:center;gap:10px 8px;padding:14px 12px;margin:0}
+.radio-actions button{max-width:100%}
+.radio-pick{margin:0 6px}
+
+.build-step{min-width:0}
+#milestones{grid-template-columns:minmax(0,1fr);max-width:1000px}
+.build-guide{margin:10px 0 0;padding:18px}
+.build-guide li{margin:12px 0;line-height:1.5}
+.build-guide h3{margin:24px 0 12px}
+.build-review{display:flex;flex-wrap:wrap;gap:12px;padding:12px}
+.build-review p{flex-basis:100%;margin:0}
+.build-review button{font-size:18px;text-align:left;padding:8px 12px}
+.build-tip{border-left:2px solid var(--green);padding-left:14px;color:#d9e7d0}
+.project-setup p,.build-guide p{line-height:1.5}
+
+/* VT323 is bundled under the SIL Open Font License (vt323-OFL.txt). */
+@font-face{font-family:VT323;src:url('/vt323-regular.ttf') format('truetype');font-style:normal;font-weight:400;font-display:swap}
+body{font-family:VT323,'Courier New',monospace;font-size:22px;line-height:1.45;font-synthesis:none}
+body :is(h1,h2,h3,h4,strong,b,button,summary,legend,.brand,.eyebrow){font-weight:400}
+body :is(h1,h2,h3,h4){letter-spacing:0}
+body :is(button,input,select){font-family:inherit}
+body :is(.eyebrow,.tiny,.tag,.ascii-label,.ascii-caption){font-family:VT323,monospace;font-size:16px;letter-spacing:1px}
+.learning-page .brand,.brand{font-size:30px;letter-spacing:1px}
+.learning-page aside nav a{font-size:21px;padding:9px 12px}
+.learning-page nav a[aria-current=page]{font-weight:400}
+body :is(button,.button-link){font-size:22px;font-weight:400}
+.learning-page #lesson-title{font-size:clamp(36px,4.5vw,52px);line-height:1.1;letter-spacing:0}
+.hero-panel h1{font-size:clamp(42px,5vw,68px);line-height:1.08;letter-spacing:0}
+body h2{font-size:32px}body h3{font-size:26px}
+.learning-page .lesson-panel p,.learning-page #lesson-steps li,.hero-panel .intro,.intro,.milestone small,.first-steps p{font-size:22px;line-height:1.5}
+.learning-page .lesson-block h3{font-size:25px}.learning-page .workspace-disclosure>summary{font-size:30px}
+body :is(.lesson-card small,.lesson-goal small,.lesson-note p,.lesson-panel small,header,footer,.pilot-link,.hero-bottom span,.stats small,.stats p,.lesson-block h4,.home-resume){font-size:18px}
+.learning-page .lesson-navigation #next,.learning-page .lesson-navigation #previous{font-size:20px}
+body :is(#navigation-status,#capstone-progress,#practice-form label,.practice small,.editor-help,.link-button){font-size:18px}
+.learning-page .radio-heading strong{font-size:20px;letter-spacing:0}.learning-page .radio-heading span{font-family:inherit;font-size:12px}
+body :is(#radio-track,.radio-pick,.radio-queue-label,#radio-queue,.radio-actions button,#radio-status,.radio-volume,.radio-position){font-family:inherit;font-size:17px}
+.learning-page .tiny{font-size:15px}
+/* Keep source code and the ASCII scene aligned with their original monospace metrics. */
+pre,code,textarea,#practice-answer{font-family:Consolas,'Courier New',monospace;font-synthesis:weight}
+.answer-symbol{font-family:'Segoe UI',sans-serif}
+@media(max-width:700px){
+  .learning-page .brand{font-size:27px}.learning-page #menu-toggle{font-size:19px}
+  .learning-page aside nav a{font-size:20px}.learning-page #lesson-title{font-size:36px}
+  .learning-page .lesson-panel p,.learning-page #lesson-steps li{font-size:21px}
+  .learning-page .lesson-navigation #next{font-size:18px}.learning-page header{font-size:16px}
+}
