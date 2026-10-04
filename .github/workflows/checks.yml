@@ -3,7 +3,7 @@ name: GameForge checks
 on:
   pull_request:
   push:
-    branches: [main, guided-rpg-and-course-review]
+    branches: [main]
   workflow_dispatch:
 
 permissions:

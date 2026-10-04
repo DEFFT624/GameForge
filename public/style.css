@@ -303,3 +303,11 @@ pre,code,textarea,#practice-answer{font-family:Consolas,'Courier New',monospace;
 .module-debug { margin-block: 24px; }
 .module-debug textarea { width: 100%; }
 .module-debug pre { white-space: pre; overflow-x: auto; }
+
+.trace-scroll { overflow-x: auto; max-width: 100%; margin-block: 18px; }
+.trace-scroll:focus-visible { outline: 2px solid var(--green); outline-offset: 4px; }
+.trace-scroll table { border-collapse: collapse; width: 100%; min-width: 620px; font-size: 20px; }
+.trace-scroll caption { text-align: left; color: var(--green); margin-bottom: 12px; }
+.trace-scroll th, .trace-scroll td { text-align: left; vertical-align: top; padding: 12px; border: 1px solid var(--line); }
+.trace-scroll thead { background: #142219; color: var(--green); }
+.trace-scroll tbody tr:nth-child(even) { background: #15221966; }

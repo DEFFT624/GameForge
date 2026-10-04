@@ -1,7 +1,7 @@
 import {course} from './course-plan.js';
 import {lessons as foundations, snippets, validateDraft} from './content.js';
 import {milestones} from './course-extension.js';
-const {lessons, practices, lessonGuides, checkPractice, modules, labs, checkLab, debugging} = course;
+const {lessons, practices, lessonGuides, checkPractice, modules, labs, checkLab, debugging, traces} = course;
 const $ = id => document.getElementById(id);
 let storageReliable = true;
 function read(key, fallback) { try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; } }
@@ -228,6 +228,14 @@ function showLesson(index) {
     const row = element('div'); row.append(element('dt', word), element('dd', meaning)); return row;
   }));
   $('lesson-steps').replaceChildren(...guide.steps.map(step => element('li', step)));
+  $('trace-reveal').open = false;
+  $('trace-caption').textContent = 'Trace: ' + lesson.title;
+  $('trace-rows').replaceChildren(...traces[lesson.id].map(([instruction, values, output], index) => {
+    const row = element('tr');
+    const step = element('th', String(index + 1)); step.setAttribute('scope', 'row');
+    row.append(step, element('td', instruction), element('td', values), element('td', output ?? 'Nothing printed'));
+    return row;
+  }));
   $('lesson-output').textContent = guide.output; $('lesson-mistake').textContent = guide.mistake;
   $('lesson-try').textContent = guide.tryIt; $('lesson-solution').textContent = guide.solution;
   $('solution-reveal').open = false; $('words-reveal').open = false;

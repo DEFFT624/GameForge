@@ -44,3 +44,7 @@ At the last lesson of each module, open Find and repair a bug. Compare the expec
 ## Two-tab persistence
 
 Open two learning workspaces at the same address. Complete different lessons in each; refreshing must keep both completions. Write lab or debugging notes in different lessons/modules and confirm they both remain. Add a different snippet in each tab, then delete one: the other must remain. Check different RPG milestones and uncheck one; both tabs should show the latest checklist. Editing the same answer or note in both tabs uses the most recent save.
+
+## Execution traces
+
+In Understand it, open Trace the values one step at a time. Compare the values after each row with the code; New output shows only the line printed during that step. Try the for and while loops, function return, inventory removal, and game-state loop. At narrow widths the table can scroll within its own box; focus the table region to scroll with the keyboard. Changing lessons closes the trace and replaces its caption and rows.

@@ -86,6 +86,13 @@ test('module debugging notes persist independently and appear only at module end
  page.get('next').fire('click');assert.equal(page.get('module-debug').hidden,true);
  for(const raw of ['null','[]','{','{"control":42}']) assert.equal(load(new Map([['gameforge-debug-notes',raw]])).get('debug-note').value,'');
 });
+test('execution trace follows the current lesson and closes when changing lessons',()=>{
+ const page=load();assert.equal(page.get('trace-rows').children[0].children[2].textContent,'health = 100');
+ page.get('trace-reveal').open=true;page.get('next').fire('click');
+ assert.equal(page.get('trace-reveal').open,false);
+ assert.equal(page.get('trace-rows').children[2].children[3].textContent,'Game over');
+ assert.equal(page.get('trace-caption').textContent,'Trace: Make the game react');
+});
 test('reset clears saved answers and progress but preserves drafts and project milestones', () => {
   let page = load(new Map([['gameforge-drafts', '[]'], ['gameforge-capstone', '["status"]']]));
   page.choose(1); page.type('int'); page.get('challenge').fire('submit'); page.get('practice-form').fire('submit');

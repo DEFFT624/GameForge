@@ -63,6 +63,13 @@ test('each module has a debugging challenge with distinct observed and expected 
   assert.notEqual(bug.actual,bug.expected);assert.notEqual(bug.code,bug.fixed);
  }
 });
+test('every execution trace prints exactly the lesson output in order',()=>{
+ for(const lesson of course.lessons) {
+  const rows=course.traces[lesson.id];assert.ok(rows.length>=3);
+  for(const [instruction,values,output] of rows)assert.ok(instruction && values && (output===null || typeof output==='string'));
+  assert.equal(rows.filter(row=>row[2]!==null).map(row=>row[2]).join('\n'),course.lessonGuides[lesson.id].output,lesson.id);
+ }
+});
 test('small lessons come before their combined applications without changing old quiz IDs',()=>{
  const ids=course.lessons.map(l=>l.id);
  for(const [before,after] of [['call-function','function-inputs'],['function-inputs','methods'],['class-fields','characters'],['while-loop','enum-state'],['enum-state','switch-choice'],['switch-choice','states']]) assert.ok(ids.indexOf(before)<ids.indexOf(after));

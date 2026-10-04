@@ -31,3 +31,7 @@ Four challenges in `course-plan.js` pair observed behavior with a minimal repair
 ## Pending review: persistence merge
 
 The two-tab regression failed before the fix and passes now. Review `recordMap`, `saveRecord`, `refreshRequiredProgress`, and storage event handling in app.js. Saves merge only known IDs and sanitized records; failure switches the visit to in-memory behavior so navigation does not discard unsaved work. Tests cover completions, drafts, optional notes, snippets, milestones, cross-tab reset, and failed storage. Same-record concurrent editing uses the latest save.
+
+## Pending review: lesson execution traces
+
+`lesson-traces.js` follows all 14 examples. Output-column sequences match compiled lesson outputs; manually review the value descriptions, especially print-before-decrement/increment, object independence, and switch break versus loop termination. Tables have captions, column/row headers, a keyboard-focusable scrolling region, and no browser execution. Current visual rendering and Claude review remain pending.

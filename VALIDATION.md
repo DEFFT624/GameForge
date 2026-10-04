@@ -80,3 +80,9 @@ A regression test reproduced two workspace tabs overwriting different lesson com
 Prepared `.github/workflows/checks.yml` for Linux/Node 22 and Windows/Node 24. Official actions checkout v7.0.1, setup-node v7.0.0, and setup-dotnet v6.0.0 release tags and action manifests were verified against their upstream GitHub repositories; uses are pinned to full commit SHAs. Workflow has contents:read only, no persisted checkout credentials, and no publishing step. `global.json` selects stable .NET 10 feature bands.
 
 The website test launcher enumerates only .test.mjs files explicitly, avoiding shell glob differences and accidental execution of the browser feedback script by generic Node test discovery. Local launcher: 44 passing tests. Hosted workflow results are pending until GitHub executes the saved workflow.
+
+## October 4: execution traces and hosted checks
+
+Added optional execution traces for all 14 lesson examples. Rows distinguish values after a step from the new output during it. Traced output matches every lesson guide; changing lessons closes the trace. `npm test`: 46 pass. RPG tests and static build pass after aligning the source damage clamp with the Character lesson.
+
+GitHub workflow runs 37193013438 and 37193012933 completed successfully at commit 073aaaab326f10a99f60b82696c966e44ec42090, including Linux/Node 22 and Windows/Node 24 checks, all 36 C# samples, RPG behavior, and static build. Later trace changes await their own hosted run. The workflow now triggers pull requests and pushes to main only, avoiding duplicate branch/PR runs for the same update.

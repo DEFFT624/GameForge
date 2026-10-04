@@ -107,7 +107,7 @@ class Character
 
     public void TakeDamage(int amount)
     {
-        Health = Math.Max(0, Health - amount);
+        Health = Math.Max(0, Health - Math.Max(0, amount));
     }
 }
 
