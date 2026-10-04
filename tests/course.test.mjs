@@ -5,7 +5,7 @@ import {lessons} from '../public/content.js';
 import {extraLessons, milestones} from '../public/course-extension.js';
 test('every lesson has a valid quiz and a non-executing code-blank challenge', () => {
   const all = course.lessons;
-  assert.equal(all.length, 18);
+  assert.equal(all.length, 22);
   assert.equal(new Set(all.map(l => l.id)).size, all.length);
   for (const l of all) {
     assert.ok(Number.isInteger(l.correct) && l.correct >= 0 && l.correct < l.answers.length);

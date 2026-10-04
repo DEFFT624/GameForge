@@ -8,7 +8,7 @@ For local testing on Windows, open START-GAMEFORGE.cmd, leave that window runnin
 
 1. Choose Continue learning. Read lesson 1 and try an incorrect quiz answer, then the correct one. Feedback should explain the mistake and the lesson should show In progress. The completed-lesson count should increase only after both the quiz and code blank are passed.
 2. Fill in the code blank. Try the Hint button. Check the answer, then refresh the page. Quiz and code-blank progress, your selected answer, and the exact text in the blank should remain saved. Try refreshing with an unfinished answer, then switching lessons and returning. The last viewed lesson should reopen.
-3. Use Next and Previous. Open the inventory, character and game-state lessons from the learning path. All 18 lessons should be available.
+3. Use Next and Previous. Open the inventory, character and game-state lessons from the learning path. All 22 lessons should be available.
 4. Check a milestone under Dungeon of Three Rooms. Refresh and confirm it stays checked. Uncheck it if it was only a test.
 5. Search starter snippets for health. Save a harmless local snippet draft, refresh, open the draft section, and delete it. Drafts never publish or run.
 6. Try a narrow browser window. Text and controls should fit without horizontal scrolling.
@@ -25,7 +25,7 @@ Snippet editor: Tab inserts four spaces; select multiple lines to indent them to
 
 Quest Radio: select two local audio files, press Play, switch lessons, and confirm playback continues. Check next/previous, playlist selection, volume, repeat, Clear, and collapsing the heading. Refresh should empty the playlist without affecting learning progress. Invalid or oversized selections should show feedback.
 
-Expanded course: verify 18 lesson cards, including two small function lessons, class fields, and while/enum/switch introductions. Existing eight completions should show 8 / 18 after upgrade. Continue should select the first unfinished new lesson. The full-course feedback page stays locked until all 18 quizzes and code blanks are passed. Optional labs and RPG milestones do not affect that gate. Use a disposable browser profile for this test; complete all lessons, then type a disposable feedback note, refresh, verify persistence, copy the report, and remove the test note. No real beginner session has been conducted yet.
+Expanded course: verify 22 lesson cards, including two small function lessons, class fields, and while/enum/switch introductions. Existing eight completions should show 8 / 22 after upgrade. Continue should select the first unfinished new lesson. The full-course feedback page stays locked until all 22 quizzes and code blanks are passed. Optional labs and RPG milestones do not affect that gate. Use a disposable browser profile for this test; complete all lessons, then type a disposable feedback note, refresh, verify persistence, copy the report, and remove the test note. No real beginner session has been conducted yet.
 
 ## Modules and optional labs
 
@@ -53,7 +53,7 @@ In the complete-reference section of the project guide, open Trace one fight bef
 
 In Understand it, open Trace the values one step at a time. Compare the values after each row with the code; New output shows only the line printed during that step. Try the for and while loops, function return, inventory removal, and game-state loop. At narrow widths the table can scroll within its own box; focus the table region to scroll with the keyboard. Changing lessons closes the trace and replaces its caption and rows.
 
-Upgrade check: if you previously completed all 14 earlier lessons, the dashboard now shows 14 / 18 and Continue opens Give your hero a text greeting. Existing answers remain saved. Finish the four new lessons to reopen the full-course review.
+Upgrade check: if you previously completed all 14 earlier lessons, the dashboard now shows 14 / 22 and Continue opens Give your hero a text greeting. Existing answers remain saved. Finish all remaining lessons to reopen the full-course review.
 
 In First steps, search the glossary for concatenation, bool, &&, or return. Open a matching lesson and check that progress did not change. A broad search shows at most 12 entries and asks you to narrow it. Clearing the search should remove results and show the instructions.
 
@@ -66,3 +66,12 @@ Open When a program goes wrong under First steps. Distinguish a compiler error, 
 Use Link to this lesson near the lesson heading, or copy the browser address while reading a lesson. A URL such as `http://127.0.0.1:4173/learn.html?lesson=strings#lessons` should open the greeting lesson, even if a different lesson was last saved. It must not change completed exercises. Next and Previous should update that lesson ID, and refresh should keep the intended lesson. A recipient keeps their own progress.
 
 Localhost links work only on the computer running the site. To send a working link to a friend on another computer, first publish the reviewed static site and use its hosted address. Publication and license selection are still pending. Try browser Back after opening a glossary result or project prerequisite: it should return to the previous activity. Reset on a lesson should leave its URL pointing to lesson 1; reset from another activity should keep that activity open.
+
+## New game data toolbox (lessons 19–22)
+
+If all 18 earlier lessons were complete, expect 18 / 22 and Continue to open Build a readable status message. Earlier answers must still be visible. Complete both required exercises in the four new lessons to unlock the full-course review again.
+
+Open each new lesson, enter an unfinished quiz/code-blank/lab answer, refresh, and check that its own draft restores. Check that the new ASCII scenery changes while the book at the top stays the lessons icon. At the dictionary lesson, open the optional module debugging challenge; its note should persist separately. Optional work never grants required completion.
+
+The homepage's lessons 19–22 link should open interpolation directly even if a different lesson was last used. Next and Previous should cross the old/new module boundary correctly. The final lesson should link to the RPG project.
+

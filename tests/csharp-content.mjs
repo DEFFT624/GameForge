@@ -8,6 +8,10 @@ import {join} from 'node:path';
 import {course} from '../public/course-plan.js';
 // Small changes suggested by the optional labs, checked as real console programs.
 const labChanges = [
+  ['interpolation', 'coins + 2', 'coins + 4', 'Coins: 5\nCoins: 9'],
+  ['arrays', 'index < rooms.Length', 'index < 1', 'Gate\n2'],
+  ['constructors', 'new Enemy("Goblin", 20)', 'new Enemy("Goblin", 35)', 'Goblin: 35'],
+  ['dictionary', 'string item = "Shield";', 'string item = "Potion";', 'Potion: 5 coins'],
   ['health', 'health - 40', 'health - 100', '10'],
   ['health', 'health - 40', 'health - 120', '-10'],
   ['strings', '" found"', '"found"', 'Coinfound'],

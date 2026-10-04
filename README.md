@@ -1,10 +1,10 @@
 # Gameforge
 
-The home page introduces the course at `/`; `/learn.html` opens the learning workspace. A new First steps guide teaches instructions, output, execution order, and text variables. All eighteen lessons include goals, glossaries, walkthroughs, expected output, common mistakes, small prediction exercises, and answer-specific feedback. Existing saved answers and progress are preserved.
+The home page introduces the course at `/`; `/learn.html` opens the learning workspace. A new First steps guide teaches instructions, output, execution order, and text variables. All twenty-two lessons include goals, glossaries, walkthroughs, expected output, common mistakes, small prediction exercises, and answer-specific feedback. Existing saved answers and progress are preserved.
 
-A beginner-friendly game development learning website. This first local MVP has a responsive dashboard, eighteen C# lessons with quizzes and code blanks, browser-local progress, two starter snippets, local text draft creation/deletion, snippet search, and a six-step RPG project checklist.
+A beginner-friendly game development learning website. This first local MVP has a responsive dashboard, twenty-two C# lessons with quizzes and code blanks, browser-local progress, two starter snippets, local text draft creation/deletion, snippet search, and a six-step RPG project checklist.
 
-The C# path is organized into four modules: values and control flow; reusable actions; inventory, characters, and input; and game states. Each lesson also offers an optional output-prediction lab with hints, explained answers, a small-change exercise, and saved notes. Optional labs do not change the required quiz-and-code-blank completion rules. Home-page tabs introduce future Unity, Krita, and Blender paths with their own color themes; those courses are planned.
+The C# path is organized into five modules: values and control flow; reusable actions; inventory, characters, and input; game states; and a game data toolbox. Each lesson also offers an optional output-prediction lab with hints, explained answers, a small-change exercise, and saved notes. Optional labs do not change the required quiz-and-code-blank completion rules. Home-page tabs introduce future Unity, Krita, and Blender paths with their own color themes; those courses are planned.
 
 See [TESTING.md](TESTING.md) for the short user test checklist. On Windows, you can also open START-GAMEFORGE.cmd.
 
@@ -30,7 +30,7 @@ See [SPEC.md](SPEC.md), [SECURITY.md](SECURITY.md), and [CONTRIBUTING.md](CONTRI
 Choose local audio files in the bottom-left player, then press Play. Playback continues between lessons. Use the playlist, previous/next, volume, repeat-song, and Clear controls. Click the Quest Radio heading to collapse it. Select up to 30 files, each at most 100 MB; browser format support varies. Files are not uploaded or stored by GameForge, and must be reselected after refresh.
 
 ## Friend feedback session
-Open /beginner-test.html after finishing both required exercises in all eighteen C# lessons. The full-course review uses the same browser and website address as the saved progress; it includes locally saved notes and Copy feedback. No results are submitted automatically, and the RPG project is optional for the review. A hosted URL is required before a friend on another computer can use it. Existing completion IDs are preserved.
+Open /beginner-test.html after finishing both required exercises in all twenty-two C# lessons. The full-course review uses the same browser and website address as the saved progress; it includes locally saved notes and Copy feedback. No results are submitted automatically, and the RPG project is optional for the review. A hosted URL is required before a friend on another computer can use it. Existing completion IDs are preserved.
 
 ### Complete tiny RPG reference
 
@@ -49,3 +49,10 @@ First steps also has a searchable glossary that links definitions to the lessons
 The troubleshooting guide distinguishes compiler errors, runtime errors, and logic mistakes using deliberate examples and repairs. `npm run test:errors` verifies the documented diagnostics and repaired outputs. These are first-party samples; learner code is never executed by the site or tests.
 
 Each lesson has a direct link using its stable ID, such as `/learn.html?lesson=strings#lessons`. Opening a shared lesson does not share progress. Localhost addresses work only on the computer running the site; use a reviewed hosted address for a friend on another computer.
+
+### Game data toolbox: lessons 19–22
+
+A fifth module adds readable status messages, fixed room arrays, constructor inputs, and safe item-price lookups. Every lesson includes a walkthrough, trace, quiz, code blank, optional prediction lab, and saved notes. A debugging challenge distinguishes stored status text from a freshly built message. Previously completed lessons and saved answers remain intact; the course review now opens after all 22 required lesson pairs.
+
+The language rules were checked against Microsoft documentation: [interpolation](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/tokens/interpolated), [arrays](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/arrays), [constructors](https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/constructors), and [TryGetValue](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.dictionary-2.trygetvalue?view=net-10.0). First-party teaching code is compiled in the validation suite; learner code remains text-only.
+

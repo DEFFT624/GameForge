@@ -139,3 +139,12 @@ Build regression fixtures reproduced stale generated files surviving a rebuild. 
 ## October 4: complete code milestone verified
 
 Workflow 37198210645 passed at ebe113c244102a7617846539e5da75ce023d709c on Linux/Node 22 and Windows/Node 24: 59 website checks, 66 C# teaching/experiment cases, five intentional-error/repair pairs, RPG behavior including its walkthrough, and static build. An exact Git blob hash comparison found all 50 checked project/repository files identical. The local home, lesson link, troubleshooting module, and reference-source endpoint returned HTTP 200 with the expected content types. Browser initialization still failed on the closing review attempt, so visual/keyboard/Claude checks remain unperformed.
+
+## October 4 morning follow-up: game data toolbox
+
+- 22 lessons / 5 modules; existing 18 lesson IDs and quiz/code-blank answers retained.
+- node tests/run.mjs: 62 tests passed. New cases cover eighteen-completion upgrade/resume, each new lesson's required-answer and draft restoration, and the direct full-review gate.
+- node tests/csharp-content.mjs: 80 first-party samples passed with real .NET compilation and expected outputs. Includes every lesson/lab, five module bugs and repairs, and all documented optional-lab change cases.
+- node build.mjs passed; approved new asset included in the build and preview routes.
+- Claude/browser visual review could not run: browser control initialization reports a missing kernel-assets path. This is an unperformed review, not a passed check.
+

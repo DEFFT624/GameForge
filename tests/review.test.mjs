@@ -29,8 +29,15 @@ test('malformed or unrelated progress does not unlock feedback',()=>{
 });
 test('the direct review page stays locked for the previously complete fourteen-lesson course',()=>{
  const newIds=new Set(['strings','booleans','combined-conditions','list-loop']);
- const oldIds=course.lessons.filter(lesson=>!newIds.has(lesson.id)).map(lesson=>lesson.id);
+ const oldIds=course.lessons.slice(0,18).filter(lesson=>!newIds.has(lesson.id)).map(lesson=>lesson.id);
  const page=load(new Map([['gameforge-progress',JSON.stringify(oldIds)],['gameforge-practice',JSON.stringify(oldIds)]]));
  assert.equal(page.get('review-content').hidden,true);
- assert.match(page.get('review-progress').textContent,/14 \/ 18/);
+ assert.match(page.get('review-progress').textContent,/14 \/ 22/);
+});
+
+test('previously complete eighteen-lesson learners need the added toolbox lessons for the review',()=>{
+ const oldIds=course.lessons.slice(0,18).map(lesson=>lesson.id);
+ const page=load(new Map([['gameforge-progress',JSON.stringify(oldIds)],['gameforge-practice',JSON.stringify(oldIds)]]));
+ assert.equal(page.get('review-content').hidden,true);
+ assert.match(page.get('review-progress').textContent,/18 \/ 22/);
 });

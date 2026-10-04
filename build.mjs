@@ -7,7 +7,7 @@ const projectPath = await realpath(fileURLToPath(root));
 const sourcePath = resolve(projectPath, 'public');
 const sourceInfo = await lstat(sourcePath);
 if (sourceInfo.isSymbolicLink() || !sourceInfo.isDirectory() || await realpath(sourcePath) !== sourcePath) throw Error('Refusing a linked source directory');
-const assets = ['vt323-regular.ttf','vt323-OFL.txt','index.html','style.css','app.js','content.js','course-extension.js','radio.js','learner-guides.js','lesson-traces.js','foundation-bridges.js','help-examples.js','home.html','home-tabs.js','course-plan.js','beginner-test.html','beginner-test.js','rpg-reference.cs'];
+const assets = ['vt323-regular.ttf','vt323-OFL.txt','index.html','style.css','app.js','content.js','course-extension.js','radio.js','learner-guides.js','lesson-traces.js','foundation-bridges.js','game-data-lessons.js','help-examples.js','home.html','home-tabs.js','course-plan.js','beginner-test.html','beginner-test.js','rpg-reference.cs'];
 // Check all required inputs before replacing a previous generated build.
 for (const name of assets) {
   if (!(await lstat(new URL('public/' + name, root))).isFile()) throw Error('Expected a regular source asset: ' + name);

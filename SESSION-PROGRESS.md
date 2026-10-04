@@ -1,3 +1,17 @@
+# Morning follow-up: 22 C# lessons
+
+The follow-up adds four complete lessons in Module 5, Expand your game data toolbox: interpolation, arrays, constructors, and Dictionary.TryGetValue. Each has a quiz, code blank, glossary, walkthrough, execution trace, optional prediction lab, a small-change exercise, and saved notes. A new module debugging challenge explains stale status text.
+
+Earlier guides now explain assignment order, block boundaries, for-loop update order, returning versus printing, generic list syntax, safe index bounds, method receivers, and the two results of TryParse more explicitly. Old quiz IDs and canonical answers are unchanged.
+
+Try the new module at http://127.0.0.1:4173/learn.html?lesson=interpolation#lessons. The preview was restarted to serve the new content file. The homepage includes a direct link to lessons 19–22.
+
+Verified locally: 62 website checks, 80 compiled first-party C# cases, and the static build pass. The upgrade checks cover previously complete eight-, fourteen-, and eighteen-lesson learners; the full-course review requires both exercises in all 22 lessons. Optional labs remain optional.
+
+Browser controls still fail during initialization with a missing-path error. Claude and a real visual inspection remain pending; no review from Claude is claimed. No accounts, upload endpoint, learner code execution, deployment, or license decision was added.
+
+---
+
 # October 4: GameForge session results
 
 Requested work window: approximately 4:13–7:13 a.m. Central. The closing review began at 6:58 a.m. All website code is saved and verified. The preview is left running for morning testing.

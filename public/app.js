@@ -109,6 +109,10 @@ const sectionScenes = {
        /     \ `
 };
 const lessonScenes = {
+  interpolation: ' +--------------+\n | NOVA: 80 HP  |\n +--------------+\n     $ { }',
+  arrays: ' +------+------+------+\n | GATE | HALL | TOWER|\n +------+------+------+\n    0      1      2',
+  constructors: ' [new Enemy()]\n       |\n     (oo)\n    SLIME\n    HP 25',
+  dictionary: ' +----------------+\n | POTION -> 5    |\n | SWORD  -> 12   |\n +----------------+',
 "strings": " .------------.\n | Welcome,   |\n |   Nova!    |\n `------------'\n       |",
 "booleans": " [ TRUE ]\n     |\n [ FALSE ]\n  YES / NO",
 "combined-conditions": "   KEY + HP\n      |\n    .-----.\n    |DOOR |\n    |  o  |\n    |_____|",
