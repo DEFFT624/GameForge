@@ -1,7 +1,7 @@
 export const lessonGuides = {
  health: {
   goal: 'Read a variable, change its value, and predict the number printed on screen.',
-  before: 'Start with the First steps guide above. You only need subtraction for this lesson.',
+  before: 'Start with the First steps guide in the menu. You only need subtraction for this lesson.',
   words: [['variable', 'A named place to store a value, such as the player’s current health.'], ['int', 'The C# type for whole numbers such as 0, 25, or 100.'], ['=', 'Assignment: calculate the right side, then store that value on the left. It does not ask whether two things are equal.'], ['Console.WriteLine(...)', 'Display the value inside the parentheses on a new line in the console.']],
   steps: ['int health = 100; creates a whole-number variable named health and gives it the value 100.', 'health = health - 25; reads the old value, calculates 100 - 25, then replaces health with 75.', 'Console.WriteLine(health); reads the current value of health and prints 75. It does not print the word health.'],
   output: '75',

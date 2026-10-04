@@ -7,7 +7,8 @@ import {readFileSync} from 'node:fs';
 import {lessons as foundations, snippets, validateDraft} from '../public/content.js';
 import {extraLessons, practices, milestones, checkPractice} from '../public/course-extension.js';
 const source = readFileSync(new URL('../public/app.js', import.meta.url), 'utf8').replace(/^import .*;\r?\n/gm, '');
-function load(storage = new Map(), confirm = true) {
+function load(storage = new Map(), confirm = true, hash = "") {
+  const location = {hash}, windowEvents = {};
   class Element {
     children = []; events = {}; value = ''; textContent = '';
     append(...items) { this.children.push(...items); }
@@ -25,10 +26,10 @@ function load(storage = new Map(), confirm = true) {
     course, lessonGuides, foundations, snippets, validateDraft, extraLessons, practices, milestones, checkPractice,
     document: {getElementById: get, createElement: () => new Element(), createTextNode: text => ({textContent: text})},
     localStorage: {getItem: key => storage.get(key) ?? null, setItem: (key, value) => storage.set(key, value)},
-    window: {confirm: () => confirm},
+    window: {confirm: () => confirm, location, addEventListener: (name,fn) => { windowEvents[name]=fn; }},
     FormData: class { get() { return get('answers').children.map(l => l.children[0]).find(i => i.checked)?.value ?? null; } }
   });
-  return {get, storage, choose(index) {
+  return {get, storage, navigate(hash) { location.hash=hash; windowEvents.hashchange(); }, choose(index) {
     const radios = get('answers').children.map(l => l.children[0]);
     radios.forEach((r, i) => { r.checked = i === index; }); radios[index].fire('change');
   }, type(value) { get('practice-answer').value = value; get('practice-answer').fire('input'); },
@@ -127,4 +128,17 @@ test('existing eight completions survive expansion but new lessons remain unfini
  const page=load(new Map([['gameforge-progress',JSON.stringify(oldIds)],['gameforge-practice',JSON.stringify(oldIds)]]));
  assert.equal(page.get('progress-count').textContent,'8 / 14');assert.equal(page.get('completion').hidden,true);
  page.get('continue').fire('click');assert.equal(page.get('lesson-title').textContent,'Call a named action');
+});
+
+
+test('workspace routes reveal one activity and Continue opens the saved course',()=>{
+  const page=load();assert.equal(page.get('dashboard').hidden,false);assert.equal(page.get('lessons').hidden,true);
+  page.get('continue').fire('click');assert.equal(page.get('lessons').hidden,false);assert.equal(page.get('dashboard').hidden,true);
+  page.type('draft');page.navigate('#community');assert.equal(page.get('community').hidden,false);assert.equal(page.get('lessons').hidden,true);
+  page.navigate('#lessons');assert.equal(page.get('practice-answer').value,'draft');assert.equal(page.get('community').hidden,true);
+  page.navigate('#not-a-view');assert.equal(page.get('dashboard').hidden,false);
+});
+test('deep links open the requested activity on reload',()=>{
+  const page=load(new Map(),true,'#lessons');assert.equal(page.get('lessons').hidden,false);assert.equal(page.get('dashboard').hidden,true);
+  page.navigate('#start-here');assert.equal(page.get('start-here').hidden,false);assert.equal(page.get('lessons').hidden,true);
 });
