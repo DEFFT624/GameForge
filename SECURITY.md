@@ -7,3 +7,5 @@ This narrows the attack surface; it is not a full security audit. Local storage 
 For contributions: no binaries, archives, bundled project downloads, credential files, obfuscated payloads or automatic installation scripts. Check examples for filesystem, process, network and destructive behavior. Do not execute untrusted examples to review them. Have a human inspect workflow changes before merging; do not expose repository secrets to untrusted pull requests.
 
 Before public release, configure GitHub private vulnerability reporting and a reporting contact. Until that exists, report suspected flaws directly to the project owner without posting credentials or exploit details publicly.
+
+Quest Radio uses object URLs for user-selected local audio and releases them on Clear, replacement, or leaving the page. CSP allows media only from blob URLs; external connections and server writes remain blocked. File type/size checks are usability filters, not malware scanning. There is no audio upload, sharing, or execution endpoint.
