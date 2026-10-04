@@ -7,3 +7,5 @@ node_modules/
 coverage/
 dist/
 .sites-runtime/
+examples/**/bin/
+examples/**/obj/

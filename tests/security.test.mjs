@@ -18,4 +18,16 @@ test('drafts reject text-direction controls in both fields but preserve Unicode'
 test('draft limits reject malformed and oversized input',()=>{assert.ok(validateDraft('', 'code'));assert.ok(validateDraft('title','x'.repeat(8001)));assert.ok(validateDraft('x'.repeat(81),'code'));assert.ok(validateDraft('title','a\0b'));assert.ok(validateDraft({},[]));assert.equal(validateDraft('Health','int health = 100;'),null);});
 test('all lessons have stable unique IDs and valid challenge answers',()=>{assert.equal(new Set(lessons.map(l=>l.id)).size,4);for(const lesson of lessons){assert.ok(lesson.answers[lesson.correct]);assert.ok(lesson.code);assert.ok(lesson.hint);}});
 test('text rendering never uses HTML injection or code execution sinks',async()=>{const source=await readFile(new URL('../public/app.js',import.meta.url),'utf8');assert.doesNotMatch(source,/innerHTML|outerHTML|insertAdjacentHTML|eval\s*\(|new Function|document\.write/);assert.match(source,/textContent/);});
+test('shared navigation and character only render text and never upload or execute input',async()=>{
+ for(const name of ['shell.js','character.js','character-progress.js']) {
+  const source=await readFile(new URL('../public/'+name,import.meta.url),'utf8');
+  assert.doesNotMatch(source,/innerHTML|outerHTML|insertAdjacentHTML|eval\s*\(|new Function|document\.write|fetch\s*\(|XMLHttpRequest/);
+ }
+});
+test('RPG reference is first-party plain text and upload methods remain blocked',async()=>{
+ const server=createServer();await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
+ const url=`http://127.0.0.1:${server.address().port}/rpg-reference.cs`;
+ try {const response=await fetch(url);assert.equal(response.status,200);assert.equal(response.headers.get('content-type'),'text/plain; charset=utf-8');assert.equal(response.headers.get('x-content-type-options'),'nosniff');assert.match(await response.text(),/enum GameState/);assert.equal((await fetch(url,{method:'POST',body:'untrusted source'})).status,405);assert.equal((await fetch(url.replace('rpg-reference.cs','GameForgeRpg.dll'))).status,404);}
+ finally {await new Promise(resolve=>server.close(resolve));}
+});
 test('server blocks uploads, private files, traversal and sets defensive headers',async()=>{const server=createServer();await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));const base=`http://127.0.0.1:${server.address().port}`;try{const page=await fetch(base);assert.equal(page.status,200);assert.match(page.headers.get('content-security-policy'),/object-src 'none'/);assert.match(page.headers.get('content-security-policy'),/connect-src 'none'/);assert.equal(page.headers.get('x-content-type-options'),'nosniff');for(const path of ['/.env','/package.json','/server.mjs','/upload','/%2e%2e%2fserver.mjs'])assert.equal((await fetch(base+path)).status,404);for(const method of ['POST','PUT','PATCH','DELETE'])assert.equal((await fetch(base+'/upload',{method,body:'untrusted bytes'})).status,405);for(const path of ['/app.js','/content.js','/style.css','/course-plan.js','/beginner-test.html','/beginner-test.js'])assert.equal((await fetch(base+path)).status,200);}finally{await new Promise(resolve=>server.close(resolve));}});
